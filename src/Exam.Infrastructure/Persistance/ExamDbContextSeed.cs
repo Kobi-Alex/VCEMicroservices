@@ -45,6 +45,16 @@ namespace Exam.Infrastructure.Persistance
                          PassingScore = 68.00m,
                          DateExam = new DateTime(2022, 02, 24),
                          Status = "not avalible"
+                     },
+                     new ExamItem()
+                     {
+                         Title = "Dosker and Kibernetis",
+                         Category = "Docker",
+                         Description = "Docker with kibernatis",
+                         DurationTime = 1000,
+                         PassingScore = 80.00m,
+                         DateExam = new DateTime(2022, 01, 30),
+                         Status = "not avalible"
                      }
                 );
 
