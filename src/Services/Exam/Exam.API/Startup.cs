@@ -1,6 +1,13 @@
+using Exam.API.Middleware;
+using Exam.Domain.Domain.Repositories;
+using Exam.Domain.Services;
+using Exam.Domain.Services.Abstractions;
+using Exam.Infrastructure.Persistance;
+using Exam.Infrastructure.Persistance.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,13 +32,24 @@ namespace Exam.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<Infrastructure.Persistance.ExamDbContext>(opt =>
+                opt.UseInMemoryDatabase("InMem"));
+
+            //add service ServiceManager
+            services.AddScoped<IServiceManager, ServiceManager>();
+            //add service RepositoryManager
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
 
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Exam.API", Version = "v1" });
             });
+
+            services.AddTransient<ExceptionHandlingMiddleware>();
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -43,6 +61,9 @@ namespace Exam.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exam.API v1"));
             }
 
+            //add ExceptionHandlingMiddleware
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
             app.UseRouting();
 
             app.UseAuthorization();
@@ -51,6 +72,9 @@ namespace Exam.API
             {
                 endpoints.MapControllers();
             });
+
+            //Seeding data
+            ExamDbContextSeed.PrepPopulation(app);
         }
     }
 }
