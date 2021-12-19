@@ -54,7 +54,7 @@ namespace Exam.Infrastructure.Persistance
                          DurationTime = 1000,
                          PassingScore = 80.00m,
                          DateExam = new DateTime(2022, 01, 30),
-                         Status = "not avalible"
+                         Status = "avalible"
                      }
                 );
 
