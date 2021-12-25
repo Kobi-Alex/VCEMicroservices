@@ -16,5 +16,7 @@ namespace Exam.Domain.Domain.Entities
         public decimal PassingScore { get; set; }
         public DateTime DateExam { get; set; }
         public string Status { get; set; }
+
+        public ICollection<QuestionItem> QuestionItems { get; set; }
     }
 }
