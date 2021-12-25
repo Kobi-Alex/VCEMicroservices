@@ -32,15 +32,19 @@ namespace Exam.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<Infrastructure.Persistance.ExamDbContext>(opt =>
+
+            services.AddDbContext<ExamDbContext>(opt =>
                 opt.UseInMemoryDatabase("InMem"));
+
 
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();
             //add service RepositoryManager
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
+
             services.AddControllers();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddSwaggerGen(c =>
             {

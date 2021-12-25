@@ -7,25 +7,28 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Mapster;
 using Exam.Domain.Domain.Exeptions;
 using Exam.Domain.Domain.Entities;
+using AutoMapper;
 
 namespace Exam.Domain.Services
 {
     internal sealed class ExamService : IExamService
     {
+        private readonly IMapper _mapper;
         private readonly IRepositoryManager _repositoryManager;
 
-        public ExamService(IRepositoryManager repositoryManager)
+        public ExamService(IRepositoryManager repositoryManager, IMapper mapper)
         {
+            _mapper = mapper;
             _repositoryManager = repositoryManager;
         }
 
         public async Task<IEnumerable<ExamReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {   
             var exams = await _repositoryManager.ExamRepository.GetAllAsync(cancellationToken);
-            var examsDto = exams.Adapt<IEnumerable<ExamReadDto>>();
+            //var examsDto = exams.Adapt<IEnumerable<ExamReadDto>>();
+            var examsDto = _mapper.Map<IEnumerable<ExamReadDto>>(exams);
             return examsDto;
         }
 
@@ -38,7 +41,8 @@ namespace Exam.Domain.Services
                 throw new ExamNotFoundException(examId);
             }
 
-            var examDto = exam.Adapt<ExamReadDto>();
+            /*var examDto = exam.Adapt<ExamReadDto>();*/
+            var examDto = _mapper.Map<ExamReadDto>(exam);
 
             return examDto;
         }
@@ -52,7 +56,8 @@ namespace Exam.Domain.Services
                 throw new ExamNotFoundException(category);
             }
 
-            var examDto = exam.Adapt<IEnumerable<ExamReadDto>>();
+            /*var examDto = exam.Adapt<IEnumerable<ExamReadDto>>();*/
+            var examDto = _mapper.Map<IEnumerable<ExamReadDto>>(exam);
 
             return examDto;
         }
@@ -66,7 +71,8 @@ namespace Exam.Domain.Services
                 throw new ExamNotFoundException(title);
             }
 
-            var examDto = exam.Adapt<IEnumerable<ExamReadDto>>();
+            /*var examDto = exam.Adapt<IEnumerable<ExamReadDto>>();*/
+            var examDto = _mapper.Map<IEnumerable<ExamReadDto>>(exam);
 
             return examDto;
         }
@@ -93,10 +99,14 @@ namespace Exam.Domain.Services
 
         public async Task<ExamReadDto> CreateAsync(ExamCreateDto examCreateDto, CancellationToken cancellationToken = default)
         {
-            var exam = examCreateDto.Adapt<ExamItem>();
+            /*var exam = examCreateDto.Adapt<ExamItem>();*/
+            var exam = _mapper.Map<ExamItem>(examCreateDto);
+
             _repositoryManager.ExamRepository.Insert(exam);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
-            return exam.Adapt<ExamReadDto>();
+            /*return exam.Adapt<ExamReadDto>();*/
+
+            return _mapper.Map<ExamReadDto>(exam);
         }
 
         public async Task DeleteAsync(int examId, CancellationToken cancellationToken = default)

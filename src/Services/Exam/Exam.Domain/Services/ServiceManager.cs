@@ -1,4 +1,5 @@
-﻿using Exam.Domain.Domain.Repositories;
+﻿using AutoMapper;
+using Exam.Domain.Domain.Repositories;
 using Exam.Domain.Services.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,9 @@ namespace Exam.Domain.Services
     {
         private readonly Lazy<IExamService> _lazyExamService;
 
-        public ServiceManager(IRepositoryManager repositoryManager)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _lazyExamService = new Lazy<IExamService>(() => new ExamService(repositoryManager));
+            _lazyExamService = new Lazy<IExamService>(() => new ExamService(repositoryManager, mapper));
         }
 
         public IExamService ExamService => _lazyExamService.Value;
