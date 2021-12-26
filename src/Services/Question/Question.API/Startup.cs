@@ -1,11 +1,17 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Question.Domain.Domain.Repositories;
+using Question.Domain.Services;
+using Question.Domain.Services.Abstractions;
+using Question.Infrastructure;
+using Question.Infrastructure.Persistance.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +31,14 @@ namespace Question.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddDbContext<QuestionDbContext>(opt =>
+                opt.UseInMemoryDatabase("InMem"));
+
+            //add service ServiceManager
+            services.AddScoped<IServiceManager, ServiceManager>();
+            //add service RepositoryManager
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -51,6 +65,9 @@ namespace Question.API
             {
                 endpoints.MapControllers();
             });
+
+            //Seeding data
+            QuestionDbContextSeed.PrepPopulation(app);
         }
     }
 }

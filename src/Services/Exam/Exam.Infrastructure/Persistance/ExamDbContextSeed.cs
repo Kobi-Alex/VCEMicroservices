@@ -38,7 +38,7 @@ namespace Exam.Infrastructure.Persistance
                     },
                      new ExamItem()
                      {
-                         Title = "Begin in Dosker",
+                         Title = "Begin in Docker",
                          Category = "Docker",
                          Description = "Docker and containerization",
                          DurationTime = 1000,
