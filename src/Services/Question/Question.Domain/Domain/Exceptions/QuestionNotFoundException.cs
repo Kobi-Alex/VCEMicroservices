@@ -15,7 +15,7 @@ namespace Question.Domain.Domain.Exceptions
         }
 
         public QuestionNotFoundException(string category)
-            : base($"The question with the identifier {category} was not found")
+            : base($"The question with the {category} was not found")
         {
         }
     }

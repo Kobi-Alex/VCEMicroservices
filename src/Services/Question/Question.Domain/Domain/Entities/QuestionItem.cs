@@ -9,23 +9,21 @@ namespace Question.Domain.Domain.Entities
     public class QuestionItem
     {
         public int Id { get; set; }
-        public string Category { get; set; }
-
-        //Question
-        public string Question { get; set; }
-        public string QuestionOptionA { get; set; }
-        public string QuestionOptionB { get; set; }
-        public string QuestionOptionD { get; set; }
-        public string QuestionOptionC { get; set; }
-
-        //Answer
-        public string Answer { get; set; }
-        public string AnswerOptionA { get; set; }
-        public string AnswerOptionB { get; set; }
-        public string AnswerOptionC { get; set; }
-        public string AnswerOptionD { get; set; }
-
+        public string Context { get; set; }
         public DateTimeOffset ReleaseDate { get; set; }
 
+        public QuestionCategory QuestionCategory { get; set; } 
+        ICollection<QuestionAnswer> QuestionAnswers { get; set; }
+
+
     }
+
+    //class Answer
+    //{
+    //    public int Id { get; set; }
+    //    public int QuestionId { get; set; }
+    //    public string Title { get; set; }
+    //    public decimal CorrectAnswer { get; set; } 0.6
+    //} 
+
 }

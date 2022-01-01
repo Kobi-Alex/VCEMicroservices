@@ -10,7 +10,7 @@ namespace Exam.Domain.Domain.Entities
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Category { get; set; }
+        public string ExamCategory { get; set; }
         public string Description { get; set; }
         public int DurationTime { get; set; }
         public decimal PassingScore { get; set; }

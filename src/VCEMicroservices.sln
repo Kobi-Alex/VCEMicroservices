@@ -17,9 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exam.Domain", "Services\Exa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exam.Infrastructure", "Services\Exam\Exam.Infrastructure\Exam.Infrastructure.csproj", "{08FF9833-4626-4AF7-8D58-C9D21B3A540F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Question.Domain", "Services\Question\Question.Domain\Question.Domain.csproj", "{835762E2-043C-428C-8DBE-B9A45F934094}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Question.Domain", "Services\Question\Question.Domain\Question.Domain.csproj", "{835762E2-043C-428C-8DBE-B9A45F934094}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Question.Infrastructure", "Services\Question\Question.Infrastructure\Question.Infrastructure.csproj", "{5B78BB15-FEBC-4D07-8B6C-2A84F44209C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Question.Infrastructure", "Services\Question\Question.Infrastructure\Question.Infrastructure.csproj", "{5B78BB15-FEBC-4D07-8B6C-2A84F44209C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

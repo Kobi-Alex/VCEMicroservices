@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Question.Domain.Domain.Exceptions
 {
-    class BadRequestException : Exception
+    public abstract class BadRequestException : Exception
     {
         protected BadRequestException(string message)
             : base(message)

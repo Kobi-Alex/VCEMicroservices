@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Question.API.Middleware;
 using Question.Domain.Domain.Repositories;
 using Question.Domain.Services;
 using Question.Domain.Services.Abstractions;
@@ -16,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace Question.API
 {
@@ -41,10 +43,17 @@ namespace Question.API
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
             services.AddControllers();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Question.API", Version = "v1" });
             });
+
+            services.AddMediatR(typeof(Startup));
+
+            services.AddTransient<ExceptionHandlingMiddleware>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +65,9 @@ namespace Question.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Question.API v1"));
             }
+
+            //add ExceptionHandlingMiddleware
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseRouting();
 

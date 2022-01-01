@@ -8,8 +8,4 @@
 	  <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Exam\Exam.Domain\Exam.Domain.csproj" />
-  </ItemGroup>
-
 </Project>
