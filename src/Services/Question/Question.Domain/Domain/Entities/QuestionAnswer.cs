@@ -11,5 +11,8 @@ namespace Question.Domain.Domain.Entities
         public int Id { get; set; }
         public string Answer { get; set; }
         public decimal CorrectAnswerCoefficient { get; set; }
+
+        public int QuestionItemId { get; set; }
+        public QuestionItem QuestionItem { get; set; }
     }
 }

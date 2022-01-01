@@ -46,7 +46,7 @@ namespace Question.Domain.Services
 
             if(questions is null)
             {
-                throw new QuestionNotFoundException(category);
+                throw new QuestionItemNotFoundException(category);
             }
 
             var questionDto = _mapper.Map<IEnumerable<QuestionReadDto>>(questions);
@@ -70,7 +70,7 @@ namespace Question.Domain.Services
 
             if(question is null)
             {
-                throw new QuestionNotFoundException(questionId);
+                throw new QuestionItemNotFoundException(questionId);
             }
 
             question.Category = questionUpdateDto.Category;
@@ -97,7 +97,7 @@ namespace Question.Domain.Services
 
             if (question is null)
             {
-                throw new QuestionNotFoundException(questionId);
+                throw new QuestionItemNotFoundException(questionId);
             }
 
             _repositoryManager.QuestionRepository.Remove(question);

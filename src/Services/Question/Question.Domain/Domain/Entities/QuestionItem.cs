@@ -13,17 +13,7 @@ namespace Question.Domain.Domain.Entities
         public DateTimeOffset ReleaseDate { get; set; }
 
         public QuestionCategory QuestionCategory { get; set; } 
-        ICollection<QuestionAnswer> QuestionAnswers { get; set; }
-
+        public ICollection<QuestionAnswer> QuestionAnswers { get; set; }
 
     }
-
-    //class Answer
-    //{
-    //    public int Id { get; set; }
-    //    public int QuestionId { get; set; }
-    //    public string Title { get; set; }
-    //    public decimal CorrectAnswer { get; set; } 0.6
-    //} 
-
 }

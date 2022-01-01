@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Question.Infrastructure.Persistance.Repositories
 {
-    internal sealed class QuestionRepository : IQuestionRepository
+    internal sealed class QuestionRepository : IQuestionItemRepository
     {
         private readonly QuestionDbContext _dbContext;
 

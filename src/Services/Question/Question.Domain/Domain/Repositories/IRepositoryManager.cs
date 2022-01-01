@@ -8,7 +8,7 @@ namespace Question.Domain.Domain.Repositories
 {
     public interface IRepositoryManager
     {
-        IQuestionRepository QuestionRepository { get; }
+        IQuestionItemRepository QuestionRepository { get; }
         IUnitOfWork UnitOfWork { get; }
     }
 }

@@ -9,12 +9,11 @@ using System.Threading.Tasks;
 
 namespace Question.Domain.Domain.Repositories
 {
-    public interface IQuestionRepository
+    public interface IQuestionItemRepository
     {
         Task<IEnumerable<QuestionItem>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<QuestionItem> GetByIdAsync(int questionId, CancellationToken cancellationToken = default);
-        Task<IEnumerable<QuestionItem>> GetQuestionByCategory(string category, CancellationToken cancellationToken = default);
-
+       
         void Insert(QuestionItem question);
         void Remove(QuestionItem question);
     }
