@@ -1,4 +1,4 @@
-﻿using Question.Domain.Domain.Repositories;
+﻿using Question.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,17 +1,16 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Question.API.Application.Queries;
-using Question.Domain.Services.Abstractions;
+using Question.API.Application.Services.Interfaces;
 using System;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Question.API.Controller
+namespace Question.API.Controllers
 {
 
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/categories/{categoryId:int}/[controller]")]
     public class QuestionsController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
@@ -23,21 +22,21 @@ namespace Question.API.Controller
             _mediator = mediator;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetQuestions(CancellationToken cancellationToken)
-        //{
-        //    Console.WriteLine("--> Getting questions...");
-
-        //    var questions = await _serviceManager.QuestionService.GetAllAsync(cancellationToken);
-
-        //    return Ok(questions);
-
-        //    //return Ok(await _mediator.Send(new GetQuestionListQuery()));
-        //}
-
         [HttpGet]
-        public async Task<IActionResult> GetQuestions(CancellationToken cancellationToken)
-            => Ok(await _serviceManager.QuestionService.GetAllAsync(cancellationToken));
+        public async Task<IActionResult> GetQuestions(int categoryId, CancellationToken cancellationToken)
+        {
+            Console.WriteLine("--> Getting questions...");
+
+            var questions = await _serviceManager.QuestionItemService.GetAllByCategoryIdAsync(categoryId, cancellationToken);
+
+            return Ok(questions);
+
+            //return Ok(await _mediator.Send(new GetQuestionListQuery()));
+        }
+
+        /*      [HttpGet]
+              public async Task<IActionResult> GetQuestions(CancellationToken cancellationToken)
+                  => Ok(await _serviceManager.QuestionService.GetAllAsync(cancellationToken));*/
     }
 
 }

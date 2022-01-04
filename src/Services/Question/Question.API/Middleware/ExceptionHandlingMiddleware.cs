@@ -1,9 +1,10 @@
-using Question.Domain.Domain.Exceptions;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Question.Domain.Exceptions;
 
 namespace Question.API.Middleware
 {

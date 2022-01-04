@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using MediatR;
-using Question.Domain.Contracts.Dtos;
-using Question.Domain.Domain.Entities;
+using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
 
 namespace Question.API.Application.Queries
 {
-    public record GetQuestionListQuery : IRequest<IEnumerable<QuestionReadDto>>;
+    public record GetQuestionListQuery : IRequest<IEnumerable<QuestionItemReadDto>>;
 
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Question.Domain.Domain.Entities;
+using Question.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,15 +25,24 @@ namespace Question.Infrastructure
             {
                 Console.WriteLine("--> Seeding Question Data...");
 
-                context.Questions.AddRange(
-                    new QuestionItem()
+                context.Categories.AddRange(
+                    new QuestionCategory()
                     {
-                        Category = "Asp Dot NET",
-                        Question = "What is the dependency injection?",
-                        Answer = "Is a design pattern used to implement IoC.",
-                        ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 26))
+                        Name = "Asp Dot NET",
+                        QuestionItems = (ICollection<QuestionItem>)GetPreconfiguredQuestionItem()
                     }
                 );
+
+
+                //context.Questions.AddRange(
+                //    new QuestionItem()
+                //    {
+                //        Category = "Asp Dot NET",
+                //        Question = "What is the dependency injection?",
+                //        Answer = "Is a design pattern used to implement IoC.",
+                //        ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 26))
+                //    }
+                //);
 
                 context.SaveChanges();
             }
@@ -41,6 +50,28 @@ namespace Question.Infrastructure
             {
                 Console.WriteLine("--> We alredy have data!!");
             }
+        }
+
+        private static IEnumerable<QuestionAnswer> GetPreconfiguredQuestionAnswer()
+        {
+            return new List<QuestionAnswer>()
+            {
+                new QuestionAnswer() { Context = "This is a design pattern used to implement IoC.", CorrectAnswerCoefficient = 1.10m},
+                new QuestionAnswer() { Context = "This is a middleware", CorrectAnswerCoefficient = 0.01m},
+            };
+        }
+
+        private static IEnumerable<QuestionItem> GetPreconfiguredQuestionItem()
+        {
+            return new List<QuestionItem>()
+            {
+                new QuestionItem() 
+                { 
+                    Context = "What is the dependency injection?", 
+                    ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 26)), 
+                    QuestionAnswers = (ICollection<QuestionAnswer>)GetPreconfiguredQuestionAnswer()
+                }
+            };
         }
     }
 }

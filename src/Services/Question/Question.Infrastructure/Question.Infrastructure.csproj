@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Presentation\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
 	<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.10" />

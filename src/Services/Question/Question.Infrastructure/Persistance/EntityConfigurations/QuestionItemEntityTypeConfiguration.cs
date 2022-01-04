@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Question.Domain.Domain.Entities;
+using Question.Domain.Entities;
 
 namespace Question.Infrastructure.Persistance.EntityConfigurations
 {
@@ -16,43 +16,22 @@ namespace Question.Infrastructure.Persistance.EntityConfigurations
         {
             builder.ToTable("Questions");
 
-            builder.HasKey(qi => qi.Id);
+            builder.HasKey(question => question.Id);
 
-            builder.Property(qi => qi.Category)
-                .IsRequired(true).HasMaxLength(30);
+            builder.Property(question => question.Id).ValueGeneratedOnAdd();
 
-            builder.Property(qi => qi.Question)
-               .IsRequired(true).HasMaxLength(200);
+            builder.Property(answer => answer.Id).ValueGeneratedOnAdd();
+           
+            builder.Property(question => question.Context)
+               .IsRequired(true).HasMaxLength(400);
 
-            builder.Property(qi => qi.QuestionOptionA)
-                .IsRequired(false).HasMaxLength(200);
+            builder.Property(question => question.ReleaseDate)
+                .IsRequired();
 
-            builder.Property(qi => qi.QuestionOptionB)
-                .IsRequired(false).HasMaxLength(200);
-
-            builder.Property(qi => qi.QuestionOptionC)
-                .IsRequired(false).HasMaxLength(200);
-
-            builder.Property(qi => qi.QuestionOptionD)
-                .IsRequired(false).HasMaxLength(200);
-
-            builder.Property(qi => qi.Answer)
-               .IsRequired().HasMaxLength(200);
-
-            builder.Property(qi => qi.AnswerOptionA)
-                .IsRequired(false).HasMaxLength(200);
-
-            builder.Property(qi => qi.AnswerOptionB)
-                .IsRequired(false).HasMaxLength(200);
-
-            builder.Property(qi => qi.AnswerOptionC)
-                .IsRequired(false).HasMaxLength(200);
-
-            builder.Property(qi => qi.AnswerOptionD)
-                .IsRequired(false).HasMaxLength(200);
-
-            builder.Property(qi => qi.ReleaseDate)
-               .IsRequired(true);
+            builder.HasMany(question => question.QuestionAnswers)
+                .WithOne()
+                .HasForeignKey(answer => answer.QuestionItemId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

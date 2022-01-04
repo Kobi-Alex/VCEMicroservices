@@ -8,9 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Question.API.Middleware;
-using Question.Domain.Domain.Repositories;
-using Question.Domain.Services;
-using Question.Domain.Services.Abstractions;
+using Question.Domain.Repositories;
 using Question.Infrastructure;
 using Question.Infrastructure.Persistance.Repositories;
 using System;
@@ -18,6 +16,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Question.API.Application.Services.Interfaces;
+using Question.API.Application.Services;
 
 namespace Question.API
 {
@@ -39,6 +39,7 @@ namespace Question.API
 
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();
+
             //add service RepositoryManager
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 

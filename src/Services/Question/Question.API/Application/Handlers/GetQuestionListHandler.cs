@@ -4,17 +4,12 @@ using System.Collections.Generic;
 using Question.API.Application.Queries;
 using System.Threading.Tasks;
 using System.Threading;
-using Question.Domain.Services.Abstractions;
-using Question.Domain.Contracts.Dtos;
-using AutoMapper;
-using Question.Domain.Domain.Repositories;
-using Question.Domain.Domain.Entities;
-using Question.Infrastructure;
-using Microsoft.EntityFrameworkCore;
+using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
+using Question.API.Application.Services.Interfaces;
 
 namespace Question.API.Application.Handlers
 {
-    public class GetQuestionListHandler : IRequestHandler<GetQuestionListQuery, IEnumerable<QuestionReadDto>>
+    public class GetQuestionListHandler : IRequestHandler<GetQuestionListQuery, IEnumerable<QuestionItemReadDto>>
     {
         private readonly IServiceManager serviceManager;
 
@@ -23,9 +18,9 @@ namespace Question.API.Application.Handlers
             this.serviceManager = serviceManager;
         }
 
-        public async Task<IEnumerable<QuestionReadDto>> Handle(GetQuestionListQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<QuestionItemReadDto>> Handle(GetQuestionListQuery request, CancellationToken cancellationToken)
         {
-            var questions = await serviceManager.QuestionService.GetAllAsync(cancellationToken);
+            var questions = await serviceManager.QuestionItemService.GetAllByCategoryIdAsync (2, cancellationToken);
 
             return await Task.FromResult(questions);
         }
