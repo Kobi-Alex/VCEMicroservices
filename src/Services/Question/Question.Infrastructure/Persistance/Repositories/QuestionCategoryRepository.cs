@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Question.Domain.Entities;
-using Question.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Question.Domain.Entities;
+using Question.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Question.Infrastructure.Persistance.Repositories
 {

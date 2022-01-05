@@ -25,6 +25,7 @@ namespace Question.API.Controllers
 
             var categories = await _serviceManager.QuestionCategoryService.GetAllAsync(cancellationToken);
 
+
             return Ok(categories);
 
         }

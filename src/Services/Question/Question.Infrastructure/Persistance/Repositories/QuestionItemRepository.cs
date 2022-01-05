@@ -20,7 +20,7 @@ namespace Question.Infrastructure.Persistance.Repositories
         }
 
 
-        public async Task<IEnumerable<QuestionItem>> GetAllByCategoryIdAsync(int questionCategoryId, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int questionCategoryId, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Questions
                 .Where(q => q.QuestionCategoryId == questionCategoryId)

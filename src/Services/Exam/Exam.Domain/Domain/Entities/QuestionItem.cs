@@ -9,7 +9,7 @@ namespace Exam.Domain.Domain.Entities
     public class QuestionItem
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
 
         public  ExamItem ExamItem { get; set; }
     }

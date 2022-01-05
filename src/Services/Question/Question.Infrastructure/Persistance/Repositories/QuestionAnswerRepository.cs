@@ -19,12 +19,13 @@ namespace Question.Infrastructure.Persistance.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<QuestionAnswer>> GetAllByCategoryIdAndQuestionIdAsync(int questionItemId, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<QuestionAnswer>> GetAllByQuestionItemIdAsync(int questionItemId, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Answers
                 .Where(q => q.QuestionItemId == questionItemId)
                 .ToListAsync(cancellationToken);
         }
+
 
         public async Task<QuestionAnswer> GetByIdAsync(int questionAnswerId, CancellationToken cancellationToken = default)
         {

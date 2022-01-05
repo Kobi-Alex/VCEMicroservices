@@ -12,8 +12,7 @@ namespace Question.Domain.Entities
         public string Context { get; set; }
         public DateTimeOffset ReleaseDate { get; set; }
 
-        public int? QuestionCategoryId { get; set; }
-        //public QuestionCategory QuestionCategory { get; set; }
+        public int QuestionCategoryId { get; set; }
         public ICollection<QuestionAnswer> QuestionAnswers { get; set; }
     }
 }

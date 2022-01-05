@@ -28,21 +28,16 @@ namespace Question.Infrastructure
                 context.Categories.AddRange(
                     new QuestionCategory()
                     {
-                        Name = "Asp Dot NET",
-                        QuestionItems = (ICollection<QuestionItem>)GetPreconfiguredQuestionItem()
-                    }
+                        Name = "AspDotNET",
+                        QuestionItems = (ICollection<QuestionItem>)GetPreconfiguredQuestionItemTest1()
+                    },
+
+                     new QuestionCategory()
+                     {
+                         Name = "WPF",
+                         QuestionItems = (ICollection<QuestionItem>)GetPreconfiguredQuestionItemTest2()
+                     }
                 );
-
-
-                //context.Questions.AddRange(
-                //    new QuestionItem()
-                //    {
-                //        Category = "Asp Dot NET",
-                //        Question = "What is the dependency injection?",
-                //        Answer = "Is a design pattern used to implement IoC.",
-                //        ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 26))
-                //    }
-                //);
 
                 context.SaveChanges();
             }
@@ -52,7 +47,7 @@ namespace Question.Infrastructure
             }
         }
 
-        private static IEnumerable<QuestionAnswer> GetPreconfiguredQuestionAnswer()
+        private static IEnumerable<QuestionAnswer> GetPreconfiguredQuestionAnswerTest1()
         {
             return new List<QuestionAnswer>()
             {
@@ -61,7 +56,17 @@ namespace Question.Infrastructure
             };
         }
 
-        private static IEnumerable<QuestionItem> GetPreconfiguredQuestionItem()
+        private static IEnumerable<QuestionAnswer> GetPreconfiguredQuestionAnswerTest2()
+        {
+            return new List<QuestionAnswer>()
+            {
+                new QuestionAnswer() { Context = "This is a pattern", CorrectAnswerCoefficient = 0.15m},
+                new QuestionAnswer() { Context = "This is a injection", CorrectAnswerCoefficient = 0.00m},
+                new QuestionAnswer() { Context = "This is a banding", CorrectAnswerCoefficient = 1.00m},
+            };
+        }
+
+        private static IEnumerable<QuestionItem> GetPreconfiguredQuestionItemTest1()
         {
             return new List<QuestionItem>()
             {
@@ -69,7 +74,20 @@ namespace Question.Infrastructure
                 { 
                     Context = "What is the dependency injection?", 
                     ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 26)), 
-                    QuestionAnswers = (ICollection<QuestionAnswer>)GetPreconfiguredQuestionAnswer()
+                    QuestionAnswers = (ICollection<QuestionAnswer>)GetPreconfiguredQuestionAnswerTest1()
+                }
+            };
+        }
+        
+        private static IEnumerable<QuestionItem> GetPreconfiguredQuestionItemTest2()
+        {
+            return new List<QuestionItem>()
+            {
+                new QuestionItem() 
+                { 
+                    Context = "Banding is it?", 
+                    ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 28)), 
+                    QuestionAnswers = (ICollection<QuestionAnswer>)GetPreconfiguredQuestionAnswerTest2()
                 }
             };
         }
