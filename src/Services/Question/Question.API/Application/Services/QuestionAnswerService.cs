@@ -19,9 +19,9 @@ internal sealed class QuestionAnswerService : IQuestionAnswerService
     }
 
 
-    public async Task<IEnumerable<QuestionAnswerReadDto>> GetAllByCategoryIdAndQuestionIdAsync(int questionId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<QuestionAnswerReadDto>> GetAllByQuestionItemIdAsync(int questionId, CancellationToken cancellationToken = default)
     {
-        var answers = await _repositoryManager.QuestionAnswerRepository.GetAllByCategoryIdAndQuestionIdAsync(questionId, cancellationToken);
+        var answers = await _repositoryManager.QuestionAnswerRepository.GetAllByQuestionItemIdAsync(questionId, cancellationToken);
         var answersDto = _mapper.Map<IEnumerable<QuestionAnswerReadDto>>(answers);
 
         return answersDto;

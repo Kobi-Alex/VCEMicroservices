@@ -20,7 +20,7 @@ namespace Question.API.Application.Handlers
 
         public async Task<IEnumerable<QuestionItemReadDto>> Handle(GetQuestionListQuery request, CancellationToken cancellationToken)
         {
-            var questions = await serviceManager.QuestionItemService.GetAllByCategoryIdAsync (2, cancellationToken);
+            var questions = await serviceManager.QuestionItemService.GetAllByQuestionCategoryIdAsync(2, cancellationToken);
 
             return await Task.FromResult(questions);
         }

@@ -19,30 +19,34 @@ namespace Question.Infrastructure.Persistance.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task<IEnumerable<QuestionItem>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Questions.ToListAsync(cancellationToken);
+        }
 
-        public async Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int questionCategoryId, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Questions
-                .Where(q => q.QuestionCategoryId == questionCategoryId)
+                .Where(q => q.QuestionCategoryId == categoryId)
                 .Include(q => q.QuestionAnswers)
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<QuestionItem> GetByIdAsync(int questionItemId, CancellationToken cancellationToken = default)
+        public async Task<QuestionItem> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Questions
                 .Include(q => q.QuestionAnswers)
-                .FirstOrDefaultAsync(q => q.Id == questionItemId, cancellationToken);
+                .FirstOrDefaultAsync(q => q.Id == id, cancellationToken);
         }
 
-        public void Insert(QuestionItem question)
+        public void Insert(QuestionItem item)
         {
-            _dbContext.Questions.Add(question);
+            _dbContext.Questions.Add(item);
         }
 
-        public void Remove(QuestionItem question)
+        public void Remove(QuestionItem item)
         {
-            _dbContext.Questions.Remove(question);
+            _dbContext.Questions.Remove(item);
         }
     }
 }

@@ -10,10 +10,10 @@ namespace Question.Domain.Repositories
 {
     public interface IQuestionAnswerRepository
     {
-        Task<IEnumerable<QuestionAnswer>> GetAllByQuestionItemIdAsync(int questionItemId, CancellationToken cancellationToken = default);
-        Task<QuestionAnswer> GetByIdAsync(int questionAnswerId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<QuestionAnswer>> GetAllByQuestionItemIdAsync(int questionId, CancellationToken cancellationToken = default);
+        Task<QuestionAnswer> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 
-        void Insert(QuestionAnswer answer);
-        void Remove(QuestionAnswer answer);
+        void Insert(QuestionAnswer item);
+        void Remove(QuestionAnswer item);
     }
 }

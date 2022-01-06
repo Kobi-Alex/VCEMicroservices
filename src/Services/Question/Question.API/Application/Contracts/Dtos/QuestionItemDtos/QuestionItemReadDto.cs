@@ -10,7 +10,7 @@ namespace Question.API.Application.Contracts.Dtos.QuestionItemDtos
         public string Context { get; set; }
         public DateTimeOffset ReleaseDate { get; set; }
 
-        public int? QuestionCategoryId { get; set; }
+        public int QuestionCategoryId { get; set; }
         public ICollection<QuestionAnswer> QuestionAnswers { get; set; }
     }
 }

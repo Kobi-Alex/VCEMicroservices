@@ -19,28 +19,28 @@ namespace Question.Infrastructure.Persistance.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<QuestionAnswer>> GetAllByQuestionItemIdAsync(int questionItemId, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<QuestionAnswer>> GetAllByQuestionItemIdAsync(int questionId, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Answers
-                .Where(q => q.QuestionItemId == questionItemId)
+                .Where(q => q.QuestionItemId == questionId)
                 .ToListAsync(cancellationToken);
         }
 
 
-        public async Task<QuestionAnswer> GetByIdAsync(int questionAnswerId, CancellationToken cancellationToken = default)
+        public async Task<QuestionAnswer> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Answers
-                .FirstOrDefaultAsync(a => a.Id == questionAnswerId, cancellationToken);
+                .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
         }
 
-        public void Insert(QuestionAnswer answer)
+        public void Insert(QuestionAnswer item)
         {
-            _dbContext.Answers.Add(answer);
+            _dbContext.Answers.Add(item);
         }
 
-        public void Remove(QuestionAnswer answer)
+        public void Remove(QuestionAnswer item)
         {
-            _dbContext.Answers.Remove(answer);
+            _dbContext.Answers.Remove(item);
         }
     }
 }

@@ -18,15 +18,13 @@ namespace Question.API.Application.Services
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _lazyQuestionItemService = new Lazy<IQuestionItemService>(() => new QuestionItemService(repositoryManager, mapper));
-            _lazyQuestionCategoryService = new Lazy<IQuestionCategoryService>(() => new QuestionCategoryService(repositoryManager, mapper));
-            _lazyQuestionAnswerService = new Lazy<IQuestionAnswerService>(() => new QuestionAnswerService(repositoryManager, mapper));
+            _lazyQuestionItemService = new Lazy<IQuestionItemService>(()          => new QuestionItemService(repositoryManager, mapper));
+            _lazyQuestionCategoryService = new Lazy<IQuestionCategoryService>(()  => new QuestionCategoryService(repositoryManager, mapper));
+            _lazyQuestionAnswerService = new Lazy<IQuestionAnswerService>(()      => new QuestionAnswerService(repositoryManager, mapper));
         }
 
         public IQuestionCategoryService QuestionCategoryService => _lazyQuestionCategoryService.Value;
-
         public IQuestionItemService QuestionItemService => _lazyQuestionItemService.Value;
-
         public IQuestionAnswerService QuestionAnswerService => _lazyQuestionAnswerService.Value;
     }
 }

@@ -25,17 +25,17 @@ namespace Question.Infrastructure.Persistance.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<QuestionCategory> GetByIdAsync(int questionCategoryId, CancellationToken cancellationToken = default)
+        public async Task<QuestionCategory> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Categories
                 .Include(c => c.QuestionItems)
                 .ThenInclude(q => q.QuestionAnswers)
-                .FirstOrDefaultAsync(x => x.Id == questionCategoryId, cancellationToken);
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
-        public void Insert(QuestionCategory category)
+        public void Insert(QuestionCategory item)
         {
-            _dbContext.Categories.Add(category);
+            _dbContext.Categories.Add(item);
         }
     }
 }

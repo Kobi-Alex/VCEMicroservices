@@ -25,7 +25,7 @@ namespace Question.API.Controllers
             Console.WriteLine("--> Getting answers...");
 
             var answers = await _serviceManager.QuestionAnswerService
-                .GetAllByCategoryIdAndQuestionIdAsync(questionId, cancellationToken);
+                .GetAllByQuestionItemIdAsync(questionId, cancellationToken);
 
             return Ok(answers);
 

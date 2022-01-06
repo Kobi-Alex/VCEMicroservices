@@ -20,9 +20,9 @@ namespace Question.API.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<QuestionItemReadDto>> GetAllByCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<QuestionItemReadDto>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
         {
-            var questions = await _repositoryManager.QuestionItemRepository.GetAllByCategoryIdAsync(categoryId, cancellationToken);
+            var questions = await _repositoryManager.QuestionItemRepository.GetAllByQuestionCategoryIdAsync(categoryId, cancellationToken);
             var questionsDto = _mapper.Map<IEnumerable<QuestionItemReadDto>>(questions);
 
             return questionsDto;
@@ -44,6 +44,11 @@ namespace Question.API.Application.Services
         }
 
         public Task DeleteAsync(int categoryId, int questionId, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<QuestionItemReadDto> GetByIdAsync(int questionId, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

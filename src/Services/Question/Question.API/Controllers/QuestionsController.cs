@@ -27,7 +27,8 @@ namespace Question.API.Controllers
         {
             Console.WriteLine("--> Getting questions...");
 
-            var questions = await _serviceManager.QuestionItemService.GetAllByCategoryIdAsync(categoryId, cancellationToken);
+            var questions = await _serviceManager.QuestionItemService
+                .GetAllByQuestionCategoryIdAsync(categoryId, cancellationToken);
 
             return Ok(questions);
 

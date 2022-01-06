@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Question.Domain.Exceptions;
+using Question.API.Application.Exceptions;
 
 namespace Question.API.Middleware
 {

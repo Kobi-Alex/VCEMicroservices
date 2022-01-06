@@ -11,8 +11,8 @@ namespace Question.Domain.Repositories
     public interface IQuestionCategoryRepository
     {
         Task<IEnumerable<QuestionCategory>> GetAllAsync(CancellationToken cancellationToken = default);
-        Task<QuestionCategory> GetByIdAsync(int questionCategoryId, CancellationToken cancellationToken = default);
+        Task<QuestionCategory> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 
-        void Insert(QuestionCategory category);
+        void Insert(QuestionCategory item);
     }
 }

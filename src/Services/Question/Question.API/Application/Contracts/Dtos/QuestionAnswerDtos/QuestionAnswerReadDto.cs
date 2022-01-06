@@ -9,6 +9,6 @@ namespace Question.API.Application.Contracts.Dtos.QuestionAnswerDtos
         public string Context { get; set; }
         public decimal CorrectAnswerCoefficient { get; set; }
 
-        public int? QuestionItemId { get; set; }
+        public int QuestionItemId { get; set; }
     }
 }
