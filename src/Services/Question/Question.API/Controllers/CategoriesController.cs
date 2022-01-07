@@ -20,38 +20,48 @@ namespace Question.API.Controllers
         }
 
 
+        // GET api/categories
         [HttpGet]
         public async Task<IActionResult> GetCategories(CancellationToken cancellationToken)
         {
-            Console.WriteLine("--> Getting categories...");
-
             var categories = await _serviceManager.QuestionCategoryService.GetAllAsync(cancellationToken);
 
+            Console.WriteLine("--> Getting categories...");
             return Ok(categories);
         }
 
 
-        [HttpGet("{categoryId}", Name = "GetCategoryById")]
-        public async Task<IActionResult> GetCategoryById(int categoryId, CancellationToken cancellationToken)
+        // GET api/category/5
+        [HttpGet("{id}", Name = "GetCategoryById")]
+        public async Task<IActionResult> GetCategoryById(int id, CancellationToken cancellationToken)
         {
+            var category = await _serviceManager.QuestionCategoryService.GetByIdAsync(id, cancellationToken);
+
             Console.WriteLine("--> Getting category by ID...");
-
-            var category = await _serviceManager.QuestionCategoryService.GetByIdAsync(categoryId, cancellationToken);
-
             return Ok(category);
         }
 
 
+        // POST api/category
         [HttpPost]
         public async Task<IActionResult> CreateCategory([FromBody] QuestionCategoryCreateDto questionCategoryCreateDto)
         {
             var categoryDto = await _serviceManager.QuestionCategoryService.CreateAsync(questionCategoryCreateDto);
 
             Console.WriteLine("--> Creating new category");
-
-            return CreatedAtAction(nameof(GetCategoryById), new { categoryId = categoryDto.Id}, categoryDto);
+            return CreatedAtAction(nameof(GetCategoryById), new { id = categoryDto.Id}, categoryDto);
         }
 
+
+        // PUT api/category/5
+        [HttpPut("{id}", Name = "UpdateCategory")]
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] QuestionCategoryUpdateDto questionCategoryUpdateDto, CancellationToken cancellationToken)
+        {
+            await _serviceManager.QuestionCategoryService.UpdateAsync(id, questionCategoryUpdateDto, cancellationToken);
+
+            Console.WriteLine($"--> Updating category by ID = {id}");
+            return NoContent();
+        }
     }
 
 }
