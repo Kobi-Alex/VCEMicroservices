@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
 using Question.API.Application.Queries;
 using Question.API.Application.Services.Interfaces;
 using System;
@@ -22,22 +23,68 @@ namespace Question.API.Controllers
             _mediator = mediator;
         }
 
+
+        // GET api/categories/5/questions
         [HttpGet]
         public async Task<IActionResult> GetQuestions(int categoryId, CancellationToken cancellationToken)
         {
-            Console.WriteLine("--> Getting questions...");
-
             var questions = await _serviceManager.QuestionItemService
                 .GetAllByQuestionCategoryIdAsync(categoryId, cancellationToken);
 
+            Console.WriteLine("--> Getting questions...");
             return Ok(questions);
 
             //return Ok(await _mediator.Send(new GetQuestionListQuery()));
         }
 
-        /*      [HttpGet]
-              public async Task<IActionResult> GetQuestions(CancellationToken cancellationToken)
-                  => Ok(await _serviceManager.QuestionService.GetAllAsync(cancellationToken));*/
+        /*[HttpGet]
+         * public async Task<IActionResult> GetQuestions(CancellationToken cancellationToken)
+         *      => Ok(await _serviceManager.QuestionService.GetAllAsync(cancellationToken));*/
+
+
+        // GET api/categories/5/questions/1
+        [HttpGet("{questionId:int}", Name = "GetQuestionById")]
+        public async Task<IActionResult> GetQuestionById(int categoryId, int questionId, CancellationToken cancellationToken)
+        {
+            var question = await _serviceManager.QuestionItemService.GetByIdAsync(categoryId, questionId, cancellationToken);
+
+            Console.WriteLine("--> Getting question by ID...");
+            return Ok(question);
+        }
+
+
+        // POST api/categories/5/question
+        [HttpPost]
+        public async Task<IActionResult> CreateQuestion(int categoryId, [FromBody] QuestionItemCreateDto questionItemCreateDto, CancellationToken cancellationToken)
+        {
+            var questionDto = await _serviceManager.QuestionItemService.CreateAsync(categoryId, questionItemCreateDto, cancellationToken);
+
+            Console.WriteLine("--> Creating new question...");
+            return CreatedAtAction(nameof(GetQuestionById), new { categoryId = questionDto.QuestionCategoryId, questionId = questionDto.Id }, questionDto);
+        }
+
+
+        // PUT api/categories/5/question/1
+        [HttpPut("{questionId:int}", Name = "UpdateQuestion")]
+        public async Task<IActionResult> UpdateQuestion(int categoryId, int questionId, [FromBody] QuestionItemUpdateDto questionItemUpdateDto, CancellationToken cancellationToken)
+        {
+            await _serviceManager.QuestionItemService.UpdateAsync(categoryId, questionId, questionItemUpdateDto, cancellationToken);
+
+            Console.WriteLine($"--> Updating question by ID = {questionId}");
+            return NoContent();
+        }
+
+
+        // DELETE api/categories/5/question/1
+        [HttpDelete("{questionId:int}", Name = "DeleteQuestion")]
+        public async Task<IActionResult> DeleteQuestion(int categoryId, int questionId, CancellationToken cancellationToken)
+        {
+            await _serviceManager.QuestionItemService.DeleteAsync(categoryId, questionId, cancellationToken);
+
+            Console.WriteLine($"--> Question with ID = {questionId} has been removed!!");
+            return NoContent();
+        }
+
     }
 
 }

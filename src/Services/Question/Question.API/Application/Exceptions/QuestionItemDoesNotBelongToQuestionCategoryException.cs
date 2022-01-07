@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Question.API.Application.Exceptions
 {
-    public sealed class QuestionCategoryDoesNotBelongToQuestionItemException : BadRequestException
+    public sealed class QuestionItemDoesNotBelongToQuestionCategoryException : BadRequestException
     {
-        public QuestionCategoryDoesNotBelongToQuestionItemException(int questionItemId, int questionCategoryId)
+        public QuestionItemDoesNotBelongToQuestionCategoryException(int questionCategoryId, int questionItemId)
             :base($"The question category with the identifier {questionCategoryId} does not belong to the question item" +
                  $"with the identifier {questionItemId}")
         {
