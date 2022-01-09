@@ -9,7 +9,6 @@ using Question.API.Application.Contracts.Dtos.QuestionCategoryDtos;
 using Question.API.Application.Services.Interfaces;
 using AutoMapper;
 
-
 namespace Question.API.Application.Services
 {
     internal sealed class QuestionCategoryService : IQuestionCategoryService
@@ -33,6 +32,7 @@ namespace Question.API.Application.Services
             return categoriesDto;
         }
 
+
         public async Task<QuestionCategoryReadDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var category = await _repositoryManager.QuestionCategoryRepository.GetByIdAsync(id, cancellationToken);
@@ -46,6 +46,7 @@ namespace Question.API.Application.Services
 
             return categoryDto;
         }
+
 
         public async Task<QuestionCategoryReadDto> CreateAsync(QuestionCategoryCreateDto categoryCreateDto, CancellationToken cancellationToken = default)
         {
@@ -62,6 +63,7 @@ namespace Question.API.Application.Services
 
             return _mapper.Map<QuestionCategoryReadDto>(category);
         }
+
 
         public async Task UpdateAsync(int id, QuestionCategoryUpdateDto categoryUpdateDto, CancellationToken cancellationToken = default)
         {

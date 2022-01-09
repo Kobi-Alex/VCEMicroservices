@@ -12,6 +12,9 @@ namespace Question.Domain.Entities
         public string Context { get; set; }
         public decimal CorrectAnswerCoefficient { get; set; }
 
+        // Foreign Key
         public int QuestionItemId { get; set; }
+        // Navigation property
+        public virtual QuestionItem QuestionItem { get; set; }
     }
 }

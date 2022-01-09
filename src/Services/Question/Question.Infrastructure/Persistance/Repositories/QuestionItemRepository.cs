@@ -19,25 +19,35 @@ namespace Question.Infrastructure.Persistance.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<QuestionItem>> GetAllAsync(CancellationToken cancellationToken = default)
+        //public async Task<IEnumerable<QuestionItem>> GetAllAsync(CancellationToken cancellationToken = default)
+        //{
+        //    return await _dbContext.Questions
+        //        .AsNoTracking()
+        //        .ToListAsync(cancellationToken);
+        //}
+
+        public async Task<QuestionItem> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Questions.ToListAsync(cancellationToken);
+            return await _dbContext.Questions
+                .Include(q => q.QuestionCategory)
+                .FirstOrDefaultAsync(q => q.Id == id, cancellationToken);
         }
 
         public async Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Questions
                 .Where(q => q.QuestionCategoryId == categoryId)
-                .Include(q => q.QuestionAnswers)
-                .ToListAsync(cancellationToken);
+                .Include(q => q.QuestionCategory)
+                .ToListAsync(cancellationToken);    
         }
 
-        public async Task<QuestionItem> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-        {
-            return await _dbContext.Questions
-                .Include(q => q.QuestionAnswers)
-                .FirstOrDefaultAsync(q => q.Id == id, cancellationToken);
-        }
+        //public async Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
+        //{
+        //    return await _dbContext.Questions
+        //        .Where(q => q.QuestionCategoryId == categoryId)
+        //        .Include(q => q.QuestionAnswers)
+        //        .ToListAsync(cancellationToken);
+        //}
 
         public void Insert(QuestionItem item)
         {
@@ -47,6 +57,11 @@ namespace Question.Infrastructure.Persistance.Repositories
         public void Remove(QuestionItem item)
         {
             _dbContext.Questions.Remove(item);
+        }
+
+        public bool IsQuestionExists(int id)
+        {
+            return _dbContext.Questions.Any(e => e.Id == id);
         }
     }
 }

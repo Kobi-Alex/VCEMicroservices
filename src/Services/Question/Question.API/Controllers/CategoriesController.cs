@@ -8,8 +8,8 @@ using Question.API.Application.Services.Interfaces;
 namespace Question.API.Controllers
 {
 
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class CategoriesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
@@ -20,7 +20,7 @@ namespace Question.API.Controllers
         }
 
 
-        // GET api/categories
+        // GET api/Categories
         [HttpGet]
         public async Task<IActionResult> GetCategories(CancellationToken cancellationToken)
         {
@@ -31,7 +31,7 @@ namespace Question.API.Controllers
         }
 
 
-        // GET api/category/5
+        // GET api/Categories/5
         [HttpGet("{id}", Name = "GetCategoryById")]
         public async Task<IActionResult> GetCategoryById(int id, CancellationToken cancellationToken)
         {
@@ -42,7 +42,7 @@ namespace Question.API.Controllers
         }
 
 
-        // POST api/category
+        // POST api/Categories
         [HttpPost]
         public async Task<IActionResult> CreateCategory([FromBody] QuestionCategoryCreateDto questionCategoryCreateDto)
         {
@@ -53,7 +53,7 @@ namespace Question.API.Controllers
         }
 
 
-        // PUT api/category/5
+        // PUT api/Categories/5
         [HttpPut("{id}", Name = "UpdateCategory")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] QuestionCategoryUpdateDto questionCategoryUpdateDto, CancellationToken cancellationToken)
         {
@@ -63,5 +63,4 @@ namespace Question.API.Controllers
             return NoContent();
         }
     }
-
 }

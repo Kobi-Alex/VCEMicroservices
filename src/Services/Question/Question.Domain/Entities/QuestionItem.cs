@@ -12,7 +12,11 @@ namespace Question.Domain.Entities
         public string Context { get; set; }
         public DateTimeOffset ReleaseDate { get; set; }
 
+
+        // Foreign Key
         public int QuestionCategoryId { get; set; }
-        public ICollection<QuestionAnswer> QuestionAnswers { get; set; }
+        // Navigation property
+        public virtual QuestionCategory QuestionCategory { get; set; }
+        public virtual ICollection<QuestionAnswer> QuestionAnswers { get; set; }
     }
 }

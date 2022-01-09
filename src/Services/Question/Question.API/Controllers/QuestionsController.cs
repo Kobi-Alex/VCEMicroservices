@@ -1,30 +1,26 @@
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
-using Question.API.Application.Queries;
-using Question.API.Application.Services.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
+using Question.API.Application.Services.Interfaces;
 
 namespace Question.API.Controllers
 {
 
-    [ApiController]
     [Route("api/categories/{categoryId:int}/[controller]")]
+    [ApiController]
     public class QuestionsController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
-        private readonly IMediator _mediator;
 
-        public QuestionsController(IServiceManager serviceManager, IMediator mediator)
+        public QuestionsController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
-            _mediator = mediator;
         }
 
 
-        // GET api/categories/5/questions
+        // GET api/Categories/5/Questions
         [HttpGet]
         public async Task<IActionResult> GetQuestions(int categoryId, CancellationToken cancellationToken)
         {
@@ -42,7 +38,7 @@ namespace Question.API.Controllers
          *      => Ok(await _serviceManager.QuestionService.GetAllAsync(cancellationToken));*/
 
 
-        // GET api/categories/5/questions/1
+        // GET api/Categories/5/Questions/1
         [HttpGet("{questionId:int}", Name = "GetQuestionById")]
         public async Task<IActionResult> GetQuestionById(int categoryId, int questionId, CancellationToken cancellationToken)
         {
@@ -53,7 +49,7 @@ namespace Question.API.Controllers
         }
 
 
-        // POST api/categories/5/question
+        // POST api/Categories/5/Questions
         [HttpPost]
         public async Task<IActionResult> CreateQuestion(int categoryId, [FromBody] QuestionItemCreateDto questionItemCreateDto, CancellationToken cancellationToken)
         {
@@ -64,7 +60,7 @@ namespace Question.API.Controllers
         }
 
 
-        // PUT api/categories/5/question/1
+        // PUT api/Categories/5/Questions/1
         [HttpPut("{questionId:int}", Name = "UpdateQuestion")]
         public async Task<IActionResult> UpdateQuestion(int categoryId, int questionId, [FromBody] QuestionItemUpdateDto questionItemUpdateDto, CancellationToken cancellationToken)
         {
@@ -75,7 +71,7 @@ namespace Question.API.Controllers
         }
 
 
-        // DELETE api/categories/5/question/1
+        // DELETE api/Categories/5/Questions/1
         [HttpDelete("{questionId:int}", Name = "DeleteQuestion")]
         public async Task<IActionResult> DeleteQuestion(int categoryId, int questionId, CancellationToken cancellationToken)
         {
