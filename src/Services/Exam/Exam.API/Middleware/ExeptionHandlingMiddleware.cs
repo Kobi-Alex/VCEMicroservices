@@ -1,9 +1,9 @@
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Exam.Domain.Domain.Exeptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Exam.API.Application.Exceptions;
 
 namespace Exam.API.Middleware
 {

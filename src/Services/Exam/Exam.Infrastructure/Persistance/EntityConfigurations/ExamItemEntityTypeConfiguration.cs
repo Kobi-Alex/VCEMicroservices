@@ -1,5 +1,4 @@
-
-using Exam.Domain.Domain.Entities;
+using Exam.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,28 +11,35 @@ namespace Exam.Infrastructure.Persistance.EntityConfigurations
         {
             builder.ToTable("Exams");
 
-            builder.HasKey(ei => ei.Id);
+            builder.HasKey(exam => exam.Id);
 
-            builder.Property(ei => ei.Title)
-                .IsRequired().HasMaxLength(60);
+            builder.Property(question => question.Id)
+                .ValueGeneratedOnAdd();
 
-            builder.Property(ei => ei.Category)
-                .IsRequired().HasMaxLength(60);
+            builder.Property(exam => exam.Title)
+                .IsRequired()
+                .HasMaxLength(100);
 
-            builder.Property(ei => ei.Description)
-                .IsRequired().HasMaxLength(100);
+            builder.Property(exam => exam.Description)
+                .HasMaxLength(1000);
 
-            builder.Property(ei => ei.DurationTime)
-                .IsRequired();
+            builder.Property(exam => exam.DurationTime)
+                .IsRequired(true);
 
-            builder.Property(ei => ei.PassingScore)
-                .IsRequired().HasColumnName("decimal(5, 2)");
+            builder.Property(exam => exam.PassingScore)
+                .IsRequired(true)
+                .HasPrecision(2, 2);
 
-            builder.Property(ei => ei.DateExam)
-                .IsRequired();
-            
-            builder.Property(ei => ei.Status)
-                .IsRequired().HasMaxLength(60);
+            builder.Property(exam => exam.DateExam)
+                .IsRequired(true);
+
+            builder.Property(exam => exam.Status)
+                .IsRequired(true);
+
+            //builder.HasMany(exam => exam.ExamQuestions)
+            //    .WithOne()
+            //    .HasForeignKey(question => question.ExamItemId)
+            //    .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

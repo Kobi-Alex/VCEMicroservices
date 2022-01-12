@@ -1,10 +1,7 @@
-﻿using Exam.Domain.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Exam.Domain.Repositories;
 
 namespace Exam.Infrastructure.Persistance.Repositories
 {
