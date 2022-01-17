@@ -1,26 +1,40 @@
-﻿using Exam.Domain.Entities;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Exam.Domain.Entities;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Exam.Infrastructure.Persistance
 {
     public static class ExamDbContextSeed
     {
-        public static void PrepPopulation(IApplicationBuilder app)
+        public static void PrepPopulation(IApplicationBuilder app, bool isProduction)
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                SeedData(serviceScope.ServiceProvider.GetService<ExamDbContext>());
+                SeedData(serviceScope.ServiceProvider.GetService<ExamDbContext>(), isProduction);
             }
         }
 
-        private static void SeedData(ExamDbContext context)
+        private static void SeedData(ExamDbContext context, bool isProduction)
         {
+            if (isProduction)
+            {
+                Console.WriteLine("--> Attemption to apply migrations...");
+
+                try
+                {
+                    context.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"--> Could not migrations: {ex.Message}");
+                }
+            }
+
+
             if (!context.Exams.Any())
             {
                 Console.WriteLine("--> Seeding Data...");
@@ -31,8 +45,8 @@ namespace Exam.Infrastructure.Persistance
                         Title = "Entity Framework Core",
                         Description = "Microsoft EF Core, migrations, seedings data;",
                         DurationTime = 60,
-                        PassingScore = 70.00m,
-                        DateExam = new DateTime(2022, 3, 12),
+                        PassingScore = 70,
+                        DateExam = new DateTime(2022, 03, 12),
                         Status = ExamStatus.Available
                     },
                     new ExamItem()
@@ -40,16 +54,16 @@ namespace Exam.Infrastructure.Persistance
                         Title = "Begin in Docker",
                         Description = "Docker and containerization",
                         DurationTime = 120,
-                        PassingScore = 68.00m,
+                        PassingScore = 68,
                         DateExam = new DateTime(2022, 02, 24),
                         Status = ExamStatus.Finished
                     },
                      new ExamItem()
                      {
-                         Title = "Dosker and Kibernetis",
+                         Title = "Docker and Kibernetis",
                          Description = "Docker with kibernatis",
                          DurationTime = 100,
-                         PassingScore = 80.00m,
+                         PassingScore = 80,
                          DateExam = new DateTime(2022, 01, 30),
                          Status = ExamStatus.NotAvailable
                      }

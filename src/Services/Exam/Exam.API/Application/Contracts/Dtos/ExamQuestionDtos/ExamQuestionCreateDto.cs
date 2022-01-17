@@ -5,7 +5,7 @@ namespace Exam.API.Application.Contracts.ExamQuestionDtos
 {
     public class ExamQuestionCreateDto
     {
-        [Required(ErrorMessage = "Answer context is required")]
+        [Required(ErrorMessage = "Question context is required")]
         public string Question { get; set; }
     }
 

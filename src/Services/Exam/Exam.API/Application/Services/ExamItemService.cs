@@ -54,11 +54,6 @@ namespace Exam.API.Application.Services
 
         public async Task<ExamItemReadDto> GetByIdAsync(int examId, CancellationToken cancellationToken = default)
         {
-            if(examId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(examId));
-            }
-
             var exam = await _repositoryManager.ExamItemRepository.GetByIdAsync(examId, cancellationToken);
 
             if (exam is null)
@@ -85,11 +80,6 @@ namespace Exam.API.Application.Services
 
         public async Task UpdateAsync(int examId, ExamItemUpdateDto examUpdateDto, CancellationToken cancellationToken = default)
         {
-            if (examId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(examId));
-            }
-
             var exam = await _repositoryManager.ExamItemRepository.GetByIdAsync(examId, cancellationToken);
 
             if (exam is null)
@@ -109,11 +99,6 @@ namespace Exam.API.Application.Services
 
         public async Task DeleteAsync(int examId, CancellationToken cancellationToken = default)
         {
-            if (examId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(examId));
-            }
-
             var exam = await _repositoryManager.ExamItemRepository.GetByIdAsync(examId, cancellationToken);
 
             if (exam is null)

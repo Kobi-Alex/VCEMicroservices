@@ -18,6 +18,7 @@ namespace Exam.Infrastructure.Persistance
         public DbSet<ExamItem> Exams { get; set; }
         public DbSet<ExamQuestion> Questions { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder) =>
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ExamDbContext).Assembly);
     }

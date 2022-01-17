@@ -12,6 +12,6 @@ namespace Exam.Domain.Entities
         public string Question { get; set; }
 
         public int ExamItemId { get; set; }
-        public  ExamItem ExamItem { get; set; }
+        public ExamItem ExamItem { get; set; }
     }
 }

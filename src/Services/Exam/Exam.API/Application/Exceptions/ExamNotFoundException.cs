@@ -13,8 +13,8 @@ namespace Exam.API.Application.Exceptions
         {
         }
 
-        public ExamNotFoundException(string description) 
-            : base($"The exam with the name {description} was not found")
+        public ExamNotFoundException(string name) 
+            : base($"The exam with the name {name} was not found")
         {
         }
     }

@@ -16,8 +16,6 @@ namespace Exam.Infrastructure.Persistance.EntityConfigurations
 
             builder.HasKey(question => question.Id);
 
-            //builder.Property(exam => exam.Id)
-            //    .ValueGeneratedOnAdd();
             builder.Property(question => question.Question)
                 .IsRequired(true);
 

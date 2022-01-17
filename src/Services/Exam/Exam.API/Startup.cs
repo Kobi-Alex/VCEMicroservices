@@ -18,19 +18,33 @@ namespace Exam.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment _env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //if(_env.IsProduction())
+            //{
+                Console.WriteLine("--> Using SQL DB");
 
-            services.AddDbContext<ExamDbContext>(opt =>
-                opt.UseInMemoryDatabase("InMem"));
+                services.AddDbContext<ExamDbContext>(opt =>
+                    opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
+            //}
+            //else
+            //{
+            //    Console.WriteLine("--> Using InMem DB");
+
+            //    services.AddDbContext<ExamDbContext>(opt =>
+            //        opt.UseInMemoryDatabase("InMem"));
+            //}
 
 
             //add service ServiceManager
@@ -75,7 +89,7 @@ namespace Exam.API
             });
 
             //Seeding data
-            ExamDbContextSeed.PrepPopulation(app);
+            ExamDbContextSeed.PrepPopulation(app, env.IsProduction());
         }
     }
 }

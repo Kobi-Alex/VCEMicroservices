@@ -28,13 +28,16 @@ namespace Exam.Infrastructure.Persistance.EntityConfigurations
 
             builder.Property(exam => exam.PassingScore)
                 .IsRequired(true)
-                .HasPrecision(2, 2);
+                .HasPrecision(5, 2);
 
             builder.Property(exam => exam.DateExam)
                 .IsRequired(true);
 
             builder.Property(exam => exam.Status)
                 .IsRequired(true);
+
+
+            // --> We can use this property instead code in ExamQuestionEntityTypeConfiguration
 
             //builder.HasMany(exam => exam.ExamQuestions)
             //    .WithOne()
