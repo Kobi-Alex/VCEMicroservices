@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
+  exam.api:
+    image: ${DOCKER_REGISTRY-}examapi
+    build:
+      context: .
+      dockerfile: Services/Exam/Exam.API/Dockerfile
+
+  question.api:
+    image: ${DOCKER_REGISTRY-}questionapi
+    build:
+      context: .
+      dockerfile: Services/Question/Question.API/Dockerfile
+

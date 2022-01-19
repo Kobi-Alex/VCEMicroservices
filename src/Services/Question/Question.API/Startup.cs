@@ -1,18 +1,21 @@
+using System;
+using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+
 using Question.API.Middleware;
-using Question.Domain.Repositories;
-using Question.Infrastructure;
-using Question.Infrastructure.Persistance.Repositories;
-using System;
-using MediatR;
-using Question.API.Application.Services.Interfaces;
 using Question.API.Application.Services;
+using Question.API.Application.Services.Interfaces;
+using Question.Infrastructure;
+using Question.Domain.Repositories;
+using Question.Infrastructure.Persistance.Repositories;
+
+using MassTransit;
+using RabbitMQ.Client;
 
 namespace Question.API
 {
@@ -28,7 +31,7 @@ namespace Question.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            //add service InMemory DB
             services.AddDbContext<QuestionDbContext>(opt =>
                 opt.UseInMemoryDatabase("InMem"));
 
@@ -37,6 +40,15 @@ namespace Question.API
 
             //add service RepositoryManager
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+
+            // MassTransit-RabbitMQ Configuration
+            services.AddMassTransit(config => {
+                config.UsingRabbitMq((ctx, cfg) => {
+                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+                });
+            });
+            services.AddMassTransitHostedService();
+
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -47,7 +59,6 @@ namespace Question.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Question.API", Version = "v1" });
             });
 
-            services.AddMediatR(typeof(Startup));
 
             services.AddTransient<ExceptionHandlingMiddleware>();
         }
@@ -77,5 +88,31 @@ namespace Question.API
             //add Seeding data
             QuestionDbContextSeed.PrepPopulation(app);
         }
+
+        //private void MassTransitConfigure(IServiceCollection services)
+        //{
+        //    var queueSettingsSection = Configuration.GetSection("RabbitMQ:QueueSettings");
+        //    var queueSettings = queueSettingsSection.Get<QueueSettings>();
+
+
+        //    services.AddMassTransit(config => {
+
+        //        config.UsingRabbitMq((ctx, cfg) =>
+        //        {
+        //            //cfg.Host("amqp://<username>:<password>@<hostname>:<port>/");
+        //            cfg.Host(queueSettings.HostName, queueSettings.Port, queueSettings.VirtualHost,
+        //             h => {
+        //                 h.Username(queueSettings.UserName);
+        //                 h.Password(queueSettings.Password);
+        //             });
+        //            cfg.ExchangeType = ExchangeType.Direct;
+        //        });
+
+
+        //        services.AddMassTransitHostedService();
+        //    });
+
+        //}
+
     }
 }

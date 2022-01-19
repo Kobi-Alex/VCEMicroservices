@@ -21,7 +21,7 @@ namespace Exam.Infrastructure.Persistance.Repositories
         public async Task<IEnumerable<ExamItem>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dbContext.Exams
-                //.Include(e => e.ExamQuestions)
+                .Include(e => e.ExamQuestions)
                 .ToListAsync(cancellationToken);
         }
 

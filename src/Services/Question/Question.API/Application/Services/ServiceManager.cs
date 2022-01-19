@@ -1,5 +1,6 @@
 using System;
 using AutoMapper;
+using MassTransit;
 using Question.API.Application.Services.Interfaces;
 using Question.Domain.Repositories;
 
@@ -16,9 +17,9 @@ namespace Question.API.Application.Services
         private readonly Lazy<IQuestionCategoryService> _lazyQuestionCategoryService;
         private readonly Lazy<IQuestionAnswerService> _lazyQuestionAnswerService;
 
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint)
         {
-            _lazyQuestionItemService = new Lazy<IQuestionItemService>(()          => new QuestionItemService(repositoryManager, mapper));
+            _lazyQuestionItemService = new Lazy<IQuestionItemService>(()          => new QuestionItemService(repositoryManager, mapper, publishEndpoint));
             _lazyQuestionCategoryService = new Lazy<IQuestionCategoryService>(()  => new QuestionCategoryService(repositoryManager, mapper));
             _lazyQuestionAnswerService = new Lazy<IQuestionAnswerService>(()      => new QuestionAnswerService(repositoryManager, mapper));
         }

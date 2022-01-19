@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Exam.Domain.Entities;
 using Microsoft.AspNetCore.Builder;
@@ -47,7 +48,8 @@ namespace Exam.Infrastructure.Persistance
                         DurationTime = 60,
                         PassingScore = 70,
                         DateExam = new DateTime(2022, 03, 12),
-                        Status = ExamStatus.Available
+                        Status = ExamStatus.NotAvailable,
+                        ExamQuestions = (ICollection<ExamQuestion>)GetPreconfiguredExamQuestionTest()
                     },
                     new ExamItem()
                     {
@@ -58,15 +60,16 @@ namespace Exam.Infrastructure.Persistance
                         DateExam = new DateTime(2022, 02, 24),
                         Status = ExamStatus.Finished
                     },
-                     new ExamItem()
-                     {
+                    new ExamItem()
+                    {
                          Title = "Docker and Kibernetis",
                          Description = "Docker with kibernatis",
                          DurationTime = 100,
                          PassingScore = 80,
                          DateExam = new DateTime(2022, 01, 30),
-                         Status = ExamStatus.NotAvailable
-                     }
+                         Status = ExamStatus.NotAvailable,
+                         ExamQuestions = (ICollection<ExamQuestion>)GetPreconfiguredExamQuestionTest1()
+                    }
                 );
 
                 context.SaveChanges();
@@ -75,6 +78,21 @@ namespace Exam.Infrastructure.Persistance
             {
                 Console.WriteLine("--> We alredy have data!!");
             }
+        }
+
+        private static IEnumerable<ExamQuestion> GetPreconfiguredExamQuestionTest()
+        {
+            return new List<ExamQuestion>()
+            {
+                new ExamQuestion() { Question = "What is the dependency injection?", ExamItemId = 1, QuestionItemId = 1 },
+            };
+        } 
+        private static IEnumerable<ExamQuestion> GetPreconfiguredExamQuestionTest1()
+        {
+            return new List<ExamQuestion>()
+            {
+                new ExamQuestion() { Question = "What is the dependency injection?", ExamItemId = 3, QuestionItemId = 1 },
+            };
         }
     }
 }

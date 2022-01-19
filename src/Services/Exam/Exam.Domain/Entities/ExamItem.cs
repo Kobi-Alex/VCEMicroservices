@@ -17,7 +17,7 @@ namespace Exam.Domain.Entities
         public DateTime DateExam { get; set; }
         public ExamStatus Status { get; set; } 
 
-        //public virtual ICollection<ExamQuestion> ExamQuestions { get; set; }
+        public virtual ICollection<ExamQuestion> ExamQuestions { get; set; }
 
     }
 }

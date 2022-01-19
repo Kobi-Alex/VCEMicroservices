@@ -1,9 +1,13 @@
+using EventBus.Common;
+using Exam.API.Application.IntegrationEvents;
+using Exam.API.Application.IntegrationEvents.Events;
 using Exam.API.Application.Services;
 using Exam.API.Application.Services.Abstractions;
 using Exam.API.Middleware;
 using Exam.Domain.Repositories;
 using Exam.Infrastructure.Persistance;
 using Exam.Infrastructure.Persistance.Repositories;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -31,21 +35,19 @@ namespace Exam.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //if(_env.IsProduction())
+            //if (_env.IsProduction())
             //{
-                Console.WriteLine("--> Using SQL DB");
+            //    Console.WriteLine("--> Using SQL DB");
 
-                services.AddDbContext<ExamDbContext>(opt =>
-                    opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
+            //    services.AddDbContext<ExamDbContext>(opt =>
+            //        opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
             //}
             //else
             //{
-            //    Console.WriteLine("--> Using InMem DB");
+            Console.WriteLine("--> Using InMem DB");
 
-            //    services.AddDbContext<ExamDbContext>(opt =>
-            //        opt.UseInMemoryDatabase("InMem"));
-            //}
-
+            services.AddDbContext<ExamDbContext>(opt =>
+                opt.UseInMemoryDatabase("InMem"));
 
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();
@@ -53,9 +55,28 @@ namespace Exam.API
             //add service RepositoryManager
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
+            services.AddScoped<IExamIntegrationEventService, ExamIntegrationEventService>();
+
+            // MassTransit-RabbitMQ Configuration
+            services.AddMassTransit(config => {
+
+                config.AddConsumer<ExamIntegrationEventService>();
+
+                config.UsingRabbitMq((ctx, cfg) => {
+                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+                    cfg.ReceiveEndpoint(EventBusConstants.QuestionItemDeleteQueue, c =>
+                    {
+                        c.ConfigureConsumer<ExamIntegrationEventService>(ctx);
+                    });
+                });
+            });
+            services.AddMassTransitHostedService();
+
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            
 
             services.AddSwaggerGen(c =>
             {

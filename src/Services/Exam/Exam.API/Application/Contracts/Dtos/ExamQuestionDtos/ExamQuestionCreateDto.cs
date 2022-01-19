@@ -7,6 +7,7 @@ namespace Exam.API.Application.Contracts.ExamQuestionDtos
     {
         [Required(ErrorMessage = "Question context is required")]
         public string Question { get; set; }
+        public int QuestionItemId { get; set; }
     }
 
 }

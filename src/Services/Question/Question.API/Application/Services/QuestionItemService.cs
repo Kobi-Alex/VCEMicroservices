@@ -6,19 +6,23 @@ using Question.Domain.Repositories;
 using Question.API.Application.Services.Interfaces;
 using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
 using AutoMapper;
-using Question.API.Application.Exceptions;
+using MassTransit;
 using Question.Domain.Entities;
+using Question.API.Application.Exceptions;
+using Exam.API.Application.IntegrationEvents.Events;
 
 namespace Question.API.Application.Services
 {
     internal sealed class QuestionItemService : IQuestionItemService
     {
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly IRepositoryManager _repositoryManager;
 
-        public QuestionItemService(IRepositoryManager repositoryManager, IMapper mapper)
+        public QuestionItemService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint)
         {
             _mapper = mapper;
+            _publishEndpoint = publishEndpoint;
             _repositoryManager = repositoryManager;
         }
 
@@ -101,9 +105,14 @@ namespace Question.API.Application.Services
 
             var question = await GetQuestinItemInCurrentDirectory(categoryId, questionId, cancellationToken);
 
+            //Event (send messaga to RubbitMQ server)
+            var eventMessage = _mapper.Map<QuestionItemDeleteEvent>(question);
+            await _publishEndpoint.Publish(eventMessage);
+
             _repositoryManager.QuestionItemRepository.Remove(question);
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+
         }
 
         private async Task<QuestionItem> GetQuestinItemInCurrentDirectory(int categoryId, int questionId, CancellationToken cancellationToken = default)
@@ -122,5 +131,6 @@ namespace Question.API.Application.Services
 
             return question;
         }
+
     }
 }
