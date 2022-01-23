@@ -25,7 +25,7 @@ namespace Question.Infrastructure.Persistance.EntityConfigurations
 
             builder.Property(answer => answer.CorrectAnswerCoefficient)
                 .IsRequired(true)
-                .HasPrecision(2, 2);
+                .HasPrecision(5, 2);
         }
     }
 }

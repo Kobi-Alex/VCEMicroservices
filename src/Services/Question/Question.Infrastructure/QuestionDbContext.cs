@@ -15,8 +15,8 @@ namespace Question.Infrastructure
         {
         }
 
-        public DbSet<QuestionItem> Questions { get; set; }
         public DbSet<QuestionCategory> Categories{ get; set; }
+        public DbSet<QuestionItem> Questions { get; set; }
         public DbSet<QuestionAnswer> Answers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) =>
