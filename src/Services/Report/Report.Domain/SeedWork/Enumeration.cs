@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Collections.Generic;
 
 
-namespace Statistic.Domain.SeedWork
+namespace Report.Domain.SeedWork
 {
     public abstract class Enumeration : IComparable
     {

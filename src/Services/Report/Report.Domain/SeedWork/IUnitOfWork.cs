@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Statistic.Domain.SeedWork
+namespace Report.Domain.SeedWork
 {
     public interface IUnitOfWork : IDisposable
     {
