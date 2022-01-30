@@ -9,7 +9,7 @@ namespace Question.Domain.Entities
     public class QuestionAnswer
     {
         public int Id { get; set; }
-        //public string answerKey { get; set; }
+        //public string answerKey { get; set; } A, B
         public string Context { get; set; }
         public decimal CorrectAnswerCoefficient { get; set; }  //TODO Переробити на bool (True or False) CorrectAnswerFlag
 
