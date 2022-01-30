@@ -27,13 +27,14 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
             _questionUnits = new List<QuestionUnit>();
         }
 
-        public Review(string description, string applicantId = null) : this()
+        public Review(string description, string applicantId) : this()
         {
             if (string.IsNullOrEmpty(description))
             {
                 throw new ArgumentNullException(nameof(description));
             }
 
+            _applicantId = applicantId;
             _reportDate = DateTime.UtcNow;
         }
 
