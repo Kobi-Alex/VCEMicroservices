@@ -1,6 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Question.API.Application.Contracts.Dtos.QuestionCategoryDtos;
 using Question.API.Application.Services.Interfaces;
@@ -10,6 +12,8 @@ namespace Question.API.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class CategoriesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
@@ -22,6 +26,8 @@ namespace Question.API.Controllers
 
         // GET api/Categories
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
+
         public async Task<IActionResult> GetCategories(CancellationToken cancellationToken)
         {
             var categories = await _serviceManager.QuestionCategoryService.GetAllAsync(cancellationToken);
@@ -33,6 +39,8 @@ namespace Question.API.Controllers
 
         // GET api/Categories/5
         [HttpGet("{id}", Name = "GetCategoryById")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
+
         public async Task<IActionResult> GetCategoryById(int id, CancellationToken cancellationToken)
         {
             var category = await _serviceManager.QuestionCategoryService.GetByIdAsync(id, cancellationToken);
@@ -44,6 +52,8 @@ namespace Question.API.Controllers
 
         // POST api/Categories
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
+
         public async Task<IActionResult> CreateCategory([FromBody] QuestionCategoryCreateDto questionCategoryCreateDto)
         {
             var categoryDto = await _serviceManager.QuestionCategoryService.CreateAsync(questionCategoryCreateDto);
@@ -55,6 +65,8 @@ namespace Question.API.Controllers
 
         // PUT api/Categories/5
         [HttpPut("{id}", Name = "UpdateCategory")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
+
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] QuestionCategoryUpdateDto questionCategoryUpdateDto, CancellationToken cancellationToken)
         {
             await _serviceManager.QuestionCategoryService.UpdateAsync(id, questionCategoryUpdateDto, cancellationToken);

@@ -8,28 +8,14 @@ namespace UserService.Dtos
 {
     public class UserReadDto
     {
-        [Required(ErrorMessage = "Id is required")]
         public string Id { get; set; }
-
-        [Required(ErrorMessage = "Username is required")]
         public string UserName { get; set; }
-
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress]
         public string Email { get; set; }
-  
-
-        [Required(ErrorMessage = "FirstName is required")]
         public string FirstName { get; set; }
-
-        [Required(ErrorMessage = "LastName is required")]
         public string LastName { get; set; }
-
         public string AdditionalInfo { get; set; }
         public string Roles { get; set; }
-
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
-
     }
 }

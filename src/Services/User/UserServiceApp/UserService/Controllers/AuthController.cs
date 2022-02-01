@@ -56,9 +56,9 @@ namespace UserService.Controllers
 
                 if (existingUser != null)
                 {
-                    return BadRequest(new RegistrationResponse()
+                    return BadRequest(new 
                     {
-                        Errors = new List<string>()
+                        Error = new List<string>()
                         {
                             "Email already in use"
                         },
@@ -70,9 +70,9 @@ namespace UserService.Controllers
 
                 if (existingUser != null)
                 {
-                    return BadRequest(new RegistrationResponse()
+                    return BadRequest(new 
                     {
-                        Errors = new List<string>()
+                        Error = new List<string>()
                         {
                             "Username already in use"
                         },
@@ -113,7 +113,7 @@ namespace UserService.Controllers
                 {
                     return BadRequest(new RegistrationResponse()
                     {
-                        Errors = isCreated.Errors.Select(x => x.Description).ToList(),
+                        Error = isCreated.Errors.Select(x => x.Description).ToList(),
                         Success = false
                     });
                 }
@@ -121,7 +121,7 @@ namespace UserService.Controllers
 
             return BadRequest(new RegistrationResponse()
             {
-                Errors = new List<string>()
+                Error = new List<string>()
                 {
                     "Invalid payload"
                 },
@@ -141,7 +141,7 @@ namespace UserService.Controllers
                 {
                     return BadRequest(new RegistrationResponse()
                     {
-                        Errors = new List<string>()
+                        Error = new List<string>()
                         {
                             "Invalid login request"
                         },
@@ -155,7 +155,7 @@ namespace UserService.Controllers
                 {
                     return BadRequest(new RegistrationResponse()
                     {
-                        Errors = new List<string>()
+                        Error = new List<string>()
                         {
                             "Invalid login request",
                         },
@@ -173,7 +173,7 @@ namespace UserService.Controllers
 
             return BadRequest(new RegistrationResponse()
             {
-                Errors = new List<string>()
+                Error = new List<string>()
                 {
                     "Invalid payload"
                 },
@@ -193,7 +193,7 @@ namespace UserService.Controllers
                 {
                     return BadRequest(new RegistrationResponse()
                     {
-                        Errors = new List<string>()
+                        Error = new List<string>()
                         {
                             "Invalid tokens"
                         },
@@ -212,7 +212,7 @@ namespace UserService.Controllers
 
             return BadRequest(new RegistrationResponse()
             {
-                Errors = new List<string>()
+                Error = new List<string>()
                 {
                     "Invalid payload"
                 },
@@ -251,7 +251,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Errors = new List<string>() {
+                        Error = new List<string>() {
                             "Token has not yet expired"
                         }
                     };
@@ -264,7 +264,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Errors = new List<string>() {
+                        Error = new List<string>() {
                             "Token does not exist"
                         }
                     };
@@ -276,7 +276,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Errors = new List<string>() {
+                        Error = new List<string>() {
                             "Token has been used"
                         }
                     };
@@ -288,7 +288,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Errors = new List<string>() {
+                        Error = new List<string>() {
                             "Token has been revoked"
                         }
                     };
@@ -302,7 +302,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Errors = new List<string>() {
+                        Error = new List<string>() {
                             "Token doesn't match"
                         }
                     };
@@ -327,7 +327,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Errors = new List<string>() {
+                        Error = new List<string>() {
                             "Token has expired please re-login"
                         }
                     };
@@ -338,7 +338,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Errors = new List<string>() {
+                        Error = new List<string>() {
                             "Something went wrong."
                         }
                     };
