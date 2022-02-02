@@ -117,7 +117,8 @@ namespace UserService.Controllers
                 {
                     Console.WriteLine($"\n---> New user: {newUser.Id}");
 
-                    return Ok(_mapper.Map<UserReadDto>(newUser));
+                    //return Ok(_mapper.Map<UserReadDto>(newUser));
+                    return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, _mapper.Map<UserReadDto>(newUser));
                 }
                 else
                 {
