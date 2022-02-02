@@ -4,12 +4,16 @@ using System.Threading.Tasks;
 using Exam.API.Application.Contracts.ExamItemDtos;
 using Exam.API.Application.Contracts.ExamQuestionDtos;
 using Exam.API.Application.Services.Abstractions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class ExamController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
@@ -47,6 +51,7 @@ namespace Exam.API.Controllers
         // POST api/exam/items
         [Route("items")]
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> CreateExam([FromBody] ExamItemCreateDto examCreateDto, CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Creating exam...");
@@ -59,6 +64,7 @@ namespace Exam.API.Controllers
         // GET api/exam/items/1
         [HttpDelete]
         [Route("items/{examId:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> DeleteExam(int examId, CancellationToken cancellationToken)
         {
             Console.WriteLine($"--> Delete Exam...");
@@ -66,9 +72,6 @@ namespace Exam.API.Controllers
 
             return NoContent();
         }
-
-
-
 
         // GET api/[controller]/items/5/questions
         [HttpGet]
@@ -97,6 +100,7 @@ namespace Exam.API.Controllers
         // POST api/[controller]/items/5/questions
         [HttpPost]
         [Route("items/{examId:int}/questions")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> CreateQuestionAsync(int examId, [FromBody] ExamQuestionCreateDto questionCreateDto, CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Creating question...");
@@ -110,6 +114,7 @@ namespace Exam.API.Controllers
         // GET api/[controller]/items/5/question/1
         [HttpDelete]
         [Route("items/{examId:int}/questions/{questionId:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> DeleteQuestion(int examId, int questionId, CancellationToken cancellationToken)
         {
             Console.WriteLine($"--> Delete question by Id = {questionId}");

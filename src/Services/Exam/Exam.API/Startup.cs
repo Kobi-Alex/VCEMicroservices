@@ -8,15 +8,17 @@ using Exam.Domain.Repositories;
 using Exam.Infrastructure.Persistance;
 using Exam.Infrastructure.Persistance.Repositories;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
-
+using System.Text;
 
 namespace Exam.API
 {
@@ -44,6 +46,42 @@ namespace Exam.API
             //}
             //else
             //{
+
+            //Auth <------------------------------------------------------------------------------------------------>
+
+            var key = Encoding.ASCII.GetBytes(Configuration["JwtConfig:Secret"]);
+
+
+            var tokenValidationParams = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                RequireExpirationTime = false
+            };
+            services.AddSingleton(tokenValidationParams);
+
+            services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(jwt =>
+            {
+                jwt.SaveToken = true;
+                jwt.TokenValidationParameters = tokenValidationParams;
+            });
+
+            //Auth <------------------------------------------------------------------------------------------------>
+
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
             Console.WriteLine("--> Using InMem DB");
 
             services.AddDbContext<ExamDbContext>(opt =>
@@ -101,6 +139,9 @@ namespace Exam.API
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseRouting();
+
+            app.UseCors("AllowOrigin");
+
 
             app.UseAuthorization();
 
