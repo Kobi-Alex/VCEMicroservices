@@ -86,8 +86,8 @@ namespace UserService.Controllers
                     LastName = user.LastName,
                     Email = user.Email,
                     UserName = user.UserName,
-                    NormalizedEmail = user.Email.ToUpper(),
-                    NormalizedUserName = user.UserName.ToUpper(),
+                    //NormalizedEmail = user.Email.ToUpper(),
+                    //NormalizedUserName = user.UserName.ToUpper(),
                     AdditionalInfo = user.AdditionaInfo,
                     CreatedAt = new DateTimeOffset(DateTime.Now),
                     UpdatedAt = new DateTimeOffset(DateTime.Now)
@@ -103,11 +103,11 @@ namespace UserService.Controllers
                         await _userManager.AddToRoleAsync(newUser, userRole.Name);
                     }
 
-                    var jwtToken = await GenerateJwtToken(newUser);
+                    var auth = await GenerateJwtToken(newUser);
 
                     Console.WriteLine($"\n---> New User: {newUser.Id} | Created: {DateTime.UtcNow}");
 
-                    return Ok(jwtToken);
+                    return Ok(auth);
                 }
                 else
                 {
@@ -162,6 +162,10 @@ namespace UserService.Controllers
                         Success = false
                     });
                 }
+
+
+
+                
 
                 var jwtToken = await GenerateJwtToken(existingUser);
 
@@ -315,7 +319,8 @@ namespace UserService.Controllers
                 await _context.SaveChangesAsync();
 
                 // Generate a new token
-                var dbUser = await _userManager.FindByIdAsync(storedToken.UserId);
+                //var dbUser = await _userManager.FindByIdAsync();
+                User dbUser = null;
                 return await GenerateJwtToken(dbUser);
 
             }
@@ -365,7 +370,7 @@ namespace UserService.Controllers
             var userRoles = _userManager.GetRolesAsync(user).Result;
 
             List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim("IdUser", user.Id));
+            claims.Add(new Claim("IdUser", user.Id.ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
@@ -410,6 +415,7 @@ namespace UserService.Controllers
 
             return new AuthResult()
             {
+                User = user,
                 Token = jwtToken,
                 Success = true,
                 RefreshToken = refreshToken.Token

@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace UserService.Models
 {
-    public class User:IdentityUser
+    public class User : IdentityUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -14,6 +15,9 @@ namespace UserService.Models
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
     }
+
+
 }

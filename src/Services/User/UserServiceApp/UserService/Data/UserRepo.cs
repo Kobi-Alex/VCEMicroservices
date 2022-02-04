@@ -48,6 +48,7 @@ namespace UserService.Data
                 throw new ArgumentNullException(nameof(user));
             }
 
+
             //_context.Users.Add(user);
 
             var result = await _userManager.CreateAsync(user,password);
