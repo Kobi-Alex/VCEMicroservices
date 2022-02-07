@@ -91,7 +91,6 @@ namespace Exam.API.Application.Services
             exam.Description = examUpdateDto.Description;
             exam.DurationTime = examUpdateDto.DurationTime;
             exam.PassingScore = examUpdateDto.PassingScore;
-            exam.DateExam = examUpdateDto.DateExam;
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }

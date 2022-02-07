@@ -47,7 +47,6 @@ namespace Exam.Infrastructure.Persistance
                         Description = "Microsoft EF Core, migrations, seedings data;",
                         DurationTime = 60,
                         PassingScore = 70,
-                        DateExam = new DateTime(2022, 03, 12),
                         Status = ExamStatus.NotAvailable,
                         ExamQuestions = (ICollection<ExamQuestion>)GetPreconfiguredExamQuestionTest()
                     },
@@ -57,7 +56,6 @@ namespace Exam.Infrastructure.Persistance
                         Description = "Docker and containerization",
                         DurationTime = 120,
                         PassingScore = 68,
-                        DateExam = new DateTime(2022, 02, 24),
                         Status = ExamStatus.Finished
                     },
                     new ExamItem()
@@ -66,7 +64,6 @@ namespace Exam.Infrastructure.Persistance
                          Description = "Docker with kibernatis",
                          DurationTime = 100,
                          PassingScore = 80,
-                         DateExam = new DateTime(2022, 01, 30),
                          Status = ExamStatus.NotAvailable,
                          ExamQuestions = (ICollection<ExamQuestion>)GetPreconfiguredExamQuestionTest1()
                     }

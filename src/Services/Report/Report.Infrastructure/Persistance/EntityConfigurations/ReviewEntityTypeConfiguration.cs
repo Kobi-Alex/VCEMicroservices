@@ -24,16 +24,33 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
 
             //_applicationId
             reviewConfiguration
-                .Property<string>("_applicationId")
+                .Property<string>("_applicantId")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("ApplicationId")
+                .HasColumnName("ApplicantId")
                 .IsRequired();
 
-            //_description
+            //_totalScore
             reviewConfiguration
-                .Property<string>("_description")
+                .Property<decimal>("_totalScore")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("Description")
+                .HasColumnName("TotalScore")
+                .IsRequired()
+                .HasPrecision(5, 2);
+
+            //_persentScore
+            reviewConfiguration
+                .Property<decimal>("_persentScore")
+                .UsePropertyAccessMode(PropertyAccessMode.Field)
+                .HasColumnName("PersentScore")
+                .IsRequired()
+                .HasPrecision(5, 2); ;
+
+
+            // _grade
+            reviewConfiguration
+                .Property<string>("_grade")
+                .UsePropertyAccessMode(PropertyAccessMode.Field)
+                .HasColumnName("Grade")
                 .IsRequired(false);
 
             //_reportData
@@ -43,14 +60,15 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
                 .HasColumnName("ReportDate")
                 .IsRequired();
 
-            //_questionUnits
-            var questionUnitsConfiguration = reviewConfiguration.OwnsMany(x => x.QuestionUnits);
-            reviewConfiguration.Navigation(x => x.QuestionUnits).Metadata.SetField("_questionUnits");
 
+            var navigation = reviewConfiguration.Metadata.FindNavigation(nameof(Review.QuestionUnits));
 
-            //var navigation = reviewConfiguration.Metadata.FindNavigation(nameof(Review.QuestionUnits));
-            ////Set as field (New since EF 1.1) to access the OrderItem collection property through its field
-            //navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+            // DDD Patterns comment:
+            //Set as field (New since EF 1.1) to access the ReviewItem collection property through its field
+            navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            //var questionUnitsConfiguration = reviewConfiguration.OwnsMany(x => x.QuestionUnits);
+            //reviewConfiguration.Navigation(x => x.QuestionUnits).Metadata.SetField("_questionUnits");
         }
     }
 }

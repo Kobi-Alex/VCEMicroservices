@@ -6,16 +6,16 @@ namespace Report.Domain.Exceptions
     /// Exception type for domain exceptions
     /// </summary>
     /// 
-    public class ReportingDomainException: Exception
+    public class ReportDomainException: Exception
     {
-        public ReportingDomainException()
+        public ReportDomainException()
         { }
 
-        public ReportingDomainException(string message)
+        public ReportDomainException(string message)
             : base(message)
         { }
 
-        public ReportingDomainException(string message, Exception innerException)
+        public ReportDomainException(string message, Exception innerException)
             : base(message, innerException)
         { }
     }

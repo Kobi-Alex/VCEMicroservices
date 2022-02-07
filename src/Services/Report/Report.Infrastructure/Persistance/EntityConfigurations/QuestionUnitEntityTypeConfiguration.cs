@@ -40,7 +40,7 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
             questionUnitConfiguration
                 .Property<int>("_totalNumberAnswer")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("TotalNumberAnswers")
+                .HasColumnName("TotalNumberAnswer")
                 .IsRequired();
 
             // QuestionId

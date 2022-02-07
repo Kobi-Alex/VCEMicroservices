@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Report.API.Application.Features.Queries;
+using Report.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +28,14 @@ namespace Report.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Database connection
+            services.AddDbContext<ReportDbContext>(opt =>
+                opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
+
+            // ReviewQueries services
+            services.AddScoped<IReviewQueries, ReviewQueries>(provider => new ReviewQueries
+            (Configuration.GetConnectionString("ReportsConnection")));
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

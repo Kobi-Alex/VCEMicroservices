@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Report.Domain.AggregatesModel.ReviewAggregate;
-using Report.Domain.SeedWork;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Report.Domain.SeedWork;
+using Microsoft.EntityFrameworkCore;
+using Report.Domain.AggregatesModel.ReviewAggregate;
 
 namespace Report.Infrastructure
 {

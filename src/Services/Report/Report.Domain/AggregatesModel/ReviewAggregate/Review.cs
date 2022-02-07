@@ -12,9 +12,11 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
 
         private int _examId;                                   // ID іспиту
         private string _applicantId;                           // ID абітурієнта(userId)
-        private string _description;                           // опис звіту
+        public decimal _totalScore;                            // K-сть правельних відповідей
+        public decimal _persentScore;                          // K-сть правельних відповідей у відсотках(%)
+        public string _grade;                                  // Оцінка за іспит
         private DateTime _reportDate;                          // дата звіту
-        private readonly List<QuestionUnit> _questionUnits;    // список питань екзамену
+        private readonly List<QuestionUnit> _questionUnits;    // список питань екзамену на які відповів абітурієнт
 
 
         public int GetExamId => _examId;
@@ -24,32 +26,57 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
 
         protected Review()
         {
-            _questionUnits = new List<QuestionUnit>();
+            _questionUnits = new List<QuestionUnit>();  
         }
 
-        public Review(string description, string applicantId) : this()
+        public Review(int examId, string applicantId, decimal totalScore = 0 , decimal persentScore = 0) 
+            : this()
         {
-            if (string.IsNullOrEmpty(description))
+            if(examId < 0)
             {
-                throw new ArgumentNullException(nameof(description));
+                throw new ArgumentOutOfRangeException(nameof(examId));
             }
 
+            if (string.IsNullOrEmpty(applicantId))
+            {
+                throw new ArgumentNullException(nameof(applicantId));
+            }
+
+            _examId = examId;
             _applicantId = applicantId;
+            _totalScore = totalScore;
+            _persentScore = persentScore;
             _reportDate = DateTime.UtcNow;
         }
 
 
-        public void SetExamId(int id)
+        public void SetGrade(string grade)
         {
-            _examId = id;
+            _grade = grade;
         }
 
-        public void SetApplicantId(string id)
+        public void SetTotalScore(decimal totalScore)
         {
-            _applicantId = id;
-        } 
+            _totalScore = totalScore;
+        }
 
-        public void AddQuestionUnit(int questionId, string questionName, string answerKeys, string currentKeys, int totalNumberAnswer)
+        public void SetPersentScore(decimal persentScore)
+        {
+            _persentScore = persentScore;
+        }
+
+        //public void SetExamId(int id)
+        //{
+        //    _examId = id;
+        //}
+
+        //public void SetApplicantId(string id)
+        //{
+        //    _applicantId = id;
+        //}
+
+        public void AddQuestionUnit(string questionName, string answerKeys, string currentKeys, 
+            int totalNumberAnswer, int questionId)
         {
             var existingReportForQuestion = _questionUnits
                 .Where(o => o.QuestionId == questionId)
@@ -80,7 +107,8 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
                     throw new ArgumentOutOfRangeException(nameof(questionId));
                 }
 
-                var questionUnit = new QuestionUnit(questionId, questionName, answerKeys, currentKeys, totalNumberAnswer);
+                var questionUnit = new QuestionUnit( questionName, answerKeys, currentKeys, 
+                    totalNumberAnswer, questionId);
                 _questionUnits.Add(questionUnit);
             }
 
