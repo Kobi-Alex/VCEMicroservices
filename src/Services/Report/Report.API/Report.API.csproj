@@ -21,7 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Features\Commands\" />
+    <Folder Include="Application\Features\Commands\CancelReview\" />
+    <Folder Include="Application\Features\Commands\SetQuestionUnit\" />
     <Folder Include="Application\Features\Handlers\" />
     <Folder Include="Application\Services\" />
   </ItemGroup>

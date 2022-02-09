@@ -15,35 +15,35 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
 
             questionUnitConfiguration.HasKey(o => o.Id);
 
-            // _name
+            //name
             questionUnitConfiguration
                 .Property<string>("_name")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("QuestionName")
                 .IsRequired();
             
-            // _answerKeys
+            //answerKeys
             questionUnitConfiguration
                 .Property<string>("_answerKeys")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("AnswerKeys")
                 .IsRequired();
             
-            // _currentKeys
+            //currentKeys
             questionUnitConfiguration
                 .Property<string>("_currentKeys")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("CurrentKeys")
                 .IsRequired();
 
-            // _totalNumberAnswer
+            //totalNumberAnswer
             questionUnitConfiguration
                 .Property<int>("_totalNumberAnswer")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("TotalNumberAnswer")
                 .IsRequired();
 
-            // QuestionId
+            //QuestionId
             questionUnitConfiguration
                 .Property<int>("QuestionId")
                 .IsRequired();

@@ -22,14 +22,14 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
                .HasColumnName("ExamId")
                .IsRequired();
 
-            //_applicationId
+            //applicationId
             reviewConfiguration
                 .Property<string>("_applicantId")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("ApplicantId")
                 .IsRequired();
 
-            //_totalScore
+            //totalScore
             reviewConfiguration
                 .Property<decimal>("_totalScore")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
@@ -37,7 +37,7 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
                 .IsRequired()
                 .HasPrecision(5, 2);
 
-            //_persentScore
+            //persentScore
             reviewConfiguration
                 .Property<decimal>("_persentScore")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
@@ -46,14 +46,14 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
                 .HasPrecision(5, 2); ;
 
 
-            // _grade
+            //grade
             reviewConfiguration
                 .Property<string>("_grade")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("Grade")
                 .IsRequired(false);
 
-            //_reportData
+            //reportData
             reviewConfiguration
                 .Property<DateTime>("_reportDate")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)

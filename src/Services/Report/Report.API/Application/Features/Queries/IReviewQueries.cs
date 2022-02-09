@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace Report.API.Application.Features.Queries
 {
+    //Interface for Dapper
     public interface IReviewQueries
     {
         Task<IEnumerable<Review>> GetReportsByExamIdAsync(int examId);
