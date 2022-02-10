@@ -23,7 +23,7 @@ namespace Report.Infrastructure.Persistance.Repositories
         }
 
 
-        public async Task<Review> GetReportByIdAsync(int reviewId)
+        public async Task<Review> GetReportByReviewIdAsync(int reviewId)
         {
 
             var review = await _dbContext.Reviews
@@ -47,56 +47,56 @@ namespace Report.Infrastructure.Persistance.Repositories
             return review;
         }
 
-        public async Task<Review> GetReportByExamIdAsync(int examId)
-        {
+        //public async Task<Review> GetReportByExamIdAsync(int examId)
+        //{
 
-            var review = await _dbContext.Reviews
-                .Include(x => x.QuestionUnits)
-                .FirstOrDefaultAsync(r => r.GetExamId == examId);
-
-
-            if (review == null)
-            {
-                review = _dbContext.Reviews
-                    .Local.FirstOrDefault(r => r.GetExamId == examId);
-            }
-
-            if (review != null)
-            {
-                await _dbContext.Entry(review)
-                    .Collection(u => u.QuestionUnits).LoadAsync();
-            }
+        //    var review = await _dbContext.Reviews
+        //        .Include(x => x.QuestionUnits)
+        //        .FirstOrDefaultAsync(r => r.GetExamId == examId);
 
 
-            return review;
-        }
+        //    if (review == null)
+        //    {
+        //        review = _dbContext.Reviews
+        //            .Local.FirstOrDefault(r => r.GetExamId == examId);
+        //    }
 
-        public async Task<IEnumerable<Review>> GetReportByUserIdAsync(string userId)
-        {
-            var reviewList = await _dbContext.Reviews
-                .Where(r => r.GetApplicantId == userId)
-                .Include(u => u.QuestionUnits)
-                .ToListAsync();
+        //    if (review != null)
+        //    {
+        //        await _dbContext.Entry(review)
+        //            .Collection(u => u.QuestionUnits).LoadAsync();
+        //    }
 
 
-            if (reviewList == null)
-            {
-                reviewList = _dbContext.Reviews
-                    .Local.Where(r => r.GetApplicantId == userId).ToList();
-            }
+        //    return review;
+        //}
 
-            if (reviewList != null)
-            {
-                foreach (var item in reviewList)
-                {
-                    await _dbContext.Entry(item).Collection(u => u.QuestionUnits).LoadAsync();
-                }
-            }
+        //public async Task<IEnumerable<Review>> GetReportByUserIdAsync(string userId)
+        //{
+        //    var reviewList = await _dbContext.Reviews
+        //        .Where(r => r.GetApplicantId == userId)
+        //        .Include(u => u.QuestionUnits)
+        //        .ToListAsync();
 
-            return reviewList;
 
-        }
+        //    if (reviewList == null)
+        //    {
+        //        reviewList = _dbContext.Reviews
+        //            .Local.Where(r => r.GetApplicantId == userId).ToList();
+        //    }
 
+        //    if (reviewList != null)
+        //    {
+        //        foreach (var item in reviewList)
+        //        {
+        //            await _dbContext.Entry(item).Collection(u => u.QuestionUnits).LoadAsync();
+        //        }
+        //    }
+
+        //    return reviewList;
+
+        //}
+         
         public Review Add (Review review)
         {
             return _dbContext.Reviews.Add(review).Entity;
@@ -106,10 +106,10 @@ namespace Report.Infrastructure.Persistance.Repositories
             _dbContext.Entry(review).State = EntityState.Modified;
         }
 
-        public void Remove(Review review)
-        {
-            _dbContext.Reviews.Remove(review);
-        }
+        //public void Remove(Review review)
+        //{
+        //    _dbContext.Reviews.Remove(review);
+        //}
 
     }
 }

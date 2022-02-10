@@ -15,20 +15,20 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
         private int _totalNumberAnswer;               // загальна к-сть відповідей у питанні
 
         public int QuestionId { get; private set; }   // Id поточного питання
-        
 
 
         protected QuestionUnit() 
         {
         }
 
-        public QuestionUnit(int questionId, string questionName, string answerKeys, string currentKeys, 
-            int totalNumberAnswer) : this()
+        public QuestionUnit( string questionName, string answerKeys, string currentKeys, 
+            int totalNumberAnswer, int questionId) : this()
         {
             if (questionId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(questionId));
             }
+
 
             if (string.IsNullOrEmpty(questionName))
             {
@@ -36,11 +36,11 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
             }
 
 
-            QuestionId = questionId;
             _name = questionName;
             _answerKeys = answerKeys;
             _currentKeys = currentKeys;
             _totalNumberAnswer = totalNumberAnswer;
+            QuestionId = questionId;
         }
 
 

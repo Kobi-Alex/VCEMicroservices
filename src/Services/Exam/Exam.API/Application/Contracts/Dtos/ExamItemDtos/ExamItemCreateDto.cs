@@ -20,10 +20,6 @@ namespace Exam.API.Application.Contracts.ExamItemDtos
         [Range(40.0, 100.0, ErrorMessage = "In range from 40 to 100 mark")]
         public decimal PassingScore { get; set; }
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DateExam { get; set; }
-
         [Required(ErrorMessage = "Exam status is required")]
         public ExamStatus Status { get; set; }
 

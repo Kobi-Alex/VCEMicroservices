@@ -9,12 +9,14 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
 {
     public interface IReviewRepository : IRepository<Review>
     {
-        Task<Review> GetReportByIdAsync(int id);
-        Task<Review> GetReportByExamIdAsync(int examId);
-        Task<IEnumerable<Review>> GetReportByUserIdAsync(string userId);
+        //Task<Review> GetReportByReviewIdAsync(int reviewId);
+        //Task<Review> GetReportByExamIdAsync(int examId);
+        //Task<IEnumerable<Review>> GetReportByUserIdAsync(string userId);
+
+        Task<Review> GetReportByReviewIdAsync(int reviewId);
 
         Review Add(Review review);
         void Update(Review review);
-        void Remove(Review review);
     }
 }
+    

@@ -27,9 +27,11 @@ namespace Report.Infrastructure
 
                 context.Reviews.AddRange
                 (
-                    new Review("Report from exam #1", new Guid().ToString()),
-                    new Review("Report from exam #2", new Guid().ToString()),
-                    new Review("Report from exam #3", new Guid().ToString())
+                    new Review(1, "a1875c21-b82e-4e87-962b-9777c351f989"),
+                    new Review(1, "a1875c21-b82e-4e87-962b-9777c351f990"),
+                    new Review(1, "a1875c21-b82e-4e87-962b-9777c351f991"),
+                    new Review(2, "a1875c21-b82e-4e87-962b-9777c351f994"),
+                    new Review(2, "a1875c21-b82e-4e87-962b-9777c351f995")
                 );
 
                 context.SaveChanges();
