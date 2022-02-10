@@ -17,3 +17,9 @@ services:
       context: .
       dockerfile: Services/Question/Question.API/Dockerfile
 
+  userservice:
+    image: ${DOCKER_REGISTRY-}userservice
+    build:
+      context: .
+      dockerfile:  Services/User/UserService/Dockerfile
+

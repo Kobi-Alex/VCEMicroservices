@@ -11,7 +11,7 @@ namespace UserService.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> opt) : base(opt)
         {
-
+            //Database.EnsureCreated();
         }
 
         public DbSet<Role> Roles { get; set; }

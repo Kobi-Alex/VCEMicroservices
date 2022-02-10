@@ -23,19 +23,19 @@ namespace UserService.Data
 
         private static void SeedData(AppDbContext context, bool isProd)
         {
-            if (isProd)
-            {
-                Console.WriteLine("\n---> Attempting to apply migrations...\n");
+            //if (isProd)
+            //{
+            //    Console.WriteLine("\n---> Attempting to apply migrations...\n");
 
-                try
-                {
-                    context.Database.Migrate();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"\n---> Could not run migrations: {ex.Message}\n");
-                }
-            }
+            //    try
+            //    {
+            //        context.Database.Migrate();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.WriteLine($"\n---> Could not run migrations: {ex.Message}\n");
+            //    }
+            //}
 
 
             if (!context.Roles.Any())
@@ -142,8 +142,8 @@ namespace UserService.Data
 
                 };
 
-                user1.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "User"));
-
+                user1.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                context.Users.Add(user1);
                 var user2 = new User()
                 {
                     FirstName = "Echo User_2",
@@ -156,8 +156,8 @@ namespace UserService.Data
                     //Roles = new List<Role>() { userRole }
 
                 };
-                user2.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "User"));
-
+                user2.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                context.Users.Add(user2);
                 context.SaveChanges();
             }
             else

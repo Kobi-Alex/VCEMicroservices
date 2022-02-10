@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace UserService
         public IConfiguration Configuration { get; }
 
         private readonly IWebHostEnvironment _env;
-
+        
         public Startup(IConfiguration configuration , IWebHostEnvironment env)
         {
             Configuration = configuration;
@@ -41,13 +42,13 @@ namespace UserService
 
             if (_env.IsProduction())
             {
-                Console.WriteLine("\n--> Using SqlServer Db\n");
+                Console.WriteLine("\n---> Using SqlServer Db\n");
+                Console.WriteLine($"\n---> ConStr: {Configuration.GetConnectionString("UsersConnection")}");
+                //services.AddDbContext<AppDbContext>(opt =>
+                //   opt.UseInMemoryDatabase("InMem"));
 
                 services.AddDbContext<AppDbContext>(opt =>
-                   opt.UseInMemoryDatabase("InMem"));
-
-                //services.AddDbContext<AppDbContext>(opt =>
-                //    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+                    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
             }
             else
             {
@@ -56,8 +57,11 @@ namespace UserService
                 services.AddDbContext<AppDbContext>(opt =>
                    opt.UseInMemoryDatabase("InMem"));
 
-                //services.AddDbContext<AppDbContext>(opt =>
-                //    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+
+                
+               // services.AddDbContext<AppDbContext>(opt =>
+               //     opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+                  
             }
 
 
@@ -118,8 +122,6 @@ namespace UserService
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "UserService v1"));
             }
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 
