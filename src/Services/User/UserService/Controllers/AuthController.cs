@@ -87,7 +87,9 @@ namespace UserService.Controllers
                 await _userRepository.SaveChangesAsync();
 
                 var auth = await GenerateJwtToken(newUser);
-               
+
+                Console.WriteLine($"\n---> New user: {auth.User.Email}");
+
                 return Ok(auth);
                
             }

@@ -51,7 +51,7 @@ namespace UserService.Data.Repositories
 
         public async Task<IEnumerable<User>> FindAllAsync(Expression<Func<User, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return await _context.Users.Include(x=>x.Roles).Where(predicate).ToListAsync(cancellationToken);
+            return await _context.Users.Include(x => x.Roles).Where(predicate).ToListAsync(cancellationToken);
         }
 
         public async Task<User> FindAsync(Expression<Func<User, bool>> predicate, CancellationToken cancellationToken = default)
@@ -64,7 +64,7 @@ namespace UserService.Data.Repositories
             return await _context.Users.Include(x => x.Roles).FirstOrDefaultAsync(x => x.Email == email);
         }
 
-        public async Task<User> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<User> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
             return await _context.Users.Include(x => x.Roles).FirstOrDefaultAsync(x => x.Id == id);
         }
@@ -79,41 +79,25 @@ namespace UserService.Data.Repositories
             return (await _context.SaveChangesAsync(cancellationToken) >= 0);
         }
 
-        //public void AddRole(User user, Role role)
-        //{
-        //    //var role = _context.Roles.FirstOrDefault(x => x.Name == roleName);
+        public void AddRole(User user, Role role)
+        {
+            if (role != null)
+            {
+                user.Roles.Add(role);
+            }
 
-        //    //if(role!=null)
-        //    //{
-        //    //    var existsRole = user.Roles.FirstOrDefault(x => x.Id == role.Id);
-        //    //    if(existsRole == null)
-        //    //    {
-        //    //        user.Roles.Add(role);
-        //    //    }
-        //    //}
+            user.Roles.Add(role);
+        }
 
-        //    user.Roles.Add(role);
+        public void DeleteRole(User user, Role role)
+        {
+            if (role != null)
+            {
+                user.Roles.Remove(role);
+            }
+        }
 
-            
-
-
-        //}
-
-        //public void DeleteRole(User user, string roleName)
-        //{
-        //    var role = _context.Roles.FirstOrDefault(x => x.Name == roleName);
-
-        //    if (role != null)
-        //    {
-        //        var existsRole = user.Roles.FirstOrDefault(x => x.Id == role.Id);
-        //        if (existsRole == null)
-        //        {
-        //            user.Roles.Remove(role);
-        //        }
-        //    }
-        //}
-
-        public void ChangePassword(User user,  string newPassword)
+        public void ChangePassword(User user, string newPassword)
         {
             user.Password = _hasher.HashPassword(null, newPassword);
 
@@ -122,7 +106,7 @@ namespace UserService.Data.Repositories
 
         public bool CheckPassword(User user, string password)
         {
-          var res =  _hasher.VerifyHashedPassword(null, user.Password, password);
+            var res = _hasher.VerifyHashedPassword(null, user.Password, password);
 
             switch (res)
             {
@@ -135,18 +119,17 @@ namespace UserService.Data.Repositories
                 default:
                     return false;
             }
-
         }
 
         public async Task<IEnumerable<User>> GetAdmins()
         {
             var listAdmins = new List<User>();
 
-            var adminRole =  await _context.Roles.FirstOrDefaultAsync(x => x.Name == "Admin");
+            var adminRole = await _context.Roles.FirstOrDefaultAsync(x => x.Name == "Admin");
 
-            foreach (var item in await _context.Users.Include(r=>r.Roles).ToListAsync())
+            foreach (var item in await _context.Users.Include(r => r.Roles).ToListAsync())
             {
-               if(item.Roles.FirstOrDefault(x=>x.Id == adminRole.Id) !=null)
+                if (item.Roles.FirstOrDefault(x => x.Id == adminRole.Id) != null)
                 {
                     listAdmins.Add(item);
                 }

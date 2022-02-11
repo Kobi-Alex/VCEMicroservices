@@ -18,6 +18,8 @@ namespace UserService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -56,23 +58,22 @@ namespace UserService.Controllers
 
         [HttpGet("{id}", Name = "GetUserById")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<UserReadDto>> GetUserById(int id, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<UserReadDto>> GetUserById(string id, CancellationToken cancellationToken = default)
         {
             Console.WriteLine($"\n---> Getting User by Id: {id}");
-
 
             var user = await _userRepository.GetByIdAsync(id, cancellationToken);
 
             if (user == null) return NotFound();
 
             var mapper = _mapper.Map<UserReadDto>(user);
-            //mapper.Roles = await _repository.GetRolesUserAsync(user);
+            mapper.Roles = String.Join(", ", user.Roles.ToArray().Select(x => x.Name).ToArray());
 
             return Ok(mapper);
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Manager")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> CreateUser([FromBody] UserCreateDto user)
         {
             if (ModelState.IsValid)
@@ -111,7 +112,7 @@ namespace UserService.Controllers
 
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> PutUser(int id, UserUpdateDto user)
+        public async Task<IActionResult> PutUser(string id, UserUpdateDto user)
         {
             if (ModelState.IsValid)
             {
@@ -180,8 +181,8 @@ namespace UserService.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Manager")]
-        public async Task<IActionResult> DeleteUser(int id)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public async Task<IActionResult> DeleteUser(string id)
         {
             Console.WriteLine($"\n---> Delete User: {id} ....");
             var user = await _userRepository.GetByIdAsync(id);
@@ -207,7 +208,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("AddRole")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Manager")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
 
         public async Task<IActionResult> AddRole(UserRoleDto userRoleDto)
         {
@@ -257,7 +258,7 @@ namespace UserService.Controllers
         }
         [HttpPost]
         [Route("RemoveRole")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Manager")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
 
         public async Task<IActionResult> RemoveRole(UserRoleDto userRoleDto)
         {

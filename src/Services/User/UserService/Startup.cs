@@ -42,7 +42,7 @@ namespace UserService
 
             if (_env.IsProduction())
             {
-                Console.WriteLine("\n---> Using SqlServer Db\n");
+                Console.WriteLine("\n---> Using SqlServer Db Prod\n");
                 Console.WriteLine($"\n---> ConStr: {Configuration.GetConnectionString("UsersConnection")}");
                 //services.AddDbContext<AppDbContext>(opt =>
                 //   opt.UseInMemoryDatabase("InMem"));
@@ -52,16 +52,14 @@ namespace UserService
             }
             else
             {
-                Console.WriteLine("\n--> Using InMem Db\n");
+                Console.WriteLine("\n---> Using SqlServer Db Development\n");
+                Console.WriteLine($"\n---> ConStr: {Configuration.GetConnectionString("UsersConnection")}");
+
+                //services.AddDbContext<AppDbContext>(opt =>
+                //   opt.UseInMemoryDatabase("InMem"));
 
                 services.AddDbContext<AppDbContext>(opt =>
-                   opt.UseInMemoryDatabase("InMem"));
-
-
-                
-               // services.AddDbContext<AppDbContext>(opt =>
-               //     opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
-                  
+                    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
             }
 
 

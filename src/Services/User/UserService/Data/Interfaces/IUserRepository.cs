@@ -13,7 +13,7 @@ namespace UserService.Data.Interfaces
         Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
 
         Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken);
-        Task<User> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+        Task<User> GetByIdAsync(string id, CancellationToken cancellationToken = default);
         Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
 
         Task<IEnumerable<User>> FindAllAsync(Expression<Func<User, bool>> predicate, CancellationToken cancellationToken = default);
@@ -23,8 +23,8 @@ namespace UserService.Data.Interfaces
         void Update(User user);
         void Delete(User user);
 
-        //void AddRole(User user,Role Role);
-        //void DeleteRole(User user, string roleName);
+        void AddRole(User user,Role role);
+        void DeleteRole(User user, Role role);
 
         void ChangePassword(User user, string newPassword);
 

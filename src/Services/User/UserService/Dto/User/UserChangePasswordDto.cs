@@ -9,7 +9,7 @@ namespace UserService.Dto.User
     public class UserChangePasswordDto
     {
         [Required(ErrorMessage = "IdUser is required")]
-        public int IdUser { get; set; }
+        public string IdUser { get; set; }
 
         [Required(ErrorMessage = "CurrentPassword is required")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$", ErrorMessage = "Passwords must be at least 6 characters. Passwords must have at least one digit ('0'-'9'). Passwords must have at least one lowercase ('a'-'z').")]
