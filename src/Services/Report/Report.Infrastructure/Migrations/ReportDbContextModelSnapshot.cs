@@ -49,7 +49,7 @@ namespace Report.Infrastructure.Migrations
 
                     b.Property<int>("_totalNumberAnswer")
                         .HasColumnType("int")
-                        .HasColumnName("TotalNumberAnswers");
+                        .HasColumnName("TotalNumberAnswer");
 
                     b.HasKey("Id");
 
@@ -65,10 +65,10 @@ namespace Report.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("_applicationId")
+                    b.Property<string>("_applicantId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ApplicationId");
+                        .HasColumnName("ApplicantId");
 
                     b.Property<int>("_examId")
                         .HasColumnType("int")
@@ -79,7 +79,8 @@ namespace Report.Infrastructure.Migrations
                         .HasColumnName("Grade");
 
                     b.Property<decimal>("_persentScore")
-                        .HasColumnType("decimal(18,2)")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)")
                         .HasColumnName("PersentScore");
 
                     b.Property<DateTime>("_reportDate")
@@ -87,7 +88,8 @@ namespace Report.Infrastructure.Migrations
                         .HasColumnName("ReportDate");
 
                     b.Property<decimal>("_totalScore")
-                        .HasColumnType("decimal(18,2)")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)")
                         .HasColumnName("TotalScore");
 
                     b.HasKey("Id");

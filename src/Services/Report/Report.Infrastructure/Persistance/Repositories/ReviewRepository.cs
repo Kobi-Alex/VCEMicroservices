@@ -8,7 +8,7 @@ using Report.Domain.AggregatesModel.ReviewAggregate;
 
 namespace Report.Infrastructure.Persistance.Repositories
 {
-    internal sealed class ReviewRepository : IReviewRepository
+    public class ReviewRepository : IReviewRepository
     {
         private readonly ReportDbContext _dbContext;
 
@@ -27,7 +27,6 @@ namespace Report.Infrastructure.Persistance.Repositories
         {
 
             var review = await _dbContext.Reviews
-                .Include(x => x.QuestionUnits)
                 .FirstOrDefaultAsync(r => r.Id == reviewId);
 
 
@@ -47,69 +46,44 @@ namespace Report.Infrastructure.Persistance.Repositories
             return review;
         }
 
-        //public async Task<Review> GetReportByExamIdAsync(int examId)
-        //{
-
-        //    var review = await _dbContext.Reviews
-        //        .Include(x => x.QuestionUnits)
-        //        .FirstOrDefaultAsync(r => r.GetExamId == examId);
-
-
-        //    if (review == null)
-        //    {
-        //        review = _dbContext.Reviews
-        //            .Local.FirstOrDefault(r => r.GetExamId == examId);
-        //    }
-
-        //    if (review != null)
-        //    {
-        //        await _dbContext.Entry(review)
-        //            .Collection(u => u.QuestionUnits).LoadAsync();
-        //    }
+        public async Task<Review> GetReportByApplicantIdAsync(int examId, string userId)
+        {
+            
+            var review = await _dbContext.Reviews
+               .Include(x=>x.QuestionUnits)
+               .FirstOrDefaultAsync(r=>r._examId == examId && r._applicantId == userId);
 
 
-        //    return review;
-        //}
+            if (review == null)
+            {
+                review = _dbContext.Reviews
+                    .Local.FirstOrDefault(r => r._examId == examId && r._applicantId == userId);
+            }
 
-        //public async Task<IEnumerable<Review>> GetReportByUserIdAsync(string userId)
-        //{
-        //    var reviewList = await _dbContext.Reviews
-        //        .Where(r => r.GetApplicantId == userId)
-        //        .Include(u => u.QuestionUnits)
-        //        .ToListAsync();
+            if (review != null)
+            {
+                await _dbContext.Entry(review)
+                    .Collection(u => u.QuestionUnits).LoadAsync();
+            }
 
 
-        //    if (reviewList == null)
-        //    {
-        //        reviewList = _dbContext.Reviews
-        //            .Local.Where(r => r.GetApplicantId == userId).ToList();
-        //    }
+            return review;
+        }
 
-        //    if (reviewList != null)
-        //    {
-        //        foreach (var item in reviewList)
-        //        {
-        //            await _dbContext.Entry(item).Collection(u => u.QuestionUnits).LoadAsync();
-        //        }
-        //    }
-
-        //    return reviewList;
-
-        //}
-         
         public Review Add (Review review)
         {
             return _dbContext.Reviews.Add(review).Entity;
         }
+
         public void Update(Review review)
         {
             _dbContext.Entry(review).State = EntityState.Modified;
         }
 
-        //public void Remove(Review review)
-        //{
-        //    _dbContext.Reviews.Remove(review);
-        //}
+        public void Remove(Review review)
+        {
+            _dbContext.Reviews.Remove(review);
+        }
 
     }
 }

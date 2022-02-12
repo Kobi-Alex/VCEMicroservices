@@ -10,17 +10,14 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
     public class Review : Entity, IAggregateRoot
     {
 
-        private int _examId;                                   // ID іспиту
-        private string _applicantId;                           // ID абітурієнта(userId)
-        public decimal _totalScore;                            // K-сть правельних відповідей
-        public decimal _persentScore;                          // K-сть правельних відповідей у відсотках(%)
-        public string _grade;                                  // Оцінка за іспит
+        public int _examId;                                    // ID іспиту
+        public string _applicantId;                            // ID абітурієнта(userId)
+        private decimal _totalScore;                           // K-сть правельних відповідей
+        private decimal _persentScore;                         // K-сть правельних відповідей у відсотках(%)
+        private string _grade;                                 // Оцінка за іспит
         private DateTime _reportDate;                          // дата звіту
         private readonly List<QuestionUnit> _questionUnits;    // список питань екзамену на які відповів абітурієнт
 
-
-        public int GetExamId => _examId;
-        public string GetApplicantId => _applicantId;
         public IReadOnlyCollection<QuestionUnit> QuestionUnits => _questionUnits;
 
 
@@ -65,19 +62,10 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
             _persentScore = persentScore;
         }
 
-        //public void SetExamId(int id)
-        //{
-        //    _examId = id;
-        //}
-
-        //public void SetApplicantId(string id)
-        //{
-        //    _applicantId = id;
-        //}
 
         public void AddQuestionUnit(string questionName, string answerKeys, string currentKeys, 
             int totalNumberAnswer, int questionId)
-        {
+            {
             var existingReportForQuestion = _questionUnits
                 .Where(o => o.QuestionId == questionId)
                 .SingleOrDefault();
@@ -88,10 +76,10 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
                 {
                     existingReportForQuestion.SetCurrentAnswer(currentKeys);
                 }
+
             }
             else
             {
-
                 if (questionId <= 0)
                 {
                     throw new ArgumentOutOfRangeException(nameof(questionId));
@@ -107,18 +95,28 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
                     throw new ArgumentOutOfRangeException(nameof(questionId));
                 }
 
-                var questionUnit = new QuestionUnit( questionName, answerKeys, currentKeys, 
+                var questionUnit = new QuestionUnit(questionName, answerKeys, currentKeys, 
                     totalNumberAnswer, questionId);
                 _questionUnits.Add(questionUnit);
+
             }
 
-  
+        }
+
+        // Method for counting total score result
+        private void AddScore(decimal score, string currentKeys, string answerKeys)
+        {
+            if (currentKeys.Equals(answerKeys))
+            {
+                SetTotalScore(score += 1);
+            }
         }
 
 
         public decimal GetTotalScore()
         {
             //TODO add logic total score.. -> загальний підрахунок правильних відповідей
+
             return 0.0m;
         }
 
