@@ -357,8 +357,8 @@ namespace UserService.Controllers
             {
 
                 Subject = new ClaimsIdentity(claims),
-                //Expires = DateTime.UtcNow.AddHours(6),
-                Expires = DateTime.UtcNow.AddSeconds(10),
+                Expires = DateTime.UtcNow.AddHours(6),
+                //Expires = DateTime.UtcNow.AddSeconds(10),
 
                 // here we are adding the encryption alogorithim information which will be used to decrypt our token
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

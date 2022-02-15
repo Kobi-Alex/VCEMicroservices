@@ -26,7 +26,7 @@ namespace UserService.Controllers
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
 
-        public UsersController(IUserRepository userRepository, IRoleRepository roleRepository,IMapper mapper)
+        public UsersController(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
@@ -46,14 +46,20 @@ namespace UserService.Controllers
 
             foreach (var item in users)
             {
-                if(item.Roles!=null)
+                if (item.Roles != null)
                 {
-                    userReadDto.FirstOrDefault(x=>x.Id == item.Id).Roles = String.Join(", ", item.Roles.ToArray().Select(x => x.Name).ToArray());
+                    userReadDto.FirstOrDefault(x => x.Id == item.Id).Roles = String.Join(", ", item.Roles.ToArray().Select(x => x.Name).ToArray());
                 }
             }
 
-
             return Ok(userReadDto);
+            //var list = new List<UserReadDto>();
+
+            //for (int i = 0; i < 500; i++)
+            //{
+            //    list.Add(new UserReadDto() { FirstName = $"User: {i}", AdditionalInfo = $"Additional Info user: {i}", Email = $"csuser{i}@google.com", LastName = $"Smith: {i}", Id = Guid.NewGuid().ToString(), Roles = "Student" });
+            //}
+            //return Ok(list);
         }
 
         [HttpGet("{id}", Name = "GetUserById")]
@@ -97,10 +103,10 @@ namespace UserService.Controllers
 
                 var newUser = new User();
 
-                _mapper.Map(user,newUser);
+                _mapper.Map(user, newUser);
 
                 _userRepository.Create(newUser, user.Password);
-               await _userRepository.SaveChangesAsync();
+                await _userRepository.SaveChangesAsync();
 
                 return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, _mapper.Map<UserReadDto>(newUser));
             }
@@ -158,7 +164,7 @@ namespace UserService.Controllers
                     return NotFound();
                 }
 
-                if(!_userRepository.CheckPassword(existsUser, userChangePassword.CurrentPassword))
+                if (!_userRepository.CheckPassword(existsUser, userChangePassword.CurrentPassword))
                 {
                     return BadRequest(new
                     {
@@ -198,7 +204,7 @@ namespace UserService.Controllers
                     Error = new List<string> { "Could not delete user." }
                 });
             }
-       
+
             _userRepository.Delete(user);
 
             await _userRepository.SaveChangesAsync();
@@ -236,13 +242,30 @@ namespace UserService.Controllers
                 }
 
 
-                if(existsUser.Roles.FirstOrDefault(x=>x.Id == roleExists.Id)!=null)
+                if (existsUser.Roles.FirstOrDefault(x => x.Id == roleExists.Id) != null)
                 {
                     return BadRequest(new
                     {
                         Errors = new List<string> { $"User has role: {roleExists.Name}" }
                     });
                 }
+
+                if (roleExists.Name == "Student")
+                {
+                    if (existsUser.Roles.Any(x => x.Name == "Admin") || existsUser.Roles.Any(x => x.Name == "Manager") || existsUser.Roles.Any(x => x.Name == "Teacher"))
+                    {
+                       
+                        return BadRequest(new { Error = new List<string>() { $"Cannot add role: < {roleExists.Name} > to user with roles < Admin, Manager or Teacher >" } });
+                    }
+                }
+                else
+                {
+                    if (existsUser.Roles.Any(x => x.Name == "Student"))
+                    {
+                        return BadRequest(new { Error = new List<string>() { $"Cannot add role: < {roleExists.Name} > to user with role < Student >" } });
+                    }
+                }
+
 
                 Console.WriteLine($"\n---> Add role: {roleExists.Name} to: {existsUser.Id}");
 
@@ -293,6 +316,14 @@ namespace UserService.Controllers
                         Errors = new List<string> { $"User doesn't have role: {roleExists.Name}" }
                     });
                 }
+
+
+                if (existsUser.Roles.Count() <= 1)
+                {
+                    return BadRequest(new { Error = new List<string>() { "Cannot delete role. The user must have at least one role" } });
+                }
+
+
                 Console.WriteLine($"\n---> Delete role: {roleExists.Name} from: {existsUser.Id}");
                 existsUser.Roles.Remove(roleExists);
                 _userRepository.Update(existsUser);
@@ -304,7 +335,7 @@ namespace UserService.Controllers
 
             return BadRequest(GetModelStateErrors(ModelState.Values));
         }
-        
+
         private List<string> GetModelStateErrors(IEnumerable<ModelStateEntry> modelState)
         {
             var modelErrors = new List<string>();

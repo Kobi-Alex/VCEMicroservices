@@ -24,12 +24,14 @@ namespace Question.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+
+        private readonly IWebHostEnvironment _env;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -71,9 +73,20 @@ namespace Question.API
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
 
-            //add service InMemory DB
-            services.AddDbContext<QuestionDbContext>(opt =>
-                opt.UseInMemoryDatabase("InMem"));
+            if(_env.IsProduction())
+            {
+                //add service InMemory DB
+                services.AddDbContext<QuestionDbContext>(opt =>
+                    opt.UseInMemoryDatabase("InMem"));
+            } else
+            {
+
+                Console.WriteLine("\n---> Using SqlServer Db Development\n");
+                services.AddDbContext<QuestionDbContext>(opt =>
+                   opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
+            }
+
+           
 
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();
