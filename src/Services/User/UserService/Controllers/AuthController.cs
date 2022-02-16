@@ -385,7 +385,7 @@ namespace UserService.Controllers
 
             if(user.Roles!=null)
             {
-                userReadDto.Roles = String.Join(", ", user.Roles.ToArray().Select(x=>x.Name));
+                userReadDto.Roles = String.Join(",", user.Roles.ToArray().Select(x=>x.Name));
             }
 
             await _refreshTokenRepository.SaveChangesAsync();

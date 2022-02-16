@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Report.API.Application.Features.Queries;
 using System;
@@ -11,6 +13,8 @@ namespace Report.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class ReportController : ControllerBase
     {
 
@@ -28,6 +32,7 @@ namespace Report.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(Review), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<ActionResult> GetReportsByExamIdAsync(int examId)
         {
             try
@@ -47,6 +52,7 @@ namespace Report.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(Review), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<ActionResult> GetReportsByExamIdAndUserIdAsync(int examId, string userId)
         {
             try

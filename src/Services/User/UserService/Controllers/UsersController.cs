@@ -48,7 +48,7 @@ namespace UserService.Controllers
             {
                 if (item.Roles != null)
                 {
-                    userReadDto.FirstOrDefault(x => x.Id == item.Id).Roles = String.Join(", ", item.Roles.ToArray().Select(x => x.Name).ToArray());
+                    userReadDto.FirstOrDefault(x => x.Id == item.Id).Roles = String.Join(",", item.Roles.ToArray().Select(x => x.Name).ToArray());
                 }
             }
 
@@ -73,7 +73,7 @@ namespace UserService.Controllers
             if (user == null) return NotFound();
 
             var mapper = _mapper.Map<UserReadDto>(user);
-            mapper.Roles = String.Join(", ", user.Roles.ToArray().Select(x => x.Name).ToArray());
+            mapper.Roles = String.Join(",", user.Roles.ToArray().Select(x => x.Name).ToArray());
 
             return Ok(mapper);
         }

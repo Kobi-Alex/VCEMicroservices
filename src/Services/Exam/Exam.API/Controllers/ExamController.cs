@@ -12,7 +12,7 @@ namespace Exam.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
     public class ExamController : ControllerBase
     {
@@ -58,6 +58,19 @@ namespace Exam.API.Controllers
             var examDto = await _serviceManager.ExamItemService.CreateAsync(examCreateDto, cancellationToken);
 
             return CreatedAtAction(nameof(ExamById), new { examId = examDto.Id }, examDto);
+        }
+        // POST api/exam/items
+        [Route("items/{examId:int}")]
+        [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
+        public async Task<IActionResult> UpdateExam(int examId, [FromBody] ExamItemUpdateDto examUpdateDto, CancellationToken cancellationToken)
+        {
+
+            Console.WriteLine($"--> Updating exam {examId}: ...");
+
+            await _serviceManager.ExamItemService.UpdateAsync(examId, examUpdateDto, cancellationToken);
+
+            return NoContent();
         }
 
 
