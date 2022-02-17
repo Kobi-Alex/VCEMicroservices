@@ -95,6 +95,11 @@ namespace UserService
 
             //Auth <------------------------------------------------------------------------------------------------>
 
+
+            var emailConfig = Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+
+            services.AddSingleton(emailConfig);
+
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

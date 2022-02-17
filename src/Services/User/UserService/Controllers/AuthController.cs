@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,19 +30,26 @@ namespace UserService.Controllers
         private readonly IRoleRepository _roleRepository;
         private readonly JwtConfig _jwtConfig;
         private readonly IMapper _mapper;
-
+        private readonly EmailConfiguration _emailConfig;
+        private Random randomNumbers = new Random();
+        private AppDbContext _context;
         public AuthController(
             IUserRepository userRepository,
             IRefreshTokenRepository refreshTokenRepository,
             IRoleRepository roleRepository,
             IOptionsMonitor<JwtConfig> optionsMonitor,
-            IMapper mapper)
+            IMapper mapper,
+            AppDbContext context,
+            EmailConfiguration emailConfig
+            )
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
             _roleRepository = roleRepository;
             _jwtConfig = optionsMonitor.CurrentValue;
             _mapper = mapper;
+            _emailConfig = emailConfig;
+            _context = context;
         }
 
         [HttpPost]
@@ -64,6 +73,15 @@ namespace UserService.Controllers
                     });
                 }
 
+
+                var userCodes = _context.AccessCodes.Where(x => x.Email == user.Email).OrderByDescending(x => x.ExpiryDate).ToList();
+
+                if (userCodes.Count == 0) return NotFound();
+
+                if (userCodes[0].Code != user.Code)
+                {
+                    return BadRequest(new { Error = new List<string>() { "Incorect access code" } });
+                }
 
                 var newUser = new User()
                 {
@@ -90,8 +108,11 @@ namespace UserService.Controllers
 
                 Console.WriteLine($"\n---> New user: {auth.User.Email}");
 
+                _context.RemoveRange(userCodes);
+                _context.SaveChanges();
+
                 return Ok(auth);
-               
+
             }
 
             return BadRequest(new
@@ -113,7 +134,7 @@ namespace UserService.Controllers
 
                 if (existingUser == null)
                 {
-                    return BadRequest(new 
+                    return BadRequest(new
                     {
                         Error = new List<string>()
                         {
@@ -122,7 +143,7 @@ namespace UserService.Controllers
                     });
                 }
 
-                var isCorrect =  _userRepository.CheckPassword(existingUser, user.Password);
+                var isCorrect = _userRepository.CheckPassword(existingUser, user.Password);
 
                 if (!isCorrect)
                 {
@@ -143,7 +164,7 @@ namespace UserService.Controllers
                 return Ok(jwtToken);
             }
 
-            return BadRequest(new 
+            return BadRequest(new
             {
                 Error = new List<string>()
                 {
@@ -162,7 +183,7 @@ namespace UserService.Controllers
 
                 if (result == null)
                 {
-                    return BadRequest(new 
+                    return BadRequest(new
                     {
                         Error = new List<string>()
                         {
@@ -183,7 +204,7 @@ namespace UserService.Controllers
                 }
             }
 
-            return BadRequest(new 
+            return BadRequest(new
             {
                 Error = new List<string>()
                 {
@@ -383,9 +404,9 @@ namespace UserService.Controllers
 
             var userReadDto = _mapper.Map<UserReadDto>(user);
 
-            if(user.Roles!=null)
+            if (user.Roles != null)
             {
-                userReadDto.Roles = String.Join(",", user.Roles.ToArray().Select(x=>x.Name));
+                userReadDto.Roles = String.Join(",", user.Roles.ToArray().Select(x => x.Name));
             }
 
             await _refreshTokenRepository.SaveChangesAsync();
@@ -406,5 +427,88 @@ namespace UserService.Controllers
 
             return new string(Enumerable.Repeat(chars, length).Select(x => x[random.Next(x.Length)]).ToArray());
         }
+
+
+        [HttpPost]
+        [Route("SendMessage")]
+        public async Task<IActionResult> SendMessage([FromBody] EmailRequest emailRequest)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var existingUser = await _userRepository.GetByEmailAsync(emailRequest.Email);
+
+                if (existingUser != null)
+                {
+                    return BadRequest(new
+                    {
+                        Error = new List<string>()
+                        {
+                            "Email already in use"
+                        },
+                    });
+                }
+
+                Console.WriteLine("\n---> Send Access code"); ;
+
+                var accessCode = randomNumbers.Next(100000, 999999);
+
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress(_emailConfig.From, "It step Administration"); ;
+                    mail.To.Add(emailRequest.Email);
+                    mail.Subject = "Access code";
+                    mail.IsBodyHtml = true;
+                    mail.Body = $"</h1>Your access code: {accessCode}</h1>";
+                    //mail.Attachments.Add(new Attachment("D:\\Aloha.7z"));//--Uncomment this to send any attachment  
+
+                    // SmtpClient клас з за до якого можна відправити лист
+
+                    using (SmtpClient smtp = new SmtpClient(_emailConfig.SmtpServer, _emailConfig.Port))
+                    {
+                        smtp.Credentials = new NetworkCredential(_emailConfig.From, _emailConfig.Password);//Real email and password
+
+                        smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                    }
+                }
+
+                _context.AccessCodes.Add(new AccessCode() { Code = accessCode, Email = emailRequest.Email, ExpiryDate = new DateTimeOffset(DateTime.Now).AddMinutes(30) });
+                _context.SaveChanges();
+
+                return NoContent();
+            }
+
+            return BadRequest(new
+            {
+                Error = new List<string>()
+                {
+                    "Invalid data"
+                }
+            });
+
+        }
+
+
+        [HttpPost]
+        [Route("CheckAccessCode")]
+
+        public async Task<IActionResult> CheckAccessCode(AccessCodeRequest accessCodeRequest)
+        {
+        
+
+
+            var userCodes = _context.AccessCodes.Where(x => x.Email == accessCodeRequest.Email).OrderByDescending(x => x.ExpiryDate).ToList();
+
+            if (userCodes.Count == 0) return NotFound();
+
+            if (userCodes[0].Code == accessCodeRequest.Code)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(new { Error = new List<string>() { "Incorect access code" } });
+        }
     }
+
 }

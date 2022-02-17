@@ -24,6 +24,8 @@ namespace UserService.Dto.User
         [Required(ErrorMessage = "LastName is required")]
         public string LastName { get; set; }
 
+        public int Code { get; set; }
+
         public string AdditionaInfo { get; set; }
     }
 }

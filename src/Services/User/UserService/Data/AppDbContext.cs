@@ -11,12 +11,14 @@ namespace UserService.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> opt) : base(opt)
         {
-            //Database.EnsureCreated();
+            Database.EnsureCreated();
         }
 
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+
+        public DbSet<AccessCode> AccessCodes { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
