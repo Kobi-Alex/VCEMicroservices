@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Features\Commands\CancelReview\" />
+    <Folder Include="Application\Features\Commands\DeleteReview\" />
     <Folder Include="Application\Services\" />
   </ItemGroup>
 

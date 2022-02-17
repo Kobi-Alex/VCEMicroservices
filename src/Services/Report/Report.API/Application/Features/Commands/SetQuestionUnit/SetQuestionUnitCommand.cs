@@ -9,7 +9,7 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
     // http://cqrs.nu/Faq
     // https://docs.spine3.org/motivation/immutability.html 
 
-    public class SetQuestionUnitCommand :IRequest<bool>
+    public class SetQuestionUnitCommand : IRequest<bool>
     {
         public int ExamId { get; private set; }
         public string ApplicantId { get; private set; }

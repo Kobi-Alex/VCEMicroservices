@@ -41,14 +41,6 @@ namespace Question.Infrastructure.Persistance.Repositories
                 .ToListAsync(cancellationToken);    
         }
 
-        //public async Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
-        //{
-        //    return await _dbContext.Questions
-        //        .Where(q => q.QuestionCategoryId == categoryId)
-        //        .Include(q => q.QuestionAnswers)
-        //        .ToListAsync(cancellationToken);
-        //}
-
         public void Insert(QuestionItem item)
         {
             _dbContext.Questions.Add(item);

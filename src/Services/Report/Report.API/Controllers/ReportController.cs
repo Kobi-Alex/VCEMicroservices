@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Report.API.Application.Features.Queries;
 using MediatR;
+using Report.API.Application.Features.Commands.CancelReview;
 using Report.API.Application.Features.Commands.SetQuestionUnit;
 
 namespace Report.API.Controllers
@@ -71,6 +72,23 @@ namespace Report.API.Controllers
 
             return Ok();
         }
+
+
+        ////PUT api/
+        //[Route("cancel")]
+        //[HttpPut]
+        //public async Task<IActionResult> CancelReviewAsync([FromBody] CancelReviewCommand cancelReviewCommand, CancellationToken cancellationToken)
+        //{
+        //    bool commandResult = false;
+
+        //    //if ((cancelReviewCommand.UserId, out Guid guid) && guid != Guid.Empty))
+        //    //{
+
+        //    //}
+
+        //    return Ok();
+        //}
+
 
     }
 }

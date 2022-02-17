@@ -16,5 +16,4 @@ namespace Report.API.Application.Features.Commands.CreateReview
         }
     }
 
-    
 }

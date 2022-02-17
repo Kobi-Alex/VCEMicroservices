@@ -25,34 +25,42 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
             _reviewRepository = reviewRepository ?? throw new ArgumentNullException(nameof(reviewRepository));
         }
 
-        public async Task<bool> Handle(SetQuestionUnitCommand request, CancellationToken cancellationToken)
+        public Task<bool> Handle(SetQuestionUnitCommand request, CancellationToken cancellationToken)
         {
-            // DDD patterns comment: Add child entities and value-objects through the Review Aggregate-Root
-            // methods and constructor so validations, invariants and business logic 
-            // make sure that consistency is preserved across the whole aggregate
 
+            //TODO В процесі розробки
 
-            //If review is NULL than crete new Review class
-            if (await _reviewRepository.GetReportByApplicantIdAsync(request.ExamId, request.ApplicantId) == null)
-            {
-                //request CreateReviewCommand
-                await _mediator.Send(new CreateReviewCommand(request.ExamId, request.ApplicantId), cancellationToken);
-            }
-
-            var review = await _reviewRepository.GetReportByApplicantIdAsync(request.ExamId, request.ApplicantId);
-
-            if (review == null)
-            {
-                throw new ReviewNotFoundException(nameof(Review), request);
-            }
-
-            //Add questionUnits data for review aggregate;
-            review.AddQuestionUnit(request.Name, request.AnswerKeys, request.CurrentKeys,
-                request.TotalNumberAnswer, request.QuestionId);
-
-            _reviewRepository.Update(review);
-
-            return await _reviewRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            throw new NotImplementedException(); 
         }
+
+        //public async Task<bool> Handle(SetQuestionUnitCommand request, CancellationToken cancellationToken)
+        //{
+        //    // DDD patterns comment: Add child entities and value-objects through the Review Aggregate-Root
+        //    // methods and constructor so validations, invariants and business logic 
+        //    // make sure that consistency is preserved across the whole aggregate
+
+
+        //    //If review is NULL than crete new Review class
+        //    if (await _reviewRepository.GetReportByApplicantIdAsync(request.ExamId, request.ApplicantId) == null)
+        //    {
+        //        //request CreateReviewCommand
+        //        await _mediator.Send(new CreateReviewCommand(request.ExamId, request.ApplicantId), cancellationToken);
+        //    }
+
+        //    var review = await _reviewRepository.GetReportByApplicantIdAsync(request.ExamId, request.ApplicantId);
+
+        //    if (review == null)
+        //    {
+        //        throw new ReviewNotFoundException(nameof(Review), request);
+        //    }
+
+        //    //Add questionUnits data for review aggregate;
+        //    review.AddQuestionUnit(request.Name, request.AnswerKeys, request.CurrentKeys,
+        //        request.TotalNumberAnswer, request.QuestionId);
+
+        //    _reviewRepository.Update(review);
+
+        //    return await _reviewRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+        //}
     }
 }
