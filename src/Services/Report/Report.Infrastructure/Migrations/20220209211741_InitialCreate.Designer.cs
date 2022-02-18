@@ -10,7 +10,7 @@ using Report.Infrastructure;
 namespace Report.Infrastructure.Migrations
 {
     [DbContext(typeof(ReportDbContext))]
-    [Migration("20220206200305_InitialCreate")]
+    [Migration("20220209211741_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace Report.Infrastructure.Migrations
 
                     b.Property<int>("_totalNumberAnswer")
                         .HasColumnType("int")
-                        .HasColumnName("TotalNumberAnswers");
+                        .HasColumnName("TotalNumberAnswer");
 
                     b.HasKey("Id");
 
@@ -67,10 +67,10 @@ namespace Report.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("_applicationId")
+                    b.Property<string>("_applicantId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ApplicationId");
+                        .HasColumnName("ApplicantId");
 
                     b.Property<int>("_examId")
                         .HasColumnType("int")
@@ -81,6 +81,7 @@ namespace Report.Infrastructure.Migrations
                         .HasColumnName("Grade");
 
                     b.Property<decimal>("_persentScore")
+                        .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)")
                         .HasColumnName("PersentScore");
 
@@ -89,6 +90,7 @@ namespace Report.Infrastructure.Migrations
                         .HasColumnName("ReportDate");
 
                     b.Property<decimal>("_totalScore")
+                        .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)")
                         .HasColumnName("TotalScore");
 

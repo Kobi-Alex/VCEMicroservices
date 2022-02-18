@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Question.Domain.Entities
 {
     public class QuestionAnswer
     {
+        //Answer Identity
         public int Id { get; set; }
-        //public string answerKey { get; set; } A, B
+        // Char key - current sign answer (A or B or C or D or E)
+        public string CharKey { get; set; } 
+        //Answer context
         public string Context { get; set; }
-        public decimal CorrectAnswerCoefficient { get; set; }  //TODO Переробити на bool (True or False) CorrectAnswerFlag
+        // Correct answer or No
+        public bool IsCorrectAnswer { get; set; }
+
 
         // Foreign Key
         public int QuestionItemId { get; set; }

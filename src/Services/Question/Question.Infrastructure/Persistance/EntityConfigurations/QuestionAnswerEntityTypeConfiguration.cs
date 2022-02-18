@@ -16,12 +16,18 @@ namespace Question.Infrastructure.Persistance.EntityConfigurations
 
             builder.Property(answer => answer.Id).ValueGeneratedOnAdd();
 
-            builder.Property(answer => answer.Context)
-               .IsRequired(true).HasMaxLength(400);
+            builder.Property(answer => answer.CharKey)
+                .IsRequired(true).HasMaxLength(1);
 
-            builder.Property(answer => answer.CorrectAnswerCoefficient)
-                .IsRequired(true)
-                .HasPrecision(5, 2);
+            builder.Property(answer => answer.Context)
+                .IsRequired(true).HasMaxLength(400);
+
+            builder.Property(answer => answer.IsCorrectAnswer)
+                .IsRequired(true).HasDefaultValue(false);
+
+            //builder.Property(answer => answer.CorrectAnswerCoefficient)
+            //    .IsRequired(true)
+            //    .HasPrecision(5, 2);
         }
     }
 }

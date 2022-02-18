@@ -43,7 +43,7 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("PersentScore")
                 .IsRequired()
-                .HasPrecision(5, 2); ;
+                .HasPrecision(5, 2);
 
 
             //grade

@@ -8,6 +8,7 @@ using Question.API.Application.Exceptions;
 using Question.API.Application.Services.Interfaces;
 using Question.API.Application.Contracts.Dtos.QuestionAnswerDtos;
 using AutoMapper;
+using System.Linq;
 
 namespace Question.API.Application.Services
 {
@@ -68,6 +69,24 @@ namespace Question.API.Application.Services
                 throw new QuestionItemDoesNotBelongToQuestionCategoryException(categoryId, questionId);
             }
 
+            // Get answers
+            var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository.GetAllByQuestionItemIdAsync(questionId, cancellationToken);
+
+            if (answers.Count >= 5)
+            {
+                throw new QuestionAnswerQuantityLimitException();
+            }
+
+            // Finding char key
+            var isExistCharKey = answers.FirstOrDefault(k => k.CharKey == questionAnswerCreateDto.CharKey);
+
+            // Check is exist current key in questions
+            if(isExistCharKey != null)
+            {
+                throw new QuestionAnswerFieldException(questionAnswerCreateDto.CharKey);
+            }
+
+
             var answer = _mapper.Map<QuestionAnswer>(questionAnswerCreateDto);
             answer.QuestionItemId = question.Id;
 
@@ -85,8 +104,10 @@ namespace Question.API.Application.Services
 
             var answer = await GetQuestinAnswerInCurrentDirectory(questionId, answerId, cancellationToken);
 
+            answer.CharKey = answerUpdateDto.CharKey;
             answer.Context = answerUpdateDto.Context;
-            answer.CorrectAnswerCoefficient = answerUpdateDto.CorrectAnswerCoefficient;
+            answer.IsCorrectAnswer = answerUpdateDto.IsCorrectAnswer;
+            //answer.CorrectAnswerCoefficient = answerUpdateDto.CorrectAnswerCoefficient;
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync();
         }

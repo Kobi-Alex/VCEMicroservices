@@ -1,7 +1,6 @@
-using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+using MediatR;
+
 
 namespace Report.API.Application.Features.Commands.CreateReview
 {
@@ -11,50 +10,15 @@ namespace Report.API.Application.Features.Commands.CreateReview
     // http://cqrs.nu/Faq
     // https://docs.spine3.org/motivation/immutability.html 
 
-    [DataContract]
-    public class CreateReviewCommand 
-        : IRequest<bool>
+    public class CreateReviewCommand : IRequest<bool>
     {
-        [DataMember]
-        private readonly List<QuestionUnitDTO> _questionUnits;
-
-        [DataMember]
-        public int Id { get; private set; }
-
-        [DataMember]
         public int ExamId { get; private set; }
-
-        [DataMember]
         public string ApplicantId { get; private set; }
 
-        [DataMember]
-        public IEnumerable<QuestionUnitDTO> QuestionUnits => _questionUnits;
-
-
-        public CreateReviewCommand()
+        public CreateReviewCommand(int examId, string applicantId)
         {
-            _questionUnits = new List<QuestionUnitDTO>();
-
-        }
-
-        public CreateReviewCommand(int id, int examId, string userId)
-            :this()
-        {
-            Id = id;
             ExamId = examId;
-            ApplicantId = userId;
+            ApplicantId = applicantId;
         }
-
-
-
-        public record QuestionUnitDTO
-        {
-            public int QuestionId { get; init; }
-            public string Name { get; init; }
-            public string AnswerKeys { get; init; }
-            public string CurrentKeys { get; init; }
-            public int TotalNumberAnswer { get; init; }
-        }
-
     }
 }

@@ -28,7 +28,7 @@ namespace Report.Domain.SeedWork
 
         public bool IsTransient()
         {
-            return this.Id == default(Int32);
+            return this.Id == default;
         }
 
         public override bool Equals(object obj)

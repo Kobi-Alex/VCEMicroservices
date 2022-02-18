@@ -17,12 +17,12 @@ namespace Report.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ApplicationId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ApplicantId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExamId = table.Column<int>(type: "int", nullable: false),
                     Grade = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PersentScore = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PersentScore = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false),
                     ReportDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalScore = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    TotalScore = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,7 +41,7 @@ namespace Report.Infrastructure.Migrations
                     AnswerKeys = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CurrentKeys = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     QuestionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TotalNumberAnswers = table.Column<int>(type: "int", nullable: false)
+                    TotalNumberAnswer = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -1,8 +1,8 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
-using System.Linq;
 using Dapper;
 
 namespace Report.API.Application.Features.Queries
@@ -22,7 +22,7 @@ namespace Report.API.Application.Features.Queries
         }
 
 
-        //Dapper
+        //Dapper comment
         //Get all reports by exam id, include question Units
         public async Task<IEnumerable<Review>> GetReportsByExamIdAsync(int examId)
         {
@@ -55,13 +55,13 @@ namespace Report.API.Application.Features.Queries
             }
         }
 
-        //Dapper
+        //Dapper comment
         //Get all reports by exam id and user id, include question Units
         public async Task<IEnumerable<Review>> GetReportsByExamIdAndUserIdAsync(int examId, string userId)
         {
             var query = "SELECT* " +
                         "FROM report.reviews r JOIN report.questionUnits qu ON r.Id = qu.ReviewId " +
-                        "WHERE r.ExamId = @examId and r.ApplicationId = @userId";
+                        "WHERE r.ExamId = @examId and r.ApplicantId = @userId";
 
             using (var connection = new SqlConnection(_connectionString))
             {

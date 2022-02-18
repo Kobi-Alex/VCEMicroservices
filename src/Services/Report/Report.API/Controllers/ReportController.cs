@@ -1,34 +1,38 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Report.API.Application.Features.Queries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+using MediatR;
+using Report.API.Application.Features.Commands.CancelReview;
+using Report.API.Application.Features.Commands.SetQuestionUnit;
 
 namespace Report.API.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
     public class ReportController : ControllerBase
     {
-
+        private readonly IMediator _mediator;
         private readonly ILogger<ReportController> _logger;
         private readonly IReviewQueries _reviewQueries;
 
-        public ReportController(IReviewQueries reviewQueries, ILogger<ReportController> logger)
+        public ReportController(IMediator mediator, IReviewQueries reviewQueries, ILogger<ReportController> logger)
         {
-            _reviewQueries = reviewQueries;
-            _logger = logger;
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _reviewQueries = reviewQueries ?? throw new ArgumentNullException(nameof(reviewQueries));
         }
 
 
-        [Route("{examId:int}")]
+
+        // GET api/report/items/1
+        [Route("items/{examId:int}")]
         [HttpGet]
         [ProducesResponseType(typeof(Review), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -47,8 +51,8 @@ namespace Report.API.Controllers
         }
 
 
-
-        [Route("{examId:int}/applicants{userId}")]
+        // GET api/report/items/1/applicants/3
+        [Route("items{examId:int}/applicants/{userId}")]
         [HttpGet]
         [ProducesResponseType(typeof(Review), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -65,6 +69,35 @@ namespace Report.API.Controllers
                 return NotFound();
             }
         }
+
+
+        //POST api/report/items
+        [Route("items")]
+        [HttpPost]
+        public async Task<IActionResult> CreateQuestionUnit([FromBody] SetQuestionUnitCommand setQuestionUnitCommand, CancellationToken cancellationToken)
+        {
+            Console.WriteLine("--> Adding current answer...");
+
+            await _mediator.Send(setQuestionUnitCommand, cancellationToken);
+
+            return Ok();
+        }
+
+
+        ////PUT api/
+        //[Route("cancel")]
+        //[HttpPut]
+        //public async Task<IActionResult> CancelReviewAsync([FromBody] CancelReviewCommand cancelReviewCommand, CancellationToken cancellationToken)
+        //{
+        //    bool commandResult = false;
+
+        //    //if ((cancelReviewCommand.UserId, out Guid guid) && guid != Guid.Empty))
+        //    //{
+
+        //    //}
+
+        //    return Ok();
+        //}
 
 
     }

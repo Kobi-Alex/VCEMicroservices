@@ -51,8 +51,8 @@ namespace Question.Infrastructure
         {
             return new List<QuestionAnswer>()
             {
-                new QuestionAnswer() { Context = "This is a design pattern used to implement IoC.", CorrectAnswerCoefficient = 1.10m},
-                new QuestionAnswer() { Context = "This is a middleware", CorrectAnswerCoefficient = 0.01m},
+                new QuestionAnswer() { CharKey = "A", Context = "This is a design pattern used to implement IoC.", IsCorrectAnswer = true},
+                new QuestionAnswer() { CharKey = "B", Context = "This is a middleware", IsCorrectAnswer = false},
             };
         }
 
@@ -60,9 +60,11 @@ namespace Question.Infrastructure
         {
             return new List<QuestionAnswer>()
             {
-                new QuestionAnswer() { Context = "This is a pattern", CorrectAnswerCoefficient = 0.15m},
-                new QuestionAnswer() { Context = "This is a injection", CorrectAnswerCoefficient = 0.00m},
-                new QuestionAnswer() { Context = "This is a banding", CorrectAnswerCoefficient = 1.00m},
+                new QuestionAnswer() { CharKey = "A", Context = "This is a pattern",   IsCorrectAnswer = false},
+                new QuestionAnswer() { CharKey = "B", Context = "This is a injection", IsCorrectAnswer = false},
+                new QuestionAnswer() { CharKey = "C", Context = "This is a banding",   IsCorrectAnswer = false},
+                new QuestionAnswer() { CharKey = "D", Context = "This is a Windows Presentation Fundation",   IsCorrectAnswer = true},
+                new QuestionAnswer() { CharKey = "E", Context = "This is a test",   IsCorrectAnswer = true},
             };
         }
 

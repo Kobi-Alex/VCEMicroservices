@@ -10,6 +10,10 @@
 	  <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
 	  <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.14" />
+	  <PackageReference Include="FluentValidation" Version="10.3.6" />
+	  <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.6" />
+	  <PackageReference Include="MediatR" Version="10.0.1" />
+	  <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.10" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.12" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.12">
@@ -22,9 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Features\Commands\CancelReview\" />
-    <Folder Include="Application\Features\Commands\SetQuestionUnit\" />
-    <Folder Include="Application\Features\Handlers\" />
+    <Folder Include="Application\Features\Commands\DeleteReview\" />
     <Folder Include="Application\Services\" />
   </ItemGroup>
 

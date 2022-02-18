@@ -14,6 +14,7 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
             questionUnitConfiguration.ToTable("questionUnits", ReportDbContext.DEFAULT_SCHEMA);
 
             questionUnitConfiguration.HasKey(o => o.Id);
+            questionUnitConfiguration.Property(o => o.Id).ValueGeneratedOnAdd();
 
             //name
             questionUnitConfiguration

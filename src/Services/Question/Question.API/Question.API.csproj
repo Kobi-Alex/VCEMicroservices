@@ -32,8 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Application\Configurations\" />
-    <Folder Include="Application\Features\Commands\" />
-    <Folder Include="Extensions\" />
   </ItemGroup>
 
 </Project>
