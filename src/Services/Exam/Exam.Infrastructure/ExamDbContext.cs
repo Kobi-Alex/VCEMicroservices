@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Exam.Infrastructure.Persistance
+namespace Exam.Infrastructure
 {
     public sealed class ExamDbContext : DbContext
     {

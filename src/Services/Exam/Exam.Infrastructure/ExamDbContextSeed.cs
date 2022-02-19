@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 
-namespace Exam.Infrastructure.Persistance
+namespace Exam.Infrastructure
 {
     public static class ExamDbContextSeed
     {

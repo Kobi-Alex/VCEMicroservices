@@ -30,9 +30,6 @@ namespace Exam.Infrastructure.Persistance.EntityConfigurations
                 .IsRequired(true)
                 .HasPrecision(5, 2);
 
-            //builder.Property(exam => exam.DateExam)
-            //    .IsRequired(true);
-
             builder.Property(exam => exam.Status)
                 .IsRequired(true);
 

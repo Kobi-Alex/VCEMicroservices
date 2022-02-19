@@ -18,12 +18,11 @@ namespace Question.Infrastructure.Persistance.EntityConfigurations
 
             builder.HasKey(category => category.Id);
 
-            builder.Property(question => question.Id).ValueGeneratedOnAdd();
-
-            builder.Property(category => category.Name).HasMaxLength(60);
+            builder.Property(category => category.Name)
+                .HasMaxLength(60);
 
             builder.HasMany(category => category.QuestionItems)
-                .WithOne()
+                .WithOne(question => question.QuestionCategory)
                 .HasForeignKey(question => question.QuestionCategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

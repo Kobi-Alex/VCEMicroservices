@@ -17,10 +17,6 @@ namespace Question.Infrastructure.Persistance.EntityConfigurations
             builder.ToTable("Questions");
 
             builder.HasKey(question => question.Id);
-
-            builder.Property(question => question.Id).ValueGeneratedOnAdd();
-
-            builder.Property(answer => answer.Id).ValueGeneratedOnAdd();
            
             builder.Property(question => question.Context)
                .IsRequired(true).HasMaxLength(400);
@@ -28,8 +24,13 @@ namespace Question.Infrastructure.Persistance.EntityConfigurations
             builder.Property(question => question.ReleaseDate)
                 .IsRequired();
 
+            //builder.HasOne(question => question.QuestionCategory)
+            //    .WithMany()
+            //    .HasForeignKey(question => question.QuestionCategoryId)
+            //    .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasMany(question => question.QuestionAnswers)
-                .WithOne()
+                .WithOne(answer => answer.QuestionItem)
                 .HasForeignKey(answer => answer.QuestionItemId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
