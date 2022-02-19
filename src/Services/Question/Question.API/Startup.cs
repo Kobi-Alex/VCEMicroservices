@@ -80,7 +80,6 @@ namespace Question.API
                     opt.UseInMemoryDatabase("InMem"));
             } else
             {
-
                 Console.WriteLine("\n---> Using SqlServer Db Development\n");
                 services.AddDbContext<QuestionDbContext>(opt =>
                    opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));

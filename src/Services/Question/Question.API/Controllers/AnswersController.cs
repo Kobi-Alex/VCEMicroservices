@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,6 +32,8 @@ namespace Question.API.Controllers
         {
             var answers = await _serviceManager.QuestionAnswerService
                 .GetAllByQuestionItemIdAsync(categoryId, questionId, cancellationToken);
+
+            Console.WriteLine("---> Count: " + answers.ToList().Count().ToString());
 
             Console.WriteLine("--> Getting answers...");
             return Ok(answers);

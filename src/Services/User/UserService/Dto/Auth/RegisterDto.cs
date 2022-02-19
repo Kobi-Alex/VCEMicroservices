@@ -4,11 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace UserService.Dto.User
+namespace UserService.Dto.Auth
 {
-    public class UserCreateDto
+    public class RegisterDto
     {
-
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]
         public string Email { get; set; }
@@ -23,6 +22,9 @@ namespace UserService.Dto.User
 
         [Required(ErrorMessage = "LastName is required")]
         public string LastName { get; set; }
+
+        public int Code { get; set; }
+
         public string AdditionaInfo { get; set; }
     }
 }

@@ -54,7 +54,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register([FromBody] UserCreateDto user)
+        public async Task<IActionResult> Register([FromBody] RegisterDto user)
         {
             if (ModelState.IsValid)
             {
@@ -66,10 +66,7 @@ namespace UserService.Controllers
                 {
                     return BadRequest(new
                     {
-                        Error = new List<string>()
-                        {
-                            "Email already in use"
-                        },
+                        Error = "Email already in use"
                     });
                 }
 
@@ -80,7 +77,7 @@ namespace UserService.Controllers
 
                 if (userCodes[0].Code != user.Code)
                 {
-                    return BadRequest(new { Error = new List<string>() { "Incorect access code" } });
+                    return BadRequest(new { Errors = new List<string>() { "Incorect access code" } });
                 }
 
                 var newUser = new User()
@@ -117,10 +114,7 @@ namespace UserService.Controllers
 
             return BadRequest(new
             {
-                Error = new List<string>()
-                {
-                    "Invalid payload"
-                },
+                Error = "Invalid payload"
             });
         }
 
@@ -136,10 +130,7 @@ namespace UserService.Controllers
                 {
                     return BadRequest(new
                     {
-                        Error = new List<string>()
-                        {
-                            "Invalid login request"
-                        },
+                        Error = "Invalid login request"
                     });
                 }
 
@@ -149,10 +140,7 @@ namespace UserService.Controllers
                 {
                     return BadRequest(new
                     {
-                        Error = new List<string>()
-                        {
-                            "Invalid login request",
-                        },
+                        Error = "Invalid login request"
                     });
                 }
 
@@ -166,10 +154,7 @@ namespace UserService.Controllers
 
             return BadRequest(new
             {
-                Error = new List<string>()
-                {
-                    "Invalid payload"
-                },
+                Error = "Invalid payload"
             });
         }
 
@@ -185,10 +170,7 @@ namespace UserService.Controllers
                 {
                     return BadRequest(new
                     {
-                        Error = new List<string>()
-                        {
-                            "Invalid tokens"
-                        },
+                        Error = "Invalid tokens"
                     });
                 }
 
@@ -206,10 +188,7 @@ namespace UserService.Controllers
 
             return BadRequest(new
             {
-                Error = new List<string>()
-                {
-                    "Invalid payload"
-                },
+                Error = "Invalid payload"
             });
         }
 
@@ -243,9 +222,8 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Error = new List<string>() {
-                            "Token has not yet expired"
-                        }
+                        Error = "Token has not yet expired"
+
                     };
                 }
 
@@ -256,9 +234,8 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Error = new List<string>() {
-                            "Token does not exist"
-                        }
+                        Error = "Token does not exist"
+
                     };
                 }
 
@@ -268,9 +245,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Error = new List<string>() {
-                            "Token has been used"
-                        }
+                        Error = "Token has been used"
                     };
                 }
 
@@ -280,9 +255,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Error = new List<string>() {
-                            "Token has been revoked"
-                        }
+                        Error = "Token has been revoked"
                     };
                 }
 
@@ -294,9 +267,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Error = new List<string>() {
-                            "Token doesn't match"
-                        }
+                        Error = "Token doesn't match"
                     };
                 }
 
@@ -321,9 +292,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Error = new List<string>() {
-                            "Token has expired please re-login"
-                        }
+                        Error = "Token has expired please re-login"
                     };
 
                 }
@@ -332,9 +301,7 @@ namespace UserService.Controllers
                     return new AuthResult()
                     {
                         Success = false,
-                        Error = new List<string>() {
-                            "Something went wrong."
-                        }
+                        Error = $"Something went wrong: {ex.Message}"
                     };
                 }
             }
@@ -431,7 +398,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("SendMessage")]
-        public async Task<IActionResult> SendMessage([FromBody] EmailRequest emailRequest)
+        public async Task<IActionResult> SendMessage([FromBody] RegisterDto emailRequest)
         {
 
             if (ModelState.IsValid)
@@ -442,7 +409,7 @@ namespace UserService.Controllers
                 {
                     return BadRequest(new
                     {
-                        Error = new List<string>()
+                        Errors = new List<string>()
                         {
                             "Email already in use"
                         },
@@ -481,33 +448,9 @@ namespace UserService.Controllers
 
             return BadRequest(new
             {
-                Error = new List<string>()
-                {
-                    "Invalid data"
-                }
+                Error = "Invalid data"
             });
 
-        }
-
-
-        [HttpPost]
-        [Route("CheckAccessCode")]
-
-        public async Task<IActionResult> CheckAccessCode(AccessCodeRequest accessCodeRequest)
-        {
-        
-
-
-            var userCodes = _context.AccessCodes.Where(x => x.Email == accessCodeRequest.Email).OrderByDescending(x => x.ExpiryDate).ToList();
-
-            if (userCodes.Count == 0) return NotFound();
-
-            if (userCodes[0].Code == accessCodeRequest.Code)
-            {
-                return NoContent();
-            }
-
-            return BadRequest(new { Error = new List<string>() { "Incorect access code" } });
         }
     }
 

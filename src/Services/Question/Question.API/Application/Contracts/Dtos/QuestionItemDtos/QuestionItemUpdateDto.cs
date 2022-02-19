@@ -7,7 +7,7 @@ namespace Question.API.Application.Contracts.Dtos.QuestionItemDtos
     {
         //Question
         [Required(ErrorMessage = "Question context is required")]
-        [StringLength(400, MinimumLength = 3, ErrorMessage = "Question context can't be longer than 400 characters")]
+        [StringLength(400, MinimumLength = 3, ErrorMessage = "Question context can't be longer than 400 characters and can't be less 3 characters")]
         public string Context { get; set; }
 
     }

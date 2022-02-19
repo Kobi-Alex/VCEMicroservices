@@ -318,12 +318,6 @@ namespace UserService.Controllers
                 }
 
 
-                if (existsUser.Roles.Count() <= 1)
-                {
-                    return BadRequest(new { Error = new List<string>() { "Cannot delete role. The user must have at least one role" } });
-                }
-
-
                 Console.WriteLine($"\n---> Delete role: {roleExists.Name} from: {existsUser.Id}");
                 existsUser.Roles.Remove(roleExists);
                 _userRepository.Update(existsUser);
