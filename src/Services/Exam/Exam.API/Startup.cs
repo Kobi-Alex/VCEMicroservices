@@ -37,18 +37,6 @@ namespace Exam.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            if (_env.IsProduction())
-            {
-                Console.WriteLine("--> Using SQL DB");
-
-            //    services.AddDbContext<ExamDbContext>(opt =>
-            //        opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
-            //}
-            //else
-            //{
-
-            //Auth <------------------------------------------------------------------------------------------------>
-
             var key = Encoding.ASCII.GetBytes(Configuration["JwtConfig:Secret"]);
 
 
@@ -82,13 +70,10 @@ namespace Exam.API
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
-            Console.WriteLine("--> Using InMem DB");
-                services.AddDbContext<ExamDbContext>(opt =>
-                    opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
-            }
-            else
-            {
-                Console.WriteLine("--> Using InMem DB");
+            //Console.WriteLine("--> Using InMem DB");
+            //services.AddDbContext<ExamDbContext>(opt =>
+            //    opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
+
 
             if (_env.IsProduction())
             {
@@ -98,16 +83,9 @@ namespace Exam.API
             }
             else
             {
-
                 Console.WriteLine("\n---> Using SqlServer Db Development\n");
                 services.AddDbContext<ExamDbContext>(opt =>
                    opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
-            }
-
-
-         
-                services.AddDbContext<ExamDbContext>(opt =>
-                    opt.UseInMemoryDatabase("InMem"));
             }
 
             //add service ServiceManager
@@ -119,11 +97,12 @@ namespace Exam.API
             services.AddScoped<IExamIntegrationEventService, ExamIntegrationEventService>();
 
             // MassTransit-RabbitMQ Configuration
-            services.AddMassTransit(config => {
-
+            services.AddMassTransit(config =>
+            {
                 config.AddConsumer<ExamIntegrationEventService>();
 
-                config.UsingRabbitMq((ctx, cfg) => {
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
                     cfg.Host(Configuration["EventBusSettings:HostAddress"]);
                     cfg.ReceiveEndpoint(EventBusConstants.QuestionItemDeleteQueue, c =>
                     {
@@ -136,8 +115,6 @@ namespace Exam.API
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            
 
             services.AddSwaggerGen(c =>
             {
