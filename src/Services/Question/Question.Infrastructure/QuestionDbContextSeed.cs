@@ -36,6 +36,13 @@ namespace Question.Infrastructure
                      {
                          Name = "WPF",
                          QuestionItems = (ICollection<QuestionItem>)GetPreconfiguredQuestionItemTest2()
+                     },
+
+
+                     new QuestionCategory()
+                     {
+                         Name = "Home",
+                         QuestionItems = (ICollection<QuestionItem>)GetPreconfiguredQuestionItemTest3()
                      }
                 );
 
@@ -64,7 +71,15 @@ namespace Question.Infrastructure
                 new QuestionAnswer() { CharKey = "B", Context = "This is a injection", IsCorrectAnswer = false},
                 new QuestionAnswer() { CharKey = "C", Context = "This is a banding",   IsCorrectAnswer = false},
                 new QuestionAnswer() { CharKey = "D", Context = "This is a Windows Presentation Fundation",   IsCorrectAnswer = true},
-                new QuestionAnswer() { CharKey = "E", Context = "This is a test",   IsCorrectAnswer = true},
+               // new QuestionAnswer() { CharKey = "E", Context = "This is a test",   IsCorrectAnswer = true},
+            };
+        }
+
+        private static IEnumerable<QuestionAnswer> GetPreconfiguredQuestionAnswerTest3()
+        {
+            return new List<QuestionAnswer>()
+            {
+                //new QuestionAnswer() { CharKey = "T", Context = "This is a pet", IsCorrectAnswer = true},
             };
         }
 
@@ -75,7 +90,8 @@ namespace Question.Infrastructure
                 new QuestionItem() 
                 { 
                     Context = "What is the dependency injection?", 
-                    ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 26)), 
+                    ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 26)),
+                    AnswerType = AnswerType.Single,
                     QuestionAnswers = (ICollection<QuestionAnswer>)GetPreconfiguredQuestionAnswerTest1()
                 }
             };
@@ -88,8 +104,23 @@ namespace Question.Infrastructure
                 new QuestionItem() 
                 { 
                     Context = "Banding is it?", 
-                    ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 28)), 
+                    ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 28)),
+                    AnswerType = AnswerType.Multiple,
                     QuestionAnswers = (ICollection<QuestionAnswer>)GetPreconfiguredQuestionAnswerTest2()
+                }
+            };
+        }
+
+        private static IEnumerable<QuestionItem> GetPreconfiguredQuestionItemTest3()
+        {
+            return new List<QuestionItem>()
+            {
+                new QuestionItem()
+                {
+                    Context = "Dog is it?",
+                    ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 28)),
+                    AnswerType = AnswerType.Text,
+                    QuestionAnswers = (ICollection<QuestionAnswer>)GetPreconfiguredQuestionAnswerTest3()
                 }
             };
         }

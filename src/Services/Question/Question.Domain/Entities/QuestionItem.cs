@@ -14,6 +14,8 @@ namespace Question.Domain.Entities
         public string Context { get; set; }
         // Question release date
         public DateTimeOffset ReleaseDate { get; set; }
+        // Question answer type
+        public AnswerType AnswerType { get; set; }
 
 
         // Foreign Key
