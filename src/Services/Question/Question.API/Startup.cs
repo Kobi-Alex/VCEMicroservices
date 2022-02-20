@@ -28,15 +28,10 @@ namespace Question.API
         private readonly IWebHostEnvironment _env;
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
-        public IConfiguration Configuration { get; }
-
-        private readonly IWebHostEnvironment _env;
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             _env = env;
 
-            _env = env;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -52,11 +47,13 @@ namespace Question.API
             }
             else
             {
-                Console.WriteLine("--> Using InMem DB");
-
-                //add service InMemory DB
+                Console.WriteLine("\n---> Using SqlServer Db Development\n");
                 services.AddDbContext<QuestionDbContext>(opt =>
-                    opt.UseInMemoryDatabase("InMem"));
+                   opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
+                //add service InMemory DB
+                //services.AddDbContext<QuestionDbContext>(opt =>
+                //    opt.UseInMemoryDatabase("InMem"));
+
             }
 
 
@@ -95,20 +92,6 @@ namespace Question.API
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
-
-            if(_env.IsProduction())
-            {
-                //add service InMemory DB
-                services.AddDbContext<QuestionDbContext>(opt =>
-                    opt.UseInMemoryDatabase("InMem"));
-            } else
-            {
-                Console.WriteLine("\n---> Using SqlServer Db Development\n");
-                services.AddDbContext<QuestionDbContext>(opt =>
-                   opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
-            }
-
-           
 
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();
