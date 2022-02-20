@@ -14,8 +14,6 @@ namespace Question.Infrastructure.Persistance.EntityConfigurations
 
             builder.HasKey(answer => answer.Id);
 
-            builder.Property(answer => answer.Id).ValueGeneratedOnAdd();
-
             builder.Property(answer => answer.CharKey)
                 .IsRequired(true).HasMaxLength(1);
 
@@ -25,9 +23,6 @@ namespace Question.Infrastructure.Persistance.EntityConfigurations
             builder.Property(answer => answer.IsCorrectAnswer)
                 .IsRequired(true).HasDefaultValue(false);
 
-            //builder.Property(answer => answer.CorrectAnswerCoefficient)
-            //    .IsRequired(true)
-            //    .HasPrecision(5, 2);
         }
     }
 }

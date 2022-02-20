@@ -62,15 +62,15 @@ namespace Report.API.Application.Features.Commands.Identified
                 try
                 {
                     var command = message.Command;
-                    var commandName = command.GetGenericTypeName();
+                    //var commandName = command.GetGenericTypeName();
                     var idProperty = string.Empty;
                     var commandId = string.Empty;
 
                     switch (command)
                     {
                         case CancelReviewCommand cancelReviewCommand:
-                            idProperty = nameof(cancelReviewCommand.ReviewId);
-                            commandId = $"{cancelReviewCommand.ReviewId}";
+                            //idProperty = nameof(cancelReviewCommand.ReviewId);
+                            //commandId = $"{cancelReviewCommand.ReviewId}";
                             break;
 
                         default:
@@ -81,7 +81,7 @@ namespace Report.API.Application.Features.Commands.Identified
 
                     _logger.LogInformation(
                         "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
-                        commandName,
+                        //commandName,
                         idProperty,
                         commandId,
                         command);
@@ -92,7 +92,7 @@ namespace Report.API.Application.Features.Commands.Identified
                     _logger.LogInformation(
                         "----- Command result: {@Result} - {CommandName} - {IdProperty}: {CommandId} ({@Command})",
                         result,
-                        commandName,
+                       // commandName,
                         idProperty,
                         commandId,
                         command);

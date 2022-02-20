@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
 using Exam.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -20,7 +18,7 @@ namespace Exam.Infrastructure.Persistance.EntityConfigurations
                 .IsRequired(true);
 
             builder.HasOne(eq => eq.ExamItem)
-                .WithMany()
+                .WithMany(question => question.ExamQuestions)
                 .HasForeignKey(eq => eq.ExamItemId);
         }
     }

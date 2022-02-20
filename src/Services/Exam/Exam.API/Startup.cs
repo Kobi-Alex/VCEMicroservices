@@ -5,7 +5,7 @@ using Exam.API.Application.Services;
 using Exam.API.Application.Services.Abstractions;
 using Exam.API.Middleware;
 using Exam.Domain.Repositories;
-using Exam.Infrastructure.Persistance;
+using Exam.Infrastructure;
 using Exam.Infrastructure.Persistance.Repositories;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,9 +37,9 @@ namespace Exam.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //if (_env.IsProduction())
-            //{
-            //    Console.WriteLine("--> Using SQL DB");
+            if (_env.IsProduction())
+            {
+                Console.WriteLine("--> Using SQL DB");
 
             //    services.AddDbContext<ExamDbContext>(opt =>
             //        opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
@@ -83,6 +83,12 @@ namespace Exam.API
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
             Console.WriteLine("--> Using InMem DB");
+                services.AddDbContext<ExamDbContext>(opt =>
+                    opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
+            }
+            else
+            {
+                Console.WriteLine("--> Using InMem DB");
 
             if (_env.IsProduction())
             {
@@ -100,6 +106,9 @@ namespace Exam.API
 
 
          
+                services.AddDbContext<ExamDbContext>(opt =>
+                    opt.UseInMemoryDatabase("InMem"));
+            }
 
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();

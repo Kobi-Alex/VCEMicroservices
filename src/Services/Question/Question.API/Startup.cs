@@ -25,17 +25,40 @@ namespace Question.API
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment _env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public IConfiguration Configuration { get; }
 
         private readonly IWebHostEnvironment _env;
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             _env = env;
+
+            _env = env;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            if (_env.IsProduction())
+            {
+                Console.WriteLine("--> Using SQL DB");
+
+                services.AddDbContext<QuestionDbContext>(opt =>
+                    opt.UseSqlServer(Configuration.GetConnectionString("QuestionsConnection")));
+
+            }
+            else
+            {
+                Console.WriteLine("--> Using InMem DB");
+
+                //add service InMemory DB
+                services.AddDbContext<QuestionDbContext>(opt =>
+                    opt.UseInMemoryDatabase("InMem"));
+            }
+
 
             //Auth <------------------------------------------------------------------------------------------------>
 
