@@ -182,7 +182,8 @@ namespace UserService.Controllers
                 }
                 else
                 {
-                    return BadRequest(result);
+                    return StatusCode(226, result.Error);
+                    //return BadRequest(result);
                 }
             }
 
