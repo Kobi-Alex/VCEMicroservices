@@ -14,7 +14,7 @@ namespace Exam.API.Application.Contracts.ExamItemDtos
         [StringLength(1000, MinimumLength = 10, ErrorMessage = "Description can't be longer than 1000 characters")]
         public string Description { get; set; }
 
-        [Range(30.0, 360, ErrorMessage = "In range from 30 to 240 minutes")]
+        [Range(30.0, 240, ErrorMessage = "In range from 30 to 240 minutes")]
         public int DurationTime { get; set; }
 
         [Range(40.0, 100.0, ErrorMessage = "In range from 40 to 100 mark")]

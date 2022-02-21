@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Application\Configurations\" />
+    <Folder Include="Application\Models\" />
   </ItemGroup>
 
 </Project>
