@@ -28,16 +28,18 @@ namespace UserService.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IAccessCodeRepository _accessCodeRepository;
         private readonly JwtConfig _jwtConfig;
         private readonly IMapper _mapper;
         private readonly EmailConfiguration _emailConfig;
         private Random randomNumbers = new Random();
-        private AppDbContext _context;
+       // private AppDbContext _context;
         public AuthController(
             IUserRepository userRepository,
             IRefreshTokenRepository refreshTokenRepository,
             IRoleRepository roleRepository,
             IOptionsMonitor<JwtConfig> optionsMonitor,
+            IAccessCodeRepository accessCodeRepository,
             IMapper mapper,
             AppDbContext context,
             EmailConfiguration emailConfig
@@ -49,7 +51,8 @@ namespace UserService.Controllers
             _jwtConfig = optionsMonitor.CurrentValue;
             _mapper = mapper;
             _emailConfig = emailConfig;
-            _context = context;
+          //  _context = context;
+            _accessCodeRepository = accessCodeRepository;
         }
 
         [HttpPost]
@@ -71,11 +74,11 @@ namespace UserService.Controllers
                 }
 
 
-                var userCodes = _context.AccessCodes.Where(x => x.Email == user.Email).OrderByDescending(x => x.ExpiryDate).ToList();
+                //var userCodes = _context.AccessCodes.Where(x => x.Email == user.Email).OrderByDescending(x => x.ExpiryDate).ToList();
+                var userCodes = await _accessCodeRepository.GetByEmail(user.Email);
+                if (userCodes.ToList().Count == 0) return NotFound();
 
-                if (userCodes.Count == 0) return NotFound();
-
-                if (userCodes[0].Code != user.Code)
+                if (userCodes.ToList()[0].Code != user.Code)
                 {
                     return BadRequest(new { Errors = new List<string>() { "Incorect access code" } });
                 }
@@ -105,8 +108,11 @@ namespace UserService.Controllers
 
                 Console.WriteLine($"\n---> New user: {auth.User.Email}");
 
-                _context.RemoveRange(userCodes);
-                _context.SaveChanges();
+                //_context.RemoveRange(userCodes);
+                //_context.SaveChanges();
+
+                _accessCodeRepository.RemoveByEmail(user.Email);
+                await _accessCodeRepository.SaveChangesAsync();
 
                 return Ok(auth);
 
@@ -441,8 +447,12 @@ namespace UserService.Controllers
                     }
                 }
 
-                _context.AccessCodes.Add(new AccessCode() { Code = accessCode, Email = emailRequest.Email, ExpiryDate = new DateTimeOffset(DateTime.Now).AddMinutes(30) });
-                _context.SaveChanges();
+                _accessCodeRepository.Create(new AccessCode() { Code = accessCode, Email = emailRequest.Email, ExpiryDate = new DateTimeOffset(DateTime.Now).AddMinutes(30) });
+                await _accessCodeRepository.SaveChangesAsync();
+                //_context.AccessCodes.Add(new AccessCode() { Code = accessCode, Email = emailRequest.Email, ExpiryDate = new DateTimeOffset(DateTime.Now).AddMinutes(30) });
+                //_context.SaveChanges();
+
+
 
                 return NoContent();
             }

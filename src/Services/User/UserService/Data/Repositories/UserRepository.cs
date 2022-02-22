@@ -137,5 +137,10 @@ namespace UserService.Data.Repositories
 
             return listAdmins;
         }
+
+        public void ChangeEmail(User user, string email)
+        {
+            user.Email = email;
+        }
     }
 }

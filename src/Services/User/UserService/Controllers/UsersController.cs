@@ -8,8 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
+using UserService.Configuration;
 using UserService.Data.Interfaces;
 using UserService.Dto.User;
 using UserService.Models;
@@ -24,13 +26,19 @@ namespace UserService.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IAccessCodeRepository _accessCodeRepository;
         private readonly IMapper _mapper;
+        private readonly EmailConfiguration _emailConfig;
+        private Random randomNumbers = new Random();
 
-        public UsersController(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper)
+        public UsersController(IUserRepository userRepository, IRoleRepository roleRepository, IAccessCodeRepository accessCodeRepository, IMapper mapper, EmailConfiguration emailConfig)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _mapper = mapper;
+            _accessCodeRepository = accessCodeRepository;
+
+            _emailConfig = emailConfig;
         }
 
 
@@ -128,16 +136,16 @@ namespace UserService.Controllers
 
                 if (userExists == null) return NotFound();
 
-                var userEmailExitss = await _userRepository.GetByEmailAsync(user.Email);
+                //var userEmailExitss = await _userRepository.GetByEmailAsync(user.Email);
 
-                if (userEmailExitss != null && userEmailExitss.Id != id)
-                {
-                    return BadRequest(new
-                    {
-                        Success = false,
-                        Errors = new List<string> { $"Email: {user.Email} is already used" }
-                    });
-                }
+                //if (userEmailExitss != null && userEmailExitss.Id != id)
+                //{
+                //    return BadRequest(new
+                //    {
+                //        Success = false,
+                //        Errors = new List<string> { $"Email: {user.Email} is already used" }
+                //    });
+                //}
 
                 _mapper.Map(user, userExists);
                 userExists.UpdatedAt = new DateTimeOffset(DateTime.Now);
@@ -149,6 +157,110 @@ namespace UserService.Controllers
             }
 
             return BadRequest(GetModelStateErrors(ModelState.Values));
+        }
+
+        [HttpPost]
+        [Route("UpdateEmail")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
+        public async Task<IActionResult> UpdateEmail (UserChangeEmailDto userChangeEmailDto)
+        {
+            var user = await _userRepository.GetByIdAsync(userChangeEmailDto.Id);
+
+            if (user == null) return NotFound();
+
+            var userCodes = await _accessCodeRepository.GetByEmail(userChangeEmailDto.Email);
+
+            if(userCodes.Count() == 0)
+            {
+                return NotFound();
+            }
+
+            if (userCodes.ToList()[0].Code != userChangeEmailDto.AccessCode)
+            {
+                return BadRequest(new { Errors = new List<string>() { "Incorect access code" } });
+            }
+
+
+            _userRepository.ChangeEmail(user, userChangeEmailDto.Email);
+            await _userRepository.SaveChangesAsync();
+
+            _accessCodeRepository.RemoveByEmail(userChangeEmailDto.Email);
+            await _accessCodeRepository.SaveChangesAsync();
+
+
+            Console.WriteLine("\n---> Update Email");
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("SendMessage")]
+        public async Task<IActionResult> SendMessage([FromBody] UserEmailDto userChangeEmail)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var existingUser = await _userRepository.GetByIdAsync(userChangeEmail.Id);
+
+                if (existingUser == null) return NotFound();
+
+
+                var userEmailExitss = await _userRepository.GetByEmailAsync(userChangeEmail.Email);
+
+                if (userEmailExitss != null && userEmailExitss.Id != userChangeEmail.Id)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Errors = new List<string> { $"Email: {userChangeEmail.Email} is already used" }
+                    });
+                }
+
+                if (userEmailExitss != null && userEmailExitss.Id == userChangeEmail.Id)
+                {
+                    return NoContent();
+                 
+                }
+
+
+                Console.WriteLine("\n---> Send Access code"); ;
+
+                var accessCode = randomNumbers.Next(100000, 999999);
+
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress(_emailConfig.From, "It step Administration"); ;
+                    mail.To.Add(userChangeEmail.Email);
+                    mail.Subject = "Access code";
+                    mail.IsBodyHtml = true;
+                    mail.Body = $"</h1>Your access code: {accessCode}</h1>";
+                    //mail.Attachments.Add(new Attachment("D:\\Aloha.7z"));//--Uncomment this to send any attachment  
+
+                    // SmtpClient клас з за до якого можна відправити лист
+
+                    using (SmtpClient smtp = new SmtpClient(_emailConfig.SmtpServer, _emailConfig.Port))
+                    {
+                        smtp.Credentials = new NetworkCredential(_emailConfig.From, _emailConfig.Password);//Real email and password
+
+                        smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                    }
+                }
+
+                _accessCodeRepository.Create(new AccessCode() { Code = accessCode, Email = userChangeEmail.Email, ExpiryDate = new DateTimeOffset(DateTime.Now).AddMinutes(30) });
+                await _accessCodeRepository.SaveChangesAsync();
+                //_context.AccessCodes.Add(new AccessCode() { Code = accessCode, Email = emailRequest.Email, ExpiryDate = new DateTimeOffset(DateTime.Now).AddMinutes(30) });
+                //_context.SaveChanges();
+
+                return Ok();
+            }
+
+            return BadRequest(new
+            {
+                Error = "Invalid data"
+            });
+
         }
 
         [HttpPost]

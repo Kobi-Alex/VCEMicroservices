@@ -9,9 +9,9 @@ namespace UserService.Dto.User
     public class UserUpdateDto
     {
 
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress]
-        public string Email { get; set; }
+        //[Required(ErrorMessage = "Email is required")]
+        //[EmailAddress]
+        //public string Email { get; set; }
 
         [Required(ErrorMessage = "FirstName is required")]
         public string FirstName { get; set; }

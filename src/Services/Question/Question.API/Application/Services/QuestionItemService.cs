@@ -90,6 +90,7 @@ namespace Question.API.Application.Services
             var question = await GetQuestinItemInCurrentDirectory(categoryId, questionId, cancellationToken);
 
             question.Context = questionUpdateDto.Context;
+            question.AnswerType = question.AnswerType;
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync();
         }

@@ -28,6 +28,8 @@ namespace UserService.Data.Interfaces
 
         void ChangePassword(User user, string newPassword);
 
+        void ChangeEmail(User user, string email);
+
         bool CheckPassword(User user, string password);
 
         Task<IEnumerable<User>> GetAdmins();
