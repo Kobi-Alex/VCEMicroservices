@@ -221,8 +221,31 @@
       ],
       "UpstreamPathTemplate": "/api/exams/{id}",
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Exam/items/{examId}/questions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "5001"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/exams/{examId}/questions",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Exam/items/{examId}/questions/questions/{questionId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "5001"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/exams/{examId}/questions/{questionId}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
     }
-
   ]
  
 }
