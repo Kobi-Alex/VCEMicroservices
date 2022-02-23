@@ -1,7 +1,8 @@
 {
   "Routes": [
+    //Auth
     {
-      "DownstreamPathTemplate": "/api/Auth",
+      "DownstreamPathTemplate": "/api/Auth/Login",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,9 +10,46 @@
           "Port": "7000"
         }
       ],
-      "UpstreamPathTemplate": "/api/auth",
+      "UpstreamPathTemplate": "/api/auth/login",
       "UpstreamHttpMethod": [ "POST" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/Auth/Register",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/register",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/RefreshToken",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/refreshToken",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/SendMessage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/sendMessage",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    //Users
     {
       "DownstreamPathTemplate": "/api/Users",
       "DownstreamScheme": "http",
@@ -37,6 +75,55 @@
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
     },
     {
+      "DownstreamPathTemplate": "/api/Users/UpdateEmail",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/updateEmail",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Users/AddRole",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/addRole",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Users/RemoveRole",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/removeRole",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Users/SendMessage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/sendMessage",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    //Categories
+    {
       "DownstreamPathTemplate": "/api/Categories",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -60,6 +147,7 @@
       "UpstreamPathTemplate": "/api/categories/{id}",
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
     },
+    //Questions
     {
       "DownstreamPathTemplate": "/api/Categories/{categoryId}/Questions",
       "DownstreamScheme": "http",
@@ -84,6 +172,7 @@
       "UpstreamPathTemplate": "/api/c/{categoryId}/questions/{questionId}",
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
     },
+    //Answers
     {
       "DownstreamPathTemplate": "/api/Categories/{categoryId}/Questions/{questionId}/Answers",
       "DownstreamScheme": "http",
@@ -108,6 +197,7 @@
       "UpstreamPathTemplate": "/api/c/{categoryId}/q/{questionId}/answers/{answerId}",
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
     },
+    //Exams
     {
       "DownstreamPathTemplate": "/api/Exam/items",
       "DownstreamScheme": "http",
