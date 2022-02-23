@@ -51,9 +51,7 @@ namespace Question.API.Controllers
         {
             var question = await _serviceManager.QuestionItemService.GetByIdAsync(categoryId, questionId, cancellationToken);
 
-
             Console.WriteLine("--> Getting question by ID...");
-            Console.WriteLine("\n---> Answer TYPE: ", question.AnswerType);
             return Ok(question);
         }
 
@@ -75,8 +73,6 @@ namespace Question.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> UpdateQuestion(int categoryId, int questionId, [FromBody] QuestionItemUpdateDto questionItemUpdateDto, CancellationToken cancellationToken)
         {
-
-            Console.WriteLine("************************** ---> ", questionItemUpdateDto.AnswerType);
 
             await _serviceManager.QuestionItemService.UpdateAsync(categoryId, questionId, questionItemUpdateDto, cancellationToken);
 
