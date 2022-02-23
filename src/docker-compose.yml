@@ -22,4 +22,10 @@ services:
     build:
       context: .
       dockerfile:  Services/User/UserService/Dockerfile
+  ocelotApi:
+    image: ${DOCKER_REGISTRY-}ocelotApi
+    build:
+      context: .
+      dockerfile:  APIGateway/OcelotApi/Dockerfile
+      
 
