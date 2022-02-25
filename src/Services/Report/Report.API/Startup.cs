@@ -1,21 +1,26 @@
-using FluentValidation;
+using System;
+using System.Reflection;
+
 using MediatR;
+using GrpcQuestion;
+using FluentValidation;
+
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+
+using Report.API.Grpc;
+using Report.API.Middleware;
+using Report.Infrastructure;
 using Report.API.Application.Behaviours;
 using Report.API.Application.Features.Queries;
-using Report.API.Middleware;
 using Report.Domain.AggregatesModel.ReviewAggregate;
-using Report.Infrastructure;
 using Report.Infrastructure.Persistance.Repositories;
-using System.Reflection;
-
 
 namespace Report.API
 {
@@ -35,30 +40,35 @@ namespace Report.API
             services.AddDbContext<ReportDbContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
 
-            // ReviewQueries service
+            // ReviewQueries configuration
             services.AddScoped<IReviewQueries, ReviewQueries>(provider => new ReviewQueries
             (Configuration.GetConnectionString("ReportsConnection")));
 
-            // ReviewRepository secvice
+            // ReviewRepository configuration
             services.AddScoped<IReviewRepository, ReviewRepository>();
 
-            // CQRS service
+            // gRPC configuration
+            services.AddGrpcClient<QuestionGrpc.QuestionGrpcClient>
+                        (o => o.Address = new Uri(Configuration["GrpcSettings:QuestionUrl"]));
+            services.AddScoped<QuestionGrpcService>();
+
+            // CQRS configuration
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
-            // Controller service
+            // Controller configuration
             services.AddControllers();
 
-            // Swagger service
+            // Swagger configuration
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Report.API", Version = "v1" });
             });
 
 
-            // Middleware service
+            // Middleware configuration
             services.AddTransient<ExceptionHandlingMiddleware>();
         }
 

@@ -13,10 +13,10 @@ namespace Report.API.Application.Features.Commands.CreateReview
             RuleFor(command => command.ExamId).NotEmpty();
             RuleFor(command => command.ApplicantId).NotEmpty();
             RuleFor(command => command.QuestionId).NotEmpty();
-            RuleFor(command => command.Name).NotEmpty().MinimumLength(3);
+            //RuleFor(command => command.Name).NotEmpty().MinimumLength(3);
             RuleFor(command => command.CurrentKeys).NotEmpty();
-            RuleFor(command => command.AnswerKeys).NotEmpty();
-            RuleFor(command => command.TotalNumberAnswer).NotEmpty();
+            //RuleFor(command => command.AnswerKeys).NotEmpty();
+            //RuleFor(command => command.TotalNumberAnswer).NotEmpty();
 
             logger.LogTrace("--> INSTANCE CREATED - {ClassName}", GetType().Name);
         }

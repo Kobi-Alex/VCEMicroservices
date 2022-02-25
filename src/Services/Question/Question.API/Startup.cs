@@ -16,6 +16,7 @@ using Question.Infrastructure.Persistance.Repositories;
 
 using MassTransit;
 using RabbitMQ.Client;
+using Question.API.Grpc;
 
 namespace Question.API
 {
@@ -46,19 +47,22 @@ namespace Question.API
             {
                 Console.WriteLine("--> Using InMem DB");
 
-                //add service InMemory DB
+                // InMemory DB configuration
                 services.AddDbContext<QuestionDbContext>(opt =>
                     opt.UseInMemoryDatabase("InMem"));
             }
 
 
-            //add service ServiceManager
+            // ServiceManager configuration
             services.AddScoped<IServiceManager, ServiceManager>();
 
-            //add service RepositoryManager
+            // RepositoryManager configuration
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+            
+            // gRPC configuration
+            services.AddGrpc();
 
-            // MassTransit-RabbitMQ Configuration
+            // MassTransit-RabbitMQ ñonfiguration
             services.AddMassTransit(config => {
                 config.UsingRabbitMq((ctx, cfg) => {
                     cfg.Host(Configuration["EventBusSettings:HostAddress"]);
@@ -100,6 +104,7 @@ namespace Question.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<QuestionGrpcService>();
             });
 
             //add Seeding data

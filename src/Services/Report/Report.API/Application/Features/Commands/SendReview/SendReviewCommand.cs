@@ -1,19 +1,18 @@
 using System;
 using MediatR;
 
-namespace Report.API.Application.Features.Commands.CancelReview
+namespace Report.API.Application.Features.Commands.SendReview
 {
-    public class CancelReviewCommand : IRequest<bool>
+    public class SendReviewCommand : IRequest<bool>
     {
         public int ExamId { get; set; }
         public int UserId { get; set; }
 
-        public CancelReviewCommand()
+        public SendReviewCommand()
         {
-
         }
 
-        public CancelReviewCommand(int examId, int userId)
+        public SendReviewCommand(int examId, int userId)
         {
             ExamId = examId;
             UserId = userId;

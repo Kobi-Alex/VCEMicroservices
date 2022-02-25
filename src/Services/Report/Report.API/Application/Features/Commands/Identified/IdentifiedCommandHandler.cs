@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Report.Infrastructure.Persistance.Idempotency;
-using Report.API.Application.Features.Commands.CancelReview;
+using Report.API.Application.Features.Commands.SendReview;
 using MediatR;
 
 namespace Report.API.Application.Features.Commands.Identified
@@ -62,15 +62,15 @@ namespace Report.API.Application.Features.Commands.Identified
                 try
                 {
                     var command = message.Command;
-                    //var commandName = command.GetGenericTypeName();
+                    var commandName = command.GetType();
                     var idProperty = string.Empty;
                     var commandId = string.Empty;
 
                     switch (command)
                     {
-                        case CancelReviewCommand cancelReviewCommand:
-                            //idProperty = nameof(cancelReviewCommand.ReviewId);
-                            //commandId = $"{cancelReviewCommand.ReviewId}";
+                        case SendReviewCommand cancelReviewCommand:
+                            idProperty = nameof(cancelReviewCommand.ExamId);
+                            commandId = $"{cancelReviewCommand.ExamId}";
                             break;
 
                         default:
@@ -81,7 +81,7 @@ namespace Report.API.Application.Features.Commands.Identified
 
                     _logger.LogInformation(
                         "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
-                        //commandName,
+                        commandName,
                         idProperty,
                         commandId,
                         command);
@@ -92,7 +92,7 @@ namespace Report.API.Application.Features.Commands.Identified
                     _logger.LogInformation(
                         "----- Command result: {@Result} - {CommandName} - {IdProperty}: {CommandId} ({@Command})",
                         result,
-                       // commandName,
+                        commandName,
                         idProperty,
                         commandId,
                         command);

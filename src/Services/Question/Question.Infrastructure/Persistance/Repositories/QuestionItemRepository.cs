@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Question.Domain.Entities;
-using Question.Domain.Repositories;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Question.Domain.Entities;
+using Question.Domain.Repositories;
 
 namespace Question.Infrastructure.Persistance.Repositories
 {
@@ -19,27 +18,33 @@ namespace Question.Infrastructure.Persistance.Repositories
             _dbContext = dbContext;
         }
 
-        //public async Task<IEnumerable<QuestionItem>> GetAllAsync(CancellationToken cancellationToken = default)
-        //{
-        //    return await _dbContext.Questions
-        //        .AsNoTracking()
-        //        .ToListAsync(cancellationToken);
-        //}
 
-        public async Task<QuestionItem> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<QuestionItem>> GetAllQuestionAsync(CancellationToken cancellationToken = default)
         {
             return await _dbContext.Questions
-                .Include(q => q.QuestionCategory)
-                .FirstOrDefaultAsync(q => q.Id == id, cancellationToken);
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Questions
                 .Where(q => q.QuestionCategoryId == categoryId)
-                .Include(q => q.QuestionCategory)
                 .ToListAsync(cancellationToken);    
         }
+
+        public async Task<QuestionItem> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Questions
+                .FirstOrDefaultAsync(q => q.Id == id, cancellationToken);
+        }
+
+        public async Task<QuestionItem> GetQuestionByIdIncludeAnswersAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Questions
+                .Include(q => q.QuestionAnswers)
+                .FirstOrDefaultAsync(q => q.Id == id, cancellationToken);
+        }
+
 
         public void Insert(QuestionItem item)
         {
@@ -55,5 +60,6 @@ namespace Question.Infrastructure.Persistance.Repositories
         {
             return _dbContext.Questions.Any(e => e.Id == id);
         }
+
     }
 }

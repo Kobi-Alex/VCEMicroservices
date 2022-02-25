@@ -11,25 +11,24 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
 
     public class SetQuestionUnitCommand : IRequest<bool>
     {
-        public int ExamId { get; private set; }
+        public int ExamId { get; private set; } 
         public string ApplicantId { get; private set; }
         public int QuestionId { get; private set; }
-        public string Name { get; private set; }                //Question name
-        public string AnswerKeys { get; private set; }
+        //public string Name { get; private set; }                //Question name
+        //public string AnswerKeys { get; private set; }
         public string CurrentKeys { get; private set; }
-        public int TotalNumberAnswer { get; private set; }
+        //public int TotalNumberAnswer { get; private set; }
 
 
-        public SetQuestionUnitCommand(int examId, string applicantId, int questionId, string name,
-            string answerKeys, string currentKeys, int totalNumberAnswer)
+        public SetQuestionUnitCommand(int examId, string applicantId, int questionId, string currentKeys)
         {
             ExamId = examId;
             ApplicantId = applicantId;
             QuestionId = questionId;
-            Name = name;
-            AnswerKeys = answerKeys;
+            //Name = name;
+            //AnswerKeys = answerKeys;
             CurrentKeys = currentKeys;
-            TotalNumberAnswer = totalNumberAnswer;
+            //TotalNumberAnswer = totalNumberAnswer;
         }
     }
 }

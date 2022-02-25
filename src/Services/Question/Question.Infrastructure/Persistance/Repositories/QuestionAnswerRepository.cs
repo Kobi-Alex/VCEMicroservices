@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Question.Domain.Entities;
-using Question.Domain.Repositories;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Question.Domain.Entities;
+using Question.Domain.Repositories;
 
 namespace Question.Infrastructure.Persistance.Repositories
 {
@@ -24,14 +23,13 @@ namespace Question.Infrastructure.Persistance.Repositories
         {
             return await _dbContext.Answers
                 .Where(q => q.QuestionItemId == questionId)
-                .Include(q => q.QuestionItem)
                 .ToListAsync(cancellationToken);
         }
+
 
         public async Task<QuestionAnswer> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Answers
-                .Include(a => a.QuestionItem)
                 .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
         }
 
@@ -44,5 +42,6 @@ namespace Question.Infrastructure.Persistance.Repositories
         {
             _dbContext.Answers.Remove(item);
         }
+
     }
 }
