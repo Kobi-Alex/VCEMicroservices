@@ -9,10 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using UserService.Configuration;
+using UserService.Data;
 using UserService.Data.Interfaces;
+using UserService.Data.Paggination;
 using UserService.Dto.User;
 using UserService.Models;
 
@@ -30,6 +33,7 @@ namespace UserService.Controllers
         private readonly IMapper _mapper;
         private readonly EmailConfiguration _emailConfig;
         private Random randomNumbers = new Random();
+        private Random randomPassword = new Random();
 
         public UsersController(IUserRepository userRepository, IRoleRepository roleRepository, IAccessCodeRepository accessCodeRepository, IMapper mapper, EmailConfiguration emailConfig)
         {
@@ -44,7 +48,7 @@ namespace UserService.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Manager")]
-        public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers(CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers(int page, string filter, string role, int limit = 15, CancellationToken cancellationToken = default)
         {
             Console.WriteLine("\n---> Getting All Users...");
 
@@ -60,7 +64,38 @@ namespace UserService.Controllers
                 }
             }
 
-            return Ok(userReadDto);
+            if (!String.IsNullOrEmpty(filter))
+            {
+                userReadDto = userReadDto.Where(x => x.FirstName.ToLower().Contains(filter.ToLower())
+                || x.LastName.ToLower().Contains(filter.ToLower())
+                || x.Email.ToLower().Contains(filter.ToLower()));
+            }
+
+            if (!String.IsNullOrEmpty(role))
+            {
+                userReadDto = userReadDto.Where(x => x.Roles.ToLower().Contains(role.ToLower()));
+            }
+
+            //var list = new List<UserReadDto>();
+
+            //string[] roles = new string[4] { "Student", "Admin", "Teacher", "Manager" };
+
+            //int k = 0;
+
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    list.Add(new UserReadDto { Id = i.ToString(), Roles = roles[k], Email = $"user{i}@google.com", FirstName = $"User{i}", LastName = $"L{i}", CreatedAt = DateTime.Now });
+            //    k++;
+            //    if (k >= roles.Length) k = 0;
+            //}
+
+
+
+            //return Ok(userReadDto);
+
+            return Ok(Pagination<UserReadDto>.GetData(page, limit, userReadDto));
+
+
             //var list = new List<UserReadDto>();
 
             //for (int i = 0; i < 500; i++)
@@ -109,12 +144,48 @@ namespace UserService.Controllers
                     });
                 }
 
+                Regex regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$");
+                bool isCorrectPassword = false;
                 var newUser = new User();
+                string password = RandomString(10);
+
+                while (!isCorrectPassword)
+                {
+                    if (regex.IsMatch(password))
+                    {
+                        isCorrectPassword = true;
+                    }
+                    else
+                    {
+                        password = RandomString(10);
+                    }
+                }
 
                 _mapper.Map(user, newUser);
 
-                _userRepository.Create(newUser, user.Password);
+                _userRepository.Create(newUser, password);
                 await _userRepository.SaveChangesAsync();
+
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress(_emailConfig.From, "It step Administration"); ;
+                    mail.To.Add(user.Email);
+                    mail.Subject = "Data";
+                    mail.IsBodyHtml = true;
+                    mail.Body = $"</h1>Your email: {user.Email} | Password: {password}</h1>";
+                    //mail.Attachments.Add(new Attachment("D:\\Aloha.7z"));//--Uncomment this to send any attachment  
+
+                    // SmtpClient клас з за до якого можна відправити лист
+
+                    using (SmtpClient smtp = new SmtpClient(_emailConfig.SmtpServer, _emailConfig.Port))
+                    {
+                        smtp.Credentials = new NetworkCredential(_emailConfig.From, _emailConfig.Password);//Real email and password
+
+                        smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                    }
+                }
+
 
                 return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, _mapper.Map<UserReadDto>(newUser));
             }
@@ -454,6 +525,14 @@ namespace UserService.Controllers
             }
 
             return modelErrors;
+        }
+
+        private string RandomString(int length)
+        {
+
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnpqrstuvwxy#$^+=!*()@%&0123456789";
+
+            return new string(Enumerable.Repeat(chars, length).Select(x => x[randomPassword.Next(x.Length)]).ToArray());
         }
     }
 }

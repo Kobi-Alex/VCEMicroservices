@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Exam.API.Application.Contracts.ExamItemDtos;
@@ -7,6 +8,7 @@ using Exam.API.Application.Services.Abstractions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Question.API.Application.Paggination;
 
 namespace Exam.API.Controllers
 {
@@ -27,12 +29,24 @@ namespace Exam.API.Controllers
         // GET api/exam/items
         [HttpGet]
         [Route("items")]
-        public async Task<IActionResult> Exams(CancellationToken cancellationToken)
+        public async Task<IActionResult> Exams(int page, string title, string status, int limit ,CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Getting exams...");
             var exams = await _serviceManager.ExamItemService.GetAllAsync(cancellationToken);
 
-            return Ok(exams);
+            if(title != null)
+            {
+                exams = exams.Where(x => x.Title.ToLower().Contains(title.ToLower()));
+            }
+
+            if(status != null)
+            {
+                exams = exams.Where(x => x.Status.ToString().ToLower() == status.ToLower());
+            }
+
+
+            return Ok(Pagination<ExamItemReadDto>.GetData(page,limit,exams));
+            //return Ok(exams);
         }
 
 

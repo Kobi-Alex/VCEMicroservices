@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Question.API.Application.Contracts.Dtos.QuestionCategoryDtos;
+using Question.API.Application.Paggination;
 using Question.API.Application.Services.Interfaces;
 
 namespace Question.API.Controllers
@@ -28,12 +29,14 @@ namespace Question.API.Controllers
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
 
-        public async Task<IActionResult> GetCategories(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCategories(int page, string filter, int limit,CancellationToken cancellationToken)
         {
             var categories = await _serviceManager.QuestionCategoryService.GetAllAsync(cancellationToken);
 
             Console.WriteLine("--> Getting categories...");
-            return Ok(categories);
+
+            return Ok(Pagination<QuestionCategoryReadDto>.GetData(page, filter,limit,categories));
+            //return Ok(categories);
         }
 
 
