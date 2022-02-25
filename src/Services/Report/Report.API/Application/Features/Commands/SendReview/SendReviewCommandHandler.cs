@@ -7,15 +7,15 @@ using Report.Domain.AggregatesModel.ReviewAggregate;
 using Report.Infrastructure.Persistance.Idempotency;
 using MediatR;
 
-namespace Report.API.Application.Features.Commands.CancelReview
+namespace Report.API.Application.Features.Commands.SendReview
 {
 
     // Regular CommandHandler
-    public class CancelReviewCommandHandler : IRequestHandler<CancelReviewCommand, bool>
+    public class SendReviewCommandHandler : IRequestHandler<SendReviewCommand, bool>
     {
         private readonly IReviewRepository _reviewRepository;
 
-        public CancelReviewCommandHandler(IReviewRepository reviewRepository)
+        public SendReviewCommandHandler(IReviewRepository reviewRepository)
         {
             _reviewRepository = reviewRepository;
         }
@@ -27,7 +27,7 @@ namespace Report.API.Application.Features.Commands.CancelReview
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        public Task<bool> Handle(CancelReviewCommand request, CancellationToken cancellationToken)
+        public Task<bool> Handle(SendReviewCommand request, CancellationToken cancellationToken)
         {
 
             //TODO logik: send message, create final report for applicant, count exam result <----
@@ -38,19 +38,19 @@ namespace Report.API.Application.Features.Commands.CancelReview
 
 
     // Use for Idempotency in Command process
-    public class CancelOrderIdentifiedCommandHandler : IdentifiedCommandHandler<CancelReviewCommand, bool>
-    {
-        public CancelOrderIdentifiedCommandHandler(
-            IMediator mediator,
-            IRequestManager requestManager,
-            ILogger<IdentifiedCommandHandler<CancelReviewCommand, bool>> logger)
-            : base(mediator, requestManager, logger)
-        {
-        }
+    //public class SendReviewIdentifiedCommandHandler : IdentifiedCommandHandler<SendReviewCommand, bool>
+    //{
+    //    public SendReviewIdentifiedCommandHandler(
+    //        IMediator mediator,
+    //        IRequestManager requestManager,
+    //        ILogger<IdentifiedCommandHandler<SendReviewCommand, bool>> logger)
+    //        : base(mediator, requestManager, logger)
+    //    {
+    //    }
 
-        protected override bool CreateResultForDuplicateRequest()
-        {
-            return true; // Ignore duplicate requests for processing order.
-        }
-    }
+    //    protected override bool CreateResultForDuplicateRequest()
+    //    {
+    //        return true; // Ignore duplicate requests for processing order.
+    //    }
+    //}
 }

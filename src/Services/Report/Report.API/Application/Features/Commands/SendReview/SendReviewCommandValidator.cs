@@ -2,12 +2,12 @@ using System;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 
-namespace Report.API.Application.Features.Commands.CancelReview
+namespace Report.API.Application.Features.Commands.SendReview
 {
 
-    public class CancelReviewCommandValidator : AbstractValidator<CancelReviewCommand>
+    public class SendReviewCommandValidator : AbstractValidator<SendReviewCommand>
     {
-        public CancelReviewCommandValidator(ILogger<CancelReviewCommandValidator> logger)
+        public SendReviewCommandValidator(ILogger<SendReviewCommandValidator> logger)
         {
             RuleFor(command => command.ExamId).NotEmpty();
             RuleFor(command => command.UserId).NotEmpty();

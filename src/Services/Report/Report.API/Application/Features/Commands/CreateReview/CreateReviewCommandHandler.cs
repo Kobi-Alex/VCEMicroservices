@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Report.Domain.AggregatesModel.ReviewAggregate;
 using MediatR;
-
+using Report.API.Application.Exceptions;
 
 namespace Report.API.Application.Features.Commands.CreateReview
 {
@@ -33,7 +33,7 @@ namespace Report.API.Application.Features.Commands.CreateReview
 
             if(review == null)
             {
-                throw new ArgumentNullException(nameof(review));
+                throw new ReviewNullException(nameof(review));
             }
 
             _reviewRepository.Add(review);

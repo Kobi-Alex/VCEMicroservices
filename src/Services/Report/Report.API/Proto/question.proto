@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcQuestion";
+
+//package ReportApi;
+
+service QuestionGrpc{
+	rpc GetQuestionUnitFromQuestionData(GetQuestionUnit) returns (QuestionUnitModel) {}
+}
+
+message GetQuestionUnit {
+	int32 questionId = 1;
+}
+
+message QuestionUnitModel {
+	string context = 1;
+	string answerKey = 2;
+	int32 totalNumberAnswer = 3;
+}

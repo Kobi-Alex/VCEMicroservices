@@ -61,7 +61,8 @@ namespace Report.API.Controllers
         }
 
 
-        //POST api/report/items
+        // POST api/report/items
+        // Create and add new applicant answer or update
         [Route("items")]
         [HttpPost]
         public async Task<IActionResult> CreateQuestionUnit([FromBody] SetQuestionUnitCommand setQuestionUnitCommand, CancellationToken cancellationToken)

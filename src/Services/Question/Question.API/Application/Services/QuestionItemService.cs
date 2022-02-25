@@ -28,6 +28,14 @@ namespace Question.API.Application.Services
 
 
 
+        public async Task<IEnumerable<QuestionItemReadDto>> GetAllQuestionAsync(CancellationToken cancellationToken = default)
+        {
+            var questionItems = await _repositoryManager.QuestionItemRepository.GetAllQuestionAsync(cancellationToken);
+            var questionItemsDto = _mapper.Map<IEnumerable<QuestionItemReadDto>>(questionItems);
+
+            return questionItemsDto;
+        }
+
         public async Task<IEnumerable<QuestionItemReadDto>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
         {
 
@@ -89,6 +97,12 @@ namespace Question.API.Application.Services
 
             var question = await GetQuestinItemInCurrentDirectory(categoryId, questionId, cancellationToken);
 
+            //TODO normal change answers
+            if(question.AnswerType !=questionUpdateDto.AnswerType)
+            {
+                question.QuestionAnswers.Clear();
+            }
+
             question.Context = questionUpdateDto.Context;
             question.AnswerType = questionUpdateDto.AnswerType;
 
@@ -131,6 +145,20 @@ namespace Question.API.Application.Services
             }
 
             return question;
+        }
+
+        public async Task<QuestionItemReadDto> GetQuestionByIdIncludeAnswersAsync(int questionId, CancellationToken cancellationToken = default)
+        {
+            var question = await _repositoryManager.QuestionItemRepository.GetQuestionByIdIncludeAnswersAsync(questionId, cancellationToken);
+
+            if (question is null)
+            {
+                throw new QuestionItemNotFoundException(questionId);
+            }
+
+            var questionDto = _mapper.Map<QuestionItemReadDto>(question);
+
+            return questionDto;
         }
 
     }

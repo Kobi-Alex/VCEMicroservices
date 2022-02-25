@@ -25,6 +25,18 @@ namespace Question.API.Controllers
         }
 
 
+        // GET api/Questions
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllQuestions(CancellationToken cancellationToken)
+        //{
+        //    var questions = await _serviceManager.QuestionItemService
+        //        .GetAllQuestionAsync(cancellationToken);
+
+        //    Console.WriteLine("--> Getting all questions with out Id...");
+        //    return Ok(questions);
+        //}
+
+
         // GET api/Categories/5/Questions
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
@@ -93,5 +105,4 @@ namespace Question.API.Controllers
         }
 
     }
-
 }

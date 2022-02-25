@@ -23,22 +23,12 @@ namespace Question.Infrastructure.Persistance.Repositories
             return await _dbContext.Categories
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
-
-            //return await _dbContext.Categories
-            //    .Include(c => c.QuestionItems)
-            //    .ThenInclude(q => q.QuestionAnswers)
-            //    .ToListAsync(cancellationToken);
         }
 
         public async Task<QuestionCategory> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Categories
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-            //return await _dbContext.Categories
-            //    .Include(c => c.QuestionItems)
-            //    .ThenInclude(q => q.QuestionAnswers)
-            //    .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
         public void Insert(QuestionCategory item)

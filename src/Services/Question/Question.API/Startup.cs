@@ -16,9 +16,6 @@ using Question.Infrastructure.Persistance.Repositories;
 
 using MassTransit;
 using RabbitMQ.Client;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Question.API
 {
@@ -54,6 +51,9 @@ namespace Question.API
                 //services.AddDbContext<QuestionDbContext>(opt =>
                 //    opt.UseInMemoryDatabase("InMem"));
 
+                //add service InMemory DB
+                services.AddDbContext<QuestionDbContext>(opt =>
+                    opt.UseInMemoryDatabase("InMem"));
             }
 
 
@@ -96,10 +96,13 @@ namespace Question.API
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();
 
-            //add service RepositoryManager
+            // RepositoryManager configuration
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+            
+            // gRPC configuration
+            services.AddGrpc();
 
-            // MassTransit-RabbitMQ Configuration
+            // MassTransit-RabbitMQ ñonfiguration
             services.AddMassTransit(config => {
                 config.UsingRabbitMq((ctx, cfg) => {
                     cfg.Host(Configuration["EventBusSettings:HostAddress"]);
@@ -143,6 +146,7 @@ namespace Question.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<QuestionGrpcService>();
             });
 
             //add Seeding data

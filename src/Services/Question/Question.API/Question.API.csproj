@@ -8,7 +8,9 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
 
+
   <ItemGroup>
+	  <PackageReference Include="Grpc.AspNetCore" Version="2.38.0"/>
 	  <PackageReference Include="MassTransit" Version="7.3.0" />
 	  <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
 	  <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.0" />
@@ -34,5 +36,10 @@
     <Folder Include="Application\Configurations\" />
     <Folder Include="Application\Models\" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="Proto\question.proto" GrpcServices="Server"/>
+		<!--//<None Remove="Proto\question.proto" />-->
+	</ItemGroup>
 
 </Project>
