@@ -8,10 +8,20 @@ namespace Question.API.Application.Services.Interfaces
 {
     public interface IQuestionAnswerService
     {
-        Task<IEnumerable<QuestionAnswerReadDto>> GetAllByQuestionItemIdAsync(int categoryId, int questionId, CancellationToken cancellationToken = default);
-        Task<QuestionAnswerReadDto> GetByIdAsync(int categoryId, int questionId, int answerId, CancellationToken cancellationToken = default);
-        Task<QuestionAnswerReadDto> CreateAsync(int categoryId, int questionId, QuestionAnswerCreateDto answerCreateDto, CancellationToken cancellationToken = default);
-        Task UpdateAsync(int categoryId, int questionId, int answerId, QuestionAnswerUpdateDto answerUpdateDto, CancellationToken cancellationToken = default);
-        Task DeleteAsync(int categoryId, int questionId, int answerId, CancellationToken cancellationToken = default);
+        // Answer service interface
+        Task<IEnumerable<QuestionAnswerReadDto>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<IEnumerable<QuestionAnswerReadDto>> GetAllByQuestionItemIdAsync(int questionId, CancellationToken cancellationToken = default);
+        Task<QuestionAnswerReadDto> GetByIdAsync(int answerId, CancellationToken cancellationToken = default);
+        Task<QuestionAnswerReadDto> CreateAsync(QuestionAnswerCreateDto answerCreateDto, CancellationToken cancellationToken = default);
+        Task UpdateAsync(int answerId, QuestionAnswerUpdateDto answerUpdateDto, CancellationToken cancellationToken = default);
+        Task DeleteAsync(int answerId, CancellationToken cancellationToken = default);
+
+
+        // Old interface
+        //Task<IEnumerable<QuestionAnswerReadDto>> GetAllByQuestionItemIdAsync(int categoryId, int questionId, CancellationToken cancellationToken = default);
+        //Task<QuestionAnswerReadDto> GetByIdAsync(int categoryId, int questionId, int answerId, CancellationToken cancellationToken = default);
+        //Task<QuestionAnswerReadDto> CreateAsync(int categoryId, int questionId, QuestionAnswerCreateDto answerCreateDto, CancellationToken cancellationToken = default);
+        //Task UpdateAsync(int categoryId, int questionId, int answerId, QuestionAnswerUpdateDto answerUpdateDto, CancellationToken cancellationToken = default);
+        //Task DeleteAsync(int categoryId, int questionId, int answerId, CancellationToken cancellationToken = default);
     }
 }

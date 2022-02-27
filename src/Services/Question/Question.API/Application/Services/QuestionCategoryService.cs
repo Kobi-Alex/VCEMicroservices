@@ -11,6 +11,8 @@ using AutoMapper;
 
 namespace Question.API.Application.Services
 {
+    // Category service
+    // Service in which the interface IQuestionCategoryService and its methods are implemented
     internal sealed class QuestionCategoryService : IQuestionCategoryService
     {
         private readonly IMapper _mapper;
@@ -23,7 +25,7 @@ namespace Question.API.Application.Services
         }
 
 
-
+        // Get all categories from DB
         public async Task<IEnumerable<QuestionCategoryReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var categories = await _repositoryManager.QuestionCategoryRepository.GetAllAsync(cancellationToken);
@@ -33,6 +35,7 @@ namespace Question.API.Application.Services
         }
 
 
+        // Get question by ID from DB
         public async Task<QuestionCategoryReadDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var category = await _repositoryManager.QuestionCategoryRepository.GetByIdAsync(id, cancellationToken);
@@ -48,11 +51,12 @@ namespace Question.API.Application.Services
         }
 
 
+        // Create new category
         public async Task<QuestionCategoryReadDto> CreateAsync(QuestionCategoryCreateDto categoryCreateDto, CancellationToken cancellationToken = default)
         {
             if (categoryCreateDto is null)
             {
-                throw new ArgumentNullException(nameof(categoryCreateDto));
+                throw new QuestionCategoryArgumentException(nameof(categoryCreateDto));
             }
 
             var category = _mapper.Map<QuestionCategory>(categoryCreateDto);
@@ -65,8 +69,14 @@ namespace Question.API.Application.Services
         }
 
 
+        // Update current category
         public async Task UpdateAsync(int id, QuestionCategoryUpdateDto categoryUpdateDto, CancellationToken cancellationToken = default)
         {
+            if (categoryUpdateDto is null)
+            {
+                throw new QuestionCategoryArgumentException(nameof(categoryUpdateDto));
+            }
+
             var category = await _repositoryManager.QuestionCategoryRepository.GetByIdAsync(id);
 
             if (category is null)
@@ -78,6 +88,5 @@ namespace Question.API.Application.Services
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync();
         }
-
     }
 }

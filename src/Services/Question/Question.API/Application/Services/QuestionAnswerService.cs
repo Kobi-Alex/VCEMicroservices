@@ -28,56 +28,110 @@ namespace Question.API.Application.Services
         }
 
 
-        public async Task<IEnumerable<QuestionAnswerReadDto>> GetAllByQuestionItemIdAsync(int categoryId, int questionId, CancellationToken cancellationToken = default)
+
+        // Get all answers from DB 
+        public async Task<IEnumerable<QuestionAnswerReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
+            var answers = await _repositoryManager.QuestionAnswerRepository
+                .GetAllAsync(cancellationToken);
 
-            await GetQuestionItem(categoryId, questionId, cancellationToken);
-
-            var answers = await _repositoryManager.QuestionAnswerRepository.GetAllByQuestionItemIdAsync(questionId, cancellationToken);
             var answersDto = _mapper.Map<IEnumerable<QuestionAnswerReadDto>>(answers);
 
             return answersDto;
         }
 
 
-        public async Task<QuestionAnswerReadDto> GetByIdAsync(int categoryId, int questionId, int answerId, CancellationToken cancellationToken = default)
+        // Get all answers by QuestionItem ID from DB
+        public async Task<IEnumerable<QuestionAnswerReadDto>> GetAllByQuestionItemIdAsync(int questionId, CancellationToken cancellationToken = default)
         {
+            var answers = await _repositoryManager.QuestionAnswerRepository
+                .GetAllByQuestionItemIdAsync(questionId, cancellationToken);
 
-            await GetQuestionItem(categoryId, questionId, cancellationToken);
+            if(answers is null)
+            {
+                throw new QuestionAnswerNotFoundException(questionId);
+            }
 
-            var answer = await GetQuestinAnswerInCurrentDirectory(questionId, answerId, cancellationToken);
+            var answersDto = _mapper.Map<IEnumerable<QuestionAnswerReadDto>>(answers);
+
+            return answersDto;
+        }
+
+
+        // Get question by ID from DB
+        public async Task<QuestionAnswerReadDto> GetByIdAsync(int answerId, CancellationToken cancellationToken = default)
+        {
+            var answer = await _repositoryManager.QuestionAnswerRepository
+                .GetByIdAsync(answerId, cancellationToken);
+
+            if (answer is null)
+            {
+                throw new QuestionAnswerNotFoundException(answerId);
+            }
+
             var answerDto = _mapper.Map<QuestionAnswerReadDto>(answer);
 
             return answerDto;
+
         }
 
 
-        public async Task<QuestionAnswerReadDto> CreateAsync(int categoryId, int questionId, QuestionAnswerCreateDto questionAnswerCreateDto, CancellationToken cancellationToken = default)
+        // Create new answer
+        public async Task<QuestionAnswerReadDto> CreateAsync(QuestionAnswerCreateDto answerCreateDto, CancellationToken cancellationToken = default)
         {
 
-            var question = await GetQuestionItem(categoryId, questionId, cancellationToken);
-            var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository.GetAllByQuestionItemIdAsync(questionId, cancellationToken);
+            if (answerCreateDto is null)
+            {
+                throw new QuestionAnswerArgumentException(nameof(answerCreateDto));
+            }
 
-            CheckCorrectAnswerTypeWhenCreate(question, questionAnswerCreateDto, answers);
-           
-            var answer = _mapper.Map<QuestionAnswer>(questionAnswerCreateDto);
+            var question = await _repositoryManager.QuestionItemRepository
+                .GetByIdAsync(answerCreateDto.QuestionItemId);
+
+            if (question is null)
+            {
+                throw new QuestionAnswerDoesNotBelongToQuestionItemException(answerCreateDto.QuestionItemId);
+            }
+
+            var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository
+                .GetAllByQuestionItemIdAsync(question.Id);
+
+            CheckCorrectAnswerTypeWhenCreate(question, answerCreateDto, answers);
+
+            var answer = _mapper.Map<QuestionAnswer>(answerCreateDto);
             answer.QuestionItemId = question.Id;
 
             _repositoryManager.QuestionAnswerRepository.Insert(answer);
-            await _repositoryManager.UnitOfWork.SaveChangesAsync();
+            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<QuestionAnswerReadDto>(answer);
+
         }
 
 
-        public async Task UpdateAsync(int categoryId, int questionId, int answerId, QuestionAnswerUpdateDto answerUpdateDto, CancellationToken cancellationToken = default)
+        // Update current answer
+        public async Task UpdateAsync(int answerId, QuestionAnswerUpdateDto answerUpdateDto, CancellationToken cancellationToken = default)
         {
 
-            var question = await GetQuestionItem(categoryId, questionId, cancellationToken);
-            var answer = await GetQuestinAnswerInCurrentDirectory(questionId, answerId, cancellationToken);
-            var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository.GetAllByQuestionItemIdAsync(questionId, cancellationToken);
+            if (answerUpdateDto is null)
+            {
+                throw new QuestionAnswerArgumentException(nameof(answerUpdateDto));
+            }
+
+            var question = await _repositoryManager.QuestionItemRepository
+                .GetByIdAsync(answerUpdateDto.QuestionItemId);
+
+            if (question is null)
+            {
+                throw new QuestionAnswerDoesNotBelongToQuestionItemException(answerUpdateDto.QuestionItemId);
+            }
+
+            var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository
+                .GetAllByQuestionItemIdAsync(question.Id);
 
             CheckCorrectAnswerTypeWhenUpdate(question, answerUpdateDto, answers);
+           
+            var answer = await _repositoryManager.QuestionAnswerRepository.GetByIdAsync(answerId, cancellationToken);
 
             answer.Context = answerUpdateDto.Context;
             answer.IsCorrectAnswer = answerUpdateDto.IsCorrectAnswer;
@@ -86,55 +140,134 @@ namespace Question.API.Application.Services
         }
 
 
-        public async Task DeleteAsync(int categoryId, int questionId, int answerId, CancellationToken cancellationToken = default)
+        // Delete current answer
+        public async Task DeleteAsync(int answerId, CancellationToken cancellationToken = default)
         {
-            await GetQuestionItem(categoryId, questionId, cancellationToken);
 
-            var answer = await GetQuestinAnswerInCurrentDirectory(questionId, answerId, cancellationToken);
-            _repositoryManager.QuestionAnswerRepository.Remove(answer);
-
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
-        }
-
-
-        private async Task<QuestionItem> GetQuestionItem(int categoryId, int questionId, CancellationToken cancellationToken = default)
-        {
-            if (!_repositoryManager.QuestionCategoryRepository.IsCategoryExists(categoryId))
-            {
-                throw new QuestionCategoryNotFoundException(categoryId);
-            }
-
-            var question = await _repositoryManager.QuestionItemRepository.GetByIdAsync(questionId, cancellationToken);
-
-            if (question is null)
-            {
-                throw new QuestionItemNotFoundException(questionId);
-            }
-
-            if (question.QuestionCategoryId != categoryId)
-            {
-                throw new QuestionItemDoesNotBelongToQuestionCategoryException(categoryId, questionId);
-            }
-
-            return question;
-        }
-
-        private async Task<QuestionAnswer> GetQuestinAnswerInCurrentDirectory(int questionId, int answerId, CancellationToken cancellationToken = default)
-        {
-            var answer = await _repositoryManager.QuestionAnswerRepository.GetByIdAsync(answerId, cancellationToken);
+            var answer = await _repositoryManager.QuestionAnswerRepository.GetByIdAsync(answerId);
 
             if (answer is null)
             {
                 throw new QuestionAnswerNotFoundException(answerId);
             }
 
-            if (answer.QuestionItemId != questionId)
-            {
-                throw new QuestionAnswerDoesNotBelongToQuestionItemException(questionId, answerId);
-            }
-
-            return answer;
+            _repositoryManager.QuestionAnswerRepository.Remove(answer);
+            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
+
+
+        //public async Task<IEnumerable<QuestionAnswerReadDto>> GetAllByQuestionItemIdAsync(int categoryId, int questionId, CancellationToken cancellationToken = default)
+        //{
+
+        //    await GetQuestionItem(categoryId, questionId, cancellationToken);
+
+        //    var answers = await _repositoryManager.QuestionAnswerRepository.GetAllByQuestionItemIdAsync(questionId, cancellationToken);
+        //    var answersDto = _mapper.Map<IEnumerable<QuestionAnswerReadDto>>(answers);
+
+        //    return answersDto;
+        //}
+
+
+        //public async Task<QuestionAnswerReadDto> GetByIdAsync(int categoryId, int questionId, int answerId, CancellationToken cancellationToken = default)
+        //{
+
+        //    await GetQuestionItem(categoryId, questionId, cancellationToken);
+
+        //    var answer = await GetQuestinAnswerInCurrentDirectory(questionId, answerId, cancellationToken);
+        //    var answerDto = _mapper.Map<QuestionAnswerReadDto>(answer);
+
+        //    return answerDto;
+        //}
+
+
+        //public async Task<QuestionAnswerReadDto> CreateAsync(int categoryId, int questionId, QuestionAnswerCreateDto questionAnswerCreateDto, CancellationToken cancellationToken = default)
+        //{
+
+        //    var question = await GetQuestionItem(categoryId, questionId, cancellationToken);
+        //    var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository.GetAllByQuestionItemIdAsync(questionId, cancellationToken);
+
+        //    CheckCorrectAnswerTypeWhenCreate(question, questionAnswerCreateDto, answers);
+
+        //    var answer = _mapper.Map<QuestionAnswer>(questionAnswerCreateDto);
+        //    answer.QuestionItemId = question.Id;
+
+        //    _repositoryManager.QuestionAnswerRepository.Insert(answer);
+        //    await _repositoryManager.UnitOfWork.SaveChangesAsync();
+
+        //    return _mapper.Map<QuestionAnswerReadDto>(answer);
+        //}
+
+
+        //public async Task UpdateAsync(int categoryId, int questionId, int answerId, QuestionAnswerUpdateDto answerUpdateDto, CancellationToken cancellationToken = default)
+        //{
+
+        //    var question = await GetQuestionItem(categoryId, questionId, cancellationToken);
+        //    var answer = await GetQuestinAnswerInCurrentDirectory(questionId, answerId, cancellationToken);
+        //    var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository.GetAllByQuestionItemIdAsync(questionId, cancellationToken);
+
+        //    CheckCorrectAnswerTypeWhenUpdate(question, answerUpdateDto, answers);
+
+        //    answer.Context = answerUpdateDto.Context;
+        //    answer.IsCorrectAnswer = answerUpdateDto.IsCorrectAnswer;
+
+        //    await _repositoryManager.UnitOfWork.SaveChangesAsync();
+        //}
+
+
+        //public async Task DeleteAsync(int categoryId, int questionId, int answerId, CancellationToken cancellationToken = default)
+        //{
+        //    await GetQuestionItem(categoryId, questionId, cancellationToken);
+
+        //    var answer = await GetQuestinAnswerInCurrentDirectory(questionId, answerId, cancellationToken);
+        //    _repositoryManager.QuestionAnswerRepository.Remove(answer);
+
+        //    await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+        //}
+
+
+        //private async Task<QuestionItem> GetQuestionItem(int categoryId, int questionId, CancellationToken cancellationToken = default)
+        //{
+        //    if (!_repositoryManager.QuestionCategoryRepository.IsCategoryExists(categoryId))
+        //    {
+        //        throw new QuestionCategoryNotFoundException(categoryId);
+        //    }
+
+        //    var question = await _repositoryManager.QuestionItemRepository.GetByIdAsync(questionId, cancellationToken);
+
+        //    if (question is null)
+        //    {
+        //        throw new QuestionItemNotFoundException(questionId);
+        //    }
+
+        //    if (question.QuestionCategoryId != categoryId)
+        //    {
+        //        throw new QuestionItemDoesNotBelongToQuestionCategoryException(categoryId, questionId);
+        //    }
+
+        //    return question;
+        //}
+
+        //private async Task<QuestionAnswer> GetQuestinAnswerInCurrentDirectory(int questionId, int answerId, CancellationToken cancellationToken = default)
+        //{
+        //    var answer = await _repositoryManager.QuestionAnswerRepository.GetByIdAsync(answerId, cancellationToken);
+
+        //    if (answer is null)
+        //    {
+        //        throw new QuestionAnswerNotFoundException(answerId);
+        //    }
+
+        //    if (answer.QuestionItemId != questionId)
+        //    {
+        //        throw new QuestionAnswerDoesNotBelongToQuestionItemException(questionId, answerId);
+        //    }
+
+        //    return answer;
+        //}
+
+
+
+
+        /// /////////////////////////////////////////////////////////////////
 
         private void CheckCorrectAnswerTypeWhenCreate(QuestionItem question, QuestionAnswerCreateDto questionAnswerCreateDto, List<QuestionAnswer> answers)
         {

@@ -19,47 +19,53 @@ namespace Question.Infrastructure.Persistance.Repositories
         }
 
 
-        public async Task<IEnumerable<QuestionItem>> GetAllQuestionAsync(CancellationToken cancellationToken = default)
+        // Get all questions
+        public async Task<IEnumerable<QuestionItem>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dbContext.Questions
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
-        {
-            return await _dbContext.Questions
-                .Where(q => q.QuestionCategoryId == categoryId)
-                .ToListAsync(cancellationToken);    
-        }
-
+        // Get questions by ID
         public async Task<QuestionItem> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Questions
                 .FirstOrDefaultAsync(q => q.Id == id, cancellationToken);
         }
 
-        public async Task<QuestionItem> GetQuestionByIdIncludeAnswersAsync(int id, CancellationToken cancellationToken = default)
+        // Get questions by ID include answers
+        public async Task<QuestionItem> GetByIdIncludeAnswersAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Questions
                 .Include(q => q.QuestionAnswers)
                 .FirstOrDefaultAsync(q => q.Id == id, cancellationToken);
         }
 
-
+        // Insert question
         public void Insert(QuestionItem item)
         {
             _dbContext.Questions.Add(item);
         }
 
+        // Remove question
         public void Remove(QuestionItem item)
         {
             _dbContext.Questions.Remove(item);
         }
 
+        // Check if question exist
         public bool IsQuestionExists(int id)
         {
             return _dbContext.Questions.Any(e => e.Id == id);
         }
+
+
+        //public async Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
+        //{
+        //    return await _dbContext.Questions
+        //        .Where(q => q.QuestionCategoryId == categoryId)
+        //        .ToListAsync(cancellationToken);    
+        //}
 
     }
 }
