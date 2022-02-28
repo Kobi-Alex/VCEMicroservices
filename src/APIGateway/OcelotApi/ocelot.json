@@ -129,7 +129,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5002"
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/categories",
@@ -141,7 +141,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5002"
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/categories/{id}",
@@ -154,7 +154,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5002"
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/c/{categoryId}/questions",
@@ -166,7 +166,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5002"
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/c/{categoryId}/questions/{questionId}",
@@ -179,7 +179,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5002"
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/c/{categoryId}/q/{questionId}/answers",
@@ -191,7 +191,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5002"
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/c/{categoryId}/q/{questionId}/answers/{answerId}",
