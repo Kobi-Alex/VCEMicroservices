@@ -8,8 +8,8 @@ namespace Question.API.Application.Exceptions
 {
     public sealed class QuestionAnswerNotFoundException : NotFoundException
     {
-        public QuestionAnswerNotFoundException(int questionItemId)
-            : base($"The question answer with the identifier {questionItemId} was not found")
+        public QuestionAnswerNotFoundException(int questionId)
+            : base($"The question answer with the identifier {questionId} was not found")
         {
         }
     }

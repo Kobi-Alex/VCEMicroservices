@@ -15,5 +15,8 @@ namespace Question.API.Application.Contracts.Dtos.QuestionItemDtos
         [Required(ErrorMessage = "Question answer type is required")]
         public AnswerType AnswerType { get; set; }
 
+        //Category Id
+        public int QuestionCategoryId { get; set; }
+
     }
 }

@@ -11,13 +11,15 @@ namespace Question.Domain.Repositories
 {
     public interface IQuestionItemRepository
     {
-        Task<IEnumerable<QuestionItem>> GetAllQuestionAsync(CancellationToken cancellationToken = default);
-        Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<QuestionItem>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<QuestionItem> GetByIdAsync(int id, CancellationToken cancellationToken = default);
-        Task<QuestionItem> GetQuestionByIdIncludeAnswersAsync(int id, CancellationToken cancellationToken = default);
+        Task<QuestionItem> GetByIdIncludeAnswersAsync(int id, CancellationToken cancellationToken = default);
        
         void Insert(QuestionItem item);
         void Remove(QuestionItem item);
         bool IsQuestionExists(int id);
+
+
+        //Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default);
     }
 }

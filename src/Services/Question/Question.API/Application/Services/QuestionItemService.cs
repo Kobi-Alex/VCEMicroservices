@@ -13,6 +13,8 @@ using Exam.API.Application.IntegrationEvents.Events;
 
 namespace Question.API.Application.Services
 {
+    // Question service
+    // Service in which the interface IQuestionItemService and its methods are implemented
     internal sealed class QuestionItemService : IQuestionItemService
     {
         private readonly IMapper _mapper;
@@ -28,57 +30,70 @@ namespace Question.API.Application.Services
 
 
 
-        public async Task<IEnumerable<QuestionItemReadDto>> GetAllQuestionAsync(CancellationToken cancellationToken = default)
+        // Get all questions from DB
+        public async Task<IEnumerable<QuestionItemReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var questionItems = await _repositoryManager.QuestionItemRepository.GetAllQuestionAsync(cancellationToken);
+            var questionItems = await _repositoryManager.QuestionItemRepository.GetAllAsync(cancellationToken);
             var questionItemsDto = _mapper.Map<IEnumerable<QuestionItemReadDto>>(questionItems);
 
             return questionItemsDto;
         }
 
-        public async Task<IEnumerable<QuestionItemReadDto>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
+
+        // Get question by ID from DB
+        public async Task<QuestionItemReadDto> GetByIdAsync(int questionId, CancellationToken cancellationToken = default)
         {
 
-            if (! _repositoryManager.QuestionCategoryRepository.IsCategoryExists(categoryId))
+            var question = await _repositoryManager.QuestionItemRepository.GetByIdAsync(questionId, cancellationToken);
+
+            if(question is null)
             {
-                throw new QuestionCategoryNotFoundException(categoryId);
+                throw new QuestionItemNotFoundException(questionId);
             }
 
-            var questions = await _repositoryManager.QuestionItemRepository.GetAllByQuestionCategoryIdAsync(categoryId, cancellationToken);
-            var questionsDto = _mapper.Map<IEnumerable<QuestionItemReadDto>>(questions);
-
-            return questionsDto;
-        }
-
-
-        public async Task<QuestionItemReadDto> GetByIdAsync(int categoryId, int questionId,  CancellationToken cancellationToken = default)
-        {
-
-            if (!_repositoryManager.QuestionCategoryRepository.IsCategoryExists(categoryId))
-            {
-                throw new QuestionCategoryNotFoundException(categoryId);
-            }
-
-            var question = await GetQuestinItemInCurrentDirectory(categoryId, questionId, cancellationToken);
             var questionDto = _mapper.Map<QuestionItemReadDto>(question);
 
             return questionDto;
         }
 
 
-        public async Task<QuestionItemReadDto> CreateAsync(int categoryId, QuestionItemCreateDto questionItemCreateDto, CancellationToken cancellationToken = default)
+        // Get question by ID include list answers from DB
+        public async Task<QuestionItemReadDto> GetByIdIncludeAnswersAsync(int questionId, CancellationToken cancellationToken = default)
         {
-            var category = await _repositoryManager.QuestionCategoryRepository.GetByIdAsync(categoryId, cancellationToken);
+            var question = await _repositoryManager.QuestionItemRepository.GetByIdIncludeAnswersAsync(questionId, cancellationToken);
+
+            if (question is null)
+            {
+                throw new QuestionItemNotFoundException(questionId);
+            }
+
+            var questionDto = _mapper.Map<QuestionItemReadDto>(question);
+
+            return questionDto;
+        }
+
+
+        // Create new question
+        public async Task<QuestionItemReadDto> CreateAsync(QuestionItemCreateDto questionCreateDto, CancellationToken cancellationToken = default)
+        {
+
+            if (questionCreateDto is null)
+            {
+                throw new QuestionItemArgumentException(nameof(questionCreateDto));
+            }
+
+            var category = await _repositoryManager.QuestionCategoryRepository
+                .GetByIdAsync(questionCreateDto.QuestionCategoryId, cancellationToken);
 
             if (category is null)
             {
-                throw new QuestionCategoryNotFoundException(categoryId);
+                throw new QuestionCategoryNotFoundException(questionCreateDto.QuestionCategoryId);
             }
 
-            var question = _mapper.Map<QuestionItem>(questionItemCreateDto);
+
+            var question = _mapper.Map<QuestionItem>(questionCreateDto);
 
             question.ReleaseDate = new DateTimeOffset(DateTime.Now);
-            question.QuestionCategoryId = category.Id;
 
             _repositoryManager.QuestionItemRepository.Insert(question);
             await _repositoryManager.UnitOfWork.SaveChangesAsync();
@@ -87,51 +102,47 @@ namespace Question.API.Application.Services
         }
 
 
-        public async Task UpdateAsync(int categoryId, int questionId, QuestionItemUpdateDto questionUpdateDto, CancellationToken cancellationToken = default)
+        // Update current question
+        public async Task UpdateAsync(int questionId, QuestionItemUpdateDto questionUpdateDto, CancellationToken cancellationToken = default)
         {
 
-            if (!_repositoryManager.QuestionCategoryRepository.IsCategoryExists(categoryId))
+            if (questionUpdateDto is null)
             {
-                throw new QuestionCategoryNotFoundException(categoryId);
+                throw new QuestionItemArgumentException(nameof(questionUpdateDto));
             }
 
-            var question = await GetQuestinItemInCurrentDirectory(categoryId, questionId, cancellationToken);
+            if (!_repositoryManager.QuestionCategoryRepository
+                .IsCategoryExists(questionUpdateDto.QuestionCategoryId))
+            {
+                throw new QuestionCategoryNotFoundException(questionUpdateDto.QuestionCategoryId);
+            }
+
+
+            var question = await _repositoryManager.QuestionItemRepository
+                .GetByIdIncludeAnswersAsync(questionId);
+
+            if(question is null)
+            {
+                throw new QuestionItemNotFoundException(questionId);
+            }
 
             //TODO normal change answers
-            if(question.AnswerType !=questionUpdateDto.AnswerType)
+            if (question.AnswerType != questionUpdateDto.AnswerType)
             {
                 question.QuestionAnswers.Clear();
             }
 
             question.Context = questionUpdateDto.Context;
             question.AnswerType = questionUpdateDto.AnswerType;
-
+           
             await _repositoryManager.UnitOfWork.SaveChangesAsync();
         }
 
 
-        public async Task DeleteAsync(int categoryId, int questionId, CancellationToken cancellationToken = default)
+        // Delete current question
+        public async Task DeleteAsync(int questionId, CancellationToken cancellationToken = default)
         {
 
-            if (!_repositoryManager.QuestionCategoryRepository.IsCategoryExists(categoryId))
-            {
-                throw new QuestionCategoryNotFoundException(categoryId);
-            }
-
-            var question = await GetQuestinItemInCurrentDirectory(categoryId, questionId, cancellationToken);
-
-            //Event (send messaga to RubbitMQ server)
-            var eventMessage = _mapper.Map<QuestionItemDeleteEvent>(question);
-            await _publishEndpoint.Publish(eventMessage);
-
-            _repositoryManager.QuestionItemRepository.Remove(question);
-
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-        }
-
-        private async Task<QuestionItem> GetQuestinItemInCurrentDirectory(int categoryId, int questionId, CancellationToken cancellationToken = default)
-        {
             var question = await _repositoryManager.QuestionItemRepository.GetByIdAsync(questionId, cancellationToken);
 
             if (question is null)
@@ -139,27 +150,140 @@ namespace Question.API.Application.Services
                 throw new QuestionItemNotFoundException(questionId);
             }
 
-            if (question.QuestionCategoryId != categoryId)
-            {
-                throw new QuestionItemDoesNotBelongToQuestionCategoryException(categoryId, questionId);
-            }
+            // Event (send messaga to RubbitMQ server)
+            var eventMessage = _mapper.Map<QuestionItemDeleteEvent>(question);
+            await _publishEndpoint.Publish(eventMessage);
 
-            return question;
+            _repositoryManager.QuestionItemRepository.Remove(question);
+
+            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<QuestionItemReadDto> GetQuestionByIdIncludeAnswersAsync(int questionId, CancellationToken cancellationToken = default)
-        {
-            var question = await _repositoryManager.QuestionItemRepository.GetQuestionByIdIncludeAnswersAsync(questionId, cancellationToken);
+        // Old code
+        //public async Task<IEnumerable<QuestionItemReadDto>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
+        //{
 
-            if (question is null)
-            {
-                throw new QuestionItemNotFoundException(questionId);
-            }
+        //    if (! _repositoryManager.QuestionCategoryRepository.IsCategoryExists(categoryId))
+        //    {
+        //        throw new QuestionCategoryNotFoundException(categoryId);
+        //    }
 
-            var questionDto = _mapper.Map<QuestionItemReadDto>(question);
+        //    var questions = await _repositoryManager.QuestionItemRepository.GetAllByQuestionCategoryIdAsync(categoryId, cancellationToken);
+        //    var questionsDto = _mapper.Map<IEnumerable<QuestionItemReadDto>>(questions);
 
-            return questionDto;
-        }
+        //    return questionsDto;
+        //}
+
+
+        //public async Task<QuestionItemReadDto> GetByIdAsync(int categoryId, int questionId,  CancellationToken cancellationToken = default)
+        //{
+
+        //    if (!_repositoryManager.QuestionCategoryRepository.IsCategoryExists(categoryId))
+        //    {
+        //        throw new QuestionCategoryNotFoundException(categoryId);
+        //    }
+
+        //    var question = await GetQuestinItemInCurrentDirectory(categoryId, questionId, cancellationToken);
+        //    var questionDto = _mapper.Map<QuestionItemReadDto>(question);
+
+        //    return questionDto;
+        //}
+
+
+        //public async Task<QuestionItemReadDto> CreateAsync(int categoryId, QuestionItemCreateDto questionItemCreateDto, CancellationToken cancellationToken = default)
+        //{
+        //    var category = await _repositoryManager.QuestionCategoryRepository.GetByIdAsync(categoryId, cancellationToken);
+
+        //    if (category is null)
+        //    {
+        //        throw new QuestionCategoryNotFoundException(categoryId);
+        //    }
+
+        //    var question = _mapper.Map<QuestionItem>(questionItemCreateDto);
+
+        //    question.ReleaseDate = new DateTimeOffset(DateTime.Now);
+        //    question.QuestionCategoryId = category.Id;
+
+        //    _repositoryManager.QuestionItemRepository.Insert(question);
+        //    await _repositoryManager.UnitOfWork.SaveChangesAsync();
+
+        //    return _mapper.Map<QuestionItemReadDto>(question);
+        //}
+
+
+        //public async Task UpdateAsync(int categoryId, int questionId, QuestionItemUpdateDto questionUpdateDto, CancellationToken cancellationToken = default)
+        //{
+
+        //    if (!_repositoryManager.QuestionCategoryRepository.IsCategoryExists(categoryId))
+        //    {
+        //        throw new QuestionCategoryNotFoundException(categoryId);
+        //    }
+
+        //    var question = await GetQuestinItemInCurrentDirectory(categoryId, questionId, cancellationToken);
+
+        //    //TODO normal change answers
+        //    if(question.AnswerType !=questionUpdateDto.AnswerType)
+        //    {
+        //        question.QuestionAnswers.Clear();
+        //    }
+
+        //    question.Context = questionUpdateDto.Context;
+        //    question.AnswerType = questionUpdateDto.AnswerType;
+
+        //    await _repositoryManager.UnitOfWork.SaveChangesAsync();
+        //}
+
+
+        //public async Task DeleteAsync(int categoryId, int questionId, CancellationToken cancellationToken = default)
+        //{
+
+        //    if (!_repositoryManager.QuestionCategoryRepository.IsCategoryExists(categoryId))
+        //    {
+        //        throw new QuestionCategoryNotFoundException(categoryId);
+        //    }
+
+        //    var question = await GetQuestinItemInCurrentDirectory(categoryId, questionId, cancellationToken);
+
+        //    //Event (send messaga to RubbitMQ server)
+        //    var eventMessage = _mapper.Map<QuestionItemDeleteEvent>(question);
+        //    await _publishEndpoint.Publish(eventMessage);
+
+        //    _repositoryManager.QuestionItemRepository.Remove(question);
+
+        //    await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        //}
+
+        //private async Task<QuestionItem> GetQuestinItemInCurrentDirectory(int categoryId, int questionId, CancellationToken cancellationToken = default)
+        //{
+        //    var question = await _repositoryManager.QuestionItemRepository.GetByIdAsync(questionId, cancellationToken);
+
+        //    if (question is null)
+        //    {
+        //        throw new QuestionItemNotFoundException(questionId);
+        //    }
+
+        //    if (question.QuestionCategoryId != categoryId)
+        //    {
+        //        throw new QuestionItemDoesNotBelongToQuestionCategoryException(categoryId, questionId);
+        //    }
+
+        //    return question;
+        //}
+
+        //public async Task<QuestionItemReadDto> GetQuestionByIdIncludeAnswersAsync(int questionId, CancellationToken cancellationToken = default)
+        //{
+        //    var question = await _repositoryManager.QuestionItemRepository.GetQuestionByIdIncludeAnswersAsync(questionId, cancellationToken);
+
+        //    if (question is null)
+        //    {
+        //        throw new QuestionItemNotFoundException(questionId);
+        //    }
+
+        //    var questionDto = _mapper.Map<QuestionItemReadDto>(question);
+
+        //    return questionDto;
+        //}
 
     }
 }

@@ -10,5 +10,6 @@ namespace Question.API.Application.Contracts.Dtos.QuestionAnswerDtos
         public string Context { get; set; }
 
         public bool IsCorrectAnswer { get; set; }
+        public int QuestionItemId { get; set; }
     }
 }

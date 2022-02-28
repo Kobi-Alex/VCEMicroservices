@@ -23,7 +23,7 @@ namespace Question.API.Grpc
         public override async Task<QuestionUnitModel> GetQuestionUnitFromQuestionData(GetQuestionUnit request, ServerCallContext context)
         {
             // Get data from DB
-            var questionUnit = await _serviceManager.QuestionItemService.GetQuestionByIdIncludeAnswersAsync(request.QuestionId);
+            var questionUnit = await _serviceManager.QuestionItemService.GetByIdIncludeAnswersAsync(request.QuestionId);
 
             // Create response QuestionUnitModel
             // Console.WriteLine(questionUnit.Context);
