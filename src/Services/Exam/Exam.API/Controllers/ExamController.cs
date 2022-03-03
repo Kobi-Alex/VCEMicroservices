@@ -103,12 +103,13 @@ namespace Exam.API.Controllers
         // GET api/[controller]/items/5/questions
         [HttpGet]
         [Route("items/{examId:int}/questions")]
-        public async Task<IActionResult> QuestionsByExamItemId(int examId, CancellationToken cancellationToken)
+        public async Task<IActionResult> QuestionsByExamItemId(int examId, int page, int limit, CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Getting questions...");
             var questions = await _serviceManager.ExamQuestionService.GetAllByExamItemIdAsync(examId, cancellationToken);
 
-            return Ok(questions);
+            return Ok(Pagination<ExamQuestionReadDto>.GetData(page, limit, questions));
+            //return Ok(questions);
         }
 
 

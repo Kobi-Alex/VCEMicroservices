@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using UserService.Data.Interfaces;
+using UserService.Dto.User;
 using UserService.Models;
 
 namespace UserService.Data.Repositories
@@ -141,6 +142,26 @@ namespace UserService.Data.Repositories
         public void ChangeEmail(User user, string email)
         {
             user.Email = email;
+        }
+
+        public async Task<IEnumerable<UserExams>> GetUserExams(string id)
+        {
+          return await  _context.UserExams.Where(x => x.UserId == id).ToListAsync();
+        }
+
+        public async Task<UserExams> GetUserExamAsync(UserExamDto userExamDto)
+        {
+            return await _context.UserExams.FirstOrDefaultAsync(x => x.UserId == userExamDto.UserId && x.ExamId == userExamDto.ExamId);
+        }
+
+        public void AddExamToUser (UserExams userExam)
+        {
+            _context.UserExams.Add(userExam);
+        }
+
+        public void RemoveExamFromUser(UserExams userExam)
+        {
+            _context.UserExams.Remove(userExam);
         }
     }
 }

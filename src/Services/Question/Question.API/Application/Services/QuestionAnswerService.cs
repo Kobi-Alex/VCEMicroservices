@@ -135,6 +135,7 @@ namespace Question.API.Application.Services
 
             answer.Context = answerUpdateDto.Context;
             answer.IsCorrectAnswer = answerUpdateDto.IsCorrectAnswer;
+            answer.CharKey = answerUpdateDto.CharKey;
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync();
         }

@@ -35,7 +35,7 @@ namespace Question.API.Controllers
 
             Console.WriteLine("--> Getting categories...");
 
-            return Ok(Pagination<QuestionCategoryReadDto>.GetData(page, filter,limit,categories));
+            return Ok(Pagination<QuestionCategoryReadDto>.GetData(page,limit,categories));
             //return Ok(categories);
         }
 

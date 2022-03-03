@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using UserService.Dto.User;
 using UserService.Models;
 
 namespace UserService.Data.Interfaces
@@ -11,7 +12,6 @@ namespace UserService.Data.Interfaces
     public interface IUserRepository
     {
         Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
-
         Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken);
         Task<User> GetByIdAsync(string id, CancellationToken cancellationToken = default);
         Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
@@ -23,7 +23,7 @@ namespace UserService.Data.Interfaces
         void Update(User user);
         void Delete(User user);
 
-        void AddRole(User user,Role role);
+        void AddRole(User user, Role role);
         void DeleteRole(User user, Role role);
 
         void ChangePassword(User user, string newPassword);
@@ -33,5 +33,10 @@ namespace UserService.Data.Interfaces
         bool CheckPassword(User user, string password);
 
         Task<IEnumerable<User>> GetAdmins();
+
+        Task<IEnumerable<UserExams>> GetUserExams(string id);
+        Task<UserExams> GetUserExamAsync(UserExamDto userExamDto);
+        void AddExamToUser(UserExams userExam);
+        void RemoveExamFromUser(UserExams userExam);
     }
 }

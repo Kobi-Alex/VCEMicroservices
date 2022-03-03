@@ -144,7 +144,7 @@ namespace UserService.Controllers
                     });
                 }
 
-                Regex regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$");
+                Regex regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$"); // for password
                 bool isCorrectPassword = false;
                 var newUser = new User();
                 string password = RandomString(10);
@@ -185,7 +185,6 @@ namespace UserService.Controllers
                         smtp.Send(mail);
                     }
                 }
-
 
                 return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, _mapper.Map<UserReadDto>(newUser));
             }
@@ -234,7 +233,7 @@ namespace UserService.Controllers
         [Route("UpdateEmail")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
-        public async Task<IActionResult> UpdateEmail (UserChangeEmailDto userChangeEmailDto)
+        public async Task<IActionResult> UpdateEmail(UserChangeEmailDto userChangeEmailDto)
         {
             var user = await _userRepository.GetByIdAsync(userChangeEmailDto.Id);
 
@@ -242,7 +241,7 @@ namespace UserService.Controllers
 
             var userCodes = await _accessCodeRepository.GetByEmail(userChangeEmailDto.Email);
 
-            if(userCodes.Count() == 0)
+            if (userCodes.Count() == 0)
             {
                 return NotFound();
             }
@@ -291,7 +290,7 @@ namespace UserService.Controllers
                 if (userEmailExitss != null && userEmailExitss.Id == userChangeEmail.Id)
                 {
                     return NoContent();
-                 
+
                 }
 
 
@@ -398,7 +397,6 @@ namespace UserService.Controllers
         [HttpPost]
         [Route("AddRole")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-
         public async Task<IActionResult> AddRole(UserRoleDto userRoleDto)
         {
             if (ModelState.IsValid)
@@ -437,7 +435,7 @@ namespace UserService.Controllers
                 {
                     if (existsUser.Roles.Any(x => x.Name == "Admin") || existsUser.Roles.Any(x => x.Name == "Manager") || existsUser.Roles.Any(x => x.Name == "Teacher"))
                     {
-                       
+
                         return BadRequest(new { Error = new List<string>() { $"Cannot add role: < {roleExists.Name} > to user with roles < Admin, Manager or Teacher >" } });
                     }
                 }
@@ -462,10 +460,10 @@ namespace UserService.Controllers
 
             return BadRequest(GetModelStateErrors(ModelState.Values));
         }
+
         [HttpPost]
         [Route("RemoveRole")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-
         public async Task<IActionResult> RemoveRole(UserRoleDto userRoleDto)
         {
             if (ModelState.IsValid)
@@ -508,6 +506,80 @@ namespace UserService.Controllers
 
                 return NoContent();
 
+            }
+
+            return BadRequest(GetModelStateErrors(ModelState.Values));
+        }
+
+        [HttpGet]
+        [Route("Exams/{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
+
+        public async Task<IActionResult> GetUserExams(string id)
+        {
+            return Ok(await _userRepository.GetUserExams(id));
+        }
+
+
+        [HttpPost]
+        [Route("AddExam")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
+        public async Task<IActionResult> AddExamToUser(UserExamDto userExamDto)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userRepository.GetByIdAsync(userExamDto.UserId);
+
+                if (user == null)
+                {
+                    return NotFound(new
+                    {
+                        Errors = new List<string> { $"User < {userExamDto.UserId} > doesn't exists" }
+                    });
+                }
+
+                if (user.Roles.FirstOrDefault(x => x.Name == "Student") == null)
+                {
+                    return BadRequest(new
+                    {
+                        Errors = new List<string> { $"Could not add exam to user" }
+                    });
+                }
+
+                var userExam = await _userRepository.GetUserExamAsync(userExamDto);
+
+                if (userExam != null)
+                {
+                    return BadRequest(new
+                    {
+                        Errors = new List<string> { $"Exam < {userExamDto.ExamId} > is already exists" }
+                    });
+                }
+
+                _userRepository.AddExamToUser(new UserExams() { ExamId = userExamDto.ExamId, UserId = userExamDto.UserId });
+                await _userRepository.SaveChangesAsync();
+
+                return Ok();
+            }
+            
+            return BadRequest(GetModelStateErrors(ModelState.Values));
+        }
+
+        [HttpPost]
+        [Route("RemoveExam")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
+        public async Task<IActionResult> RemoveExamFromUser(UserExamDto userExamDto)
+        {
+            if(ModelState.IsValid)
+            {
+                var userExam = await _userRepository.GetUserExamAsync(userExamDto);
+
+                if (userExam == null) return NotFound();
+
+                _userRepository.RemoveExamFromUser(userExam);
+                await _userRepository.SaveChangesAsync();
+
+                return Ok();
             }
 
             return BadRequest(GetModelStateErrors(ModelState.Values));

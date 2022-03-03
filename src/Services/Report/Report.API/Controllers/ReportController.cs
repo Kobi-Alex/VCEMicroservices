@@ -7,11 +7,15 @@ using Report.API.Application.Features.Queries;
 using MediatR;
 using Report.API.Application.Features.Commands.CancelReview;
 using Report.API.Application.Features.Commands.SetQuestionUnit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Report.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ReportController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -25,11 +29,11 @@ namespace Report.API.Controllers
             _reviewQueries = reviewQueries ?? throw new ArgumentNullException(nameof(reviewQueries));
         }
 
-
-
         // GET api/report/items/1
         [Route("items/{examId:int}")]
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
+
         public async Task<ActionResult> GetReportsByExamIdAsync(int examId)
         {
             try
@@ -43,10 +47,10 @@ namespace Report.API.Controllers
             }
         }
 
-
         // GET api/report/items/1/applicants/3
         [Route("items{examId:int}/applicants/{userId}")]
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
         public async Task<ActionResult> GetReportsByExamIdAndUserIdAsync(int examId, string userId)
         {
             try
@@ -65,6 +69,7 @@ namespace Report.API.Controllers
         // Create and add new applicant answer or update
         [Route("items")]
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student")]
         public async Task<IActionResult> CreateQuestionUnit([FromBody] SetQuestionUnitCommand setQuestionUnitCommand, CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Adding current answer...");

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Question.API.Application.Paggination
 {
-    public class PagiData<T>
+  public class PagiData<T>
     {
         public int StartPage { get; set; }
 
@@ -21,10 +21,12 @@ namespace Question.API.Application.Paggination
 
     public static class Pagination<T>
     {
-        public static PagiData<T> GetData(int currentPage = 1, string filter = null, int limit = -1, IEnumerable<T> itemsData = null)
+        public static PagiData<T> GetData(int currentPage = -1, int limit = -1, IEnumerable<T> itemsData = null)
         {
+            if (itemsData == null) return null;
+            if(currentPage <=0) return new PagiData<T>() { Items = itemsData, EndPage = 1, StartPage = 1, Pages = new List<int>() { 1}, TotalPages = 1 };
 
-            var itemsCntOnPage = limit>0? limit: itemsData.Count();
+            var itemsCntOnPage = limit >0 ? limit : itemsData.Count();
 
             var totalItems = itemsData.Count();
 
@@ -78,5 +80,5 @@ namespace Question.API.Application.Paggination
             return new PagiData<T>() { Items = items, EndPage = endPage, StartPage = startPage, Pages = pages, TotalPages = totalPages };
 
         }
-    }
+    }  
 }

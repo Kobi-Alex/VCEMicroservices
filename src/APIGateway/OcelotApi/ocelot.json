@@ -122,6 +122,42 @@
       "UpstreamPathTemplate": "/api/users/sendMessage",
       "UpstreamHttpMethod": [ "POST" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/Users/Exams/:id",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/exams/:id",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Users/AddExam",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/addExam",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Users/RemoveExam",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/removeExam",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
     //Categories
     {
       "DownstreamPathTemplate": "/api/Categories",
@@ -149,7 +185,7 @@
     },
     //Questions
     {
-      "DownstreamPathTemplate": "/api/Categories/{categoryId}/Questions",
+      "DownstreamPathTemplate": "/api/Questions",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -157,11 +193,11 @@
           "Port": "6002"
         }
       ],
-      "UpstreamPathTemplate": "/api/c/{categoryId}/questions",
+      "UpstreamPathTemplate": "/api/questions",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Categories/{categoryId}/Questions/{questionId}",
+      "DownstreamPathTemplate": "/api/Questions/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -169,12 +205,12 @@
           "Port": "6002"
         }
       ],
-      "UpstreamPathTemplate": "/api/c/{categoryId}/questions/{questionId}",
+      "UpstreamPathTemplate": "/api/questions/{id}",
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
     },
     //Answers
     {
-      "DownstreamPathTemplate": "/api/Categories/{categoryId}/Questions/{questionId}/Answers",
+      "DownstreamPathTemplate": "/api/Answers",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -182,11 +218,11 @@
           "Port": "6002"
         }
       ],
-      "UpstreamPathTemplate": "/api/c/{categoryId}/q/{questionId}/answers",
+      "UpstreamPathTemplate": "/api/answers",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Categories/{categoryId}/Questions/{questionId}/Answers/{answerId}",
+      "DownstreamPathTemplate": "/api/Answers/{answerId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -194,8 +230,20 @@
           "Port": "6002"
         }
       ],
-      "UpstreamPathTemplate": "/api/c/{categoryId}/q/{questionId}/answers/{answerId}",
+      "UpstreamPathTemplate": "/api/answers/{answerId}",
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Answers/q/{questionId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "6002"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/answers/q/{questionId}",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     //Exams
     {
@@ -245,7 +293,44 @@
       ],
       "UpstreamPathTemplate": "/api/exams/{examId}/questions/{questionId}",
       "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    //Reports
+    {
+      "DownstreamPathTemplate": "/api/Report/items/{examId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "5000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/items/{examId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Report/items{examId:int}/applicants/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "5000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/items{examId:int}/a/{userId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Report/items",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "5000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/items",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
- 
+
 }

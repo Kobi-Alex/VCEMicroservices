@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
+using Question.API.Application.Paggination;
 using Question.API.Application.Services.Interfaces;
 
 namespace Question.API.Controllers
@@ -29,13 +31,24 @@ namespace Question.API.Controllers
 
         // GET api/Questions
         [HttpGet]
-        public async Task<IActionResult> GetAllQuestions(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllQuestions(int page, int limit, int? category, string context,CancellationToken cancellationToken)
         {
             var questions = await _serviceManager.QuestionItemService
                 .GetAllAsync(cancellationToken);
 
+            if(category != null)
+            {
+                questions = questions.Where(x => x.QuestionCategoryId == category).ToList();
+            }
+
+            if(!String.IsNullOrEmpty(context))
+            {
+                questions = questions.Where(x => x.Context.ToLower().Contains(context.ToLower()));
+            }
+
             Console.WriteLine("--> Getting all questions...");
-            return Ok(questions);
+            return Ok(Pagination<QuestionItemReadDto>.GetData(page, limit, questions));
+            //return Ok(questions);
         }
 
         // GET api/Questions/1

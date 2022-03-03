@@ -28,9 +28,14 @@ namespace Question.API.Controllers
 
         // GET api/Answers
         [HttpGet]
-        public async Task<IActionResult> GetAllAnswers(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllAnswers(int? questionId, CancellationToken cancellationToken)
         {
             var answers = await _serviceManager.QuestionAnswerService.GetAllAsync(cancellationToken);
+
+            if(questionId != null)
+            {
+                answers = answers.Where(x => x.QuestionItemId == questionId);
+            }
 
             Console.WriteLine("---> Count: " + answers.ToList().Count().ToString());
 
@@ -40,16 +45,16 @@ namespace Question.API.Controllers
 
 
         //// GET api/Answers/1
-        //[HttpGet]
-        //[Route("{questionId:int}")]
-        //public async Task<IActionResult> GetAllAnswersByQuestionId(int questionId, CancellationToken cancellationToken)
-        //{
-        //    var answer = await _serviceManager.QuestionAnswerService
-        //        .GetAllByQuestionItemIdAsync(questionId, cancellationToken);
+        [HttpGet]
+        [Route("q/{questionId:int}")]
+        public async Task<IActionResult> GetAllAnswersByQuestionId(int questionId, CancellationToken cancellationToken)
+        {
+            var answer = await _serviceManager.QuestionAnswerService
+                .GetAllByQuestionItemIdAsync(questionId, cancellationToken);
 
-        //    Console.WriteLine($"--> Getting answer by question ID = {questionId} ...");
-        //    return Ok(answer);
-        //}
+            Console.WriteLine($"--> Getting answer by question ID = {questionId} ...");
+            return Ok(answer);
+        }
 
 
         // GET api/Answers/1

@@ -21,6 +21,9 @@ using Report.API.Application.Behaviours;
 using Report.API.Application.Features.Queries;
 using Report.Domain.AggregatesModel.ReviewAggregate;
 using Report.Infrastructure.Persistance.Repositories;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Report.API
 {
@@ -36,6 +39,41 @@ namespace Report.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Auth <------------------------------------------------------------------------------------------------>
+
+            var key = Encoding.ASCII.GetBytes(Configuration["JwtConfig:Secret"]);
+
+
+            var tokenValidationParams = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                RequireExpirationTime = false
+            };
+            services.AddSingleton(tokenValidationParams);
+
+            services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(jwt =>
+            {
+                jwt.SaveToken = true;
+                jwt.TokenValidationParameters = tokenValidationParams;
+            });
+
+            //Auth <------------------------------------------------------------------------------------------------>
+
+
+
+
+
             // Database connection
             services.AddDbContext<ReportDbContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
