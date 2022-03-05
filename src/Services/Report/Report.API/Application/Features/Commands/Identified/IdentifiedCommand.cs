@@ -7,16 +7,14 @@ namespace Report.API.Application.Features.Commands.Identified
     public class IdentifiedCommand<T, R> : IRequest<R> 
         where T : IRequest<R>
     {
-
         public T Command { get; }
-        public Guid Id { get; }
+        public string Id { get; }
 
 
-        public IdentifiedCommand(T command, Guid id)
+        public IdentifiedCommand(T command, string id)
         {
             Command = command;
             Id = id;
         }
-
     }
 }

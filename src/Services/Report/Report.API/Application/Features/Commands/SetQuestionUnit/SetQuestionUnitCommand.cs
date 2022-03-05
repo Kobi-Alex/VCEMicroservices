@@ -14,10 +14,8 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
         public int ExamId { get; private set; } 
         public string ApplicantId { get; private set; }
         public int QuestionId { get; private set; }
-        //public string Name { get; private set; }                //Question name
-        //public string AnswerKeys { get; private set; }
         public string CurrentKeys { get; private set; }
-        //public int TotalNumberAnswer { get; private set; }
+
 
 
         public SetQuestionUnitCommand(int examId, string applicantId, int questionId, string currentKeys)
@@ -25,10 +23,7 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
             ExamId = examId;
             ApplicantId = applicantId;
             QuestionId = questionId;
-            //Name = name;
-            //AnswerKeys = answerKeys;
             CurrentKeys = currentKeys;
-            //TotalNumberAnswer = totalNumberAnswer;
         }
     }
 }

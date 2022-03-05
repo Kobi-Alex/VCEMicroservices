@@ -21,6 +21,7 @@ using Report.API.Application.Behaviours;
 using Report.API.Application.Features.Queries;
 using Report.Domain.AggregatesModel.ReviewAggregate;
 using Report.Infrastructure.Persistance.Repositories;
+using Report.Infrastructure.Persistance.Idempotency;
 
 namespace Report.API
 {
@@ -40,12 +41,15 @@ namespace Report.API
             services.AddDbContext<ReportDbContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
 
-            // ReviewQueries configuration
+            // Review queries configuration
             services.AddScoped<IReviewQueries, ReviewQueries>(provider => new ReviewQueries
             (Configuration.GetConnectionString("ReportsConnection")));
 
-            // ReviewRepository configuration
+            // Review repository configuration
             services.AddScoped<IReviewRepository, ReviewRepository>();
+
+            // Request manager configuration
+            services.AddScoped<IRequestManager, RequestManager>();
 
             // gRPC configuration
             services.AddGrpcClient<QuestionGrpc.QuestionGrpcClient>

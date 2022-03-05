@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Report.Domain.SeedWork;
 using Report.Domain.AggregatesModel.ReviewAggregate;

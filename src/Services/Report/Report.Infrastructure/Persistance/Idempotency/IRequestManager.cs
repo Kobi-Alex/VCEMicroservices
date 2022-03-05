@@ -5,7 +5,7 @@ namespace Report.Infrastructure.Persistance.Idempotency
 {
     public interface IRequestManager
     {
-        Task<bool> ExistAsync(Guid id);
-        Task CreateRequestForCommandAsync<T>(Guid id);
+        Task<bool> ExistAsync(string id);
+        Task CreateRequestForCommandAsync<T>(string id);
     }
 }
