@@ -17,6 +17,8 @@ namespace UserService.Profiles
             CreateMap<UserCreateDto, User>();
             CreateMap<User, UserReadDto>();
             CreateMap<UserUpdateDto, User>();
+            CreateMap<UserExams, UserExamDto>();
+
         }
     }
 }

@@ -515,9 +515,12 @@ namespace UserService.Controllers
         [Route("Exams/{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
 
-        public async Task<IActionResult> GetUserExams(string id)
+        public async Task<IActionResult> GetUserExams(string id, int page, int limit)
         {
-            return Ok(await _userRepository.GetUserExams(id));
+            //_mapper.Map<IEnumerable<UserReadDto>>(users);
+            //var userExams = _mapper. await _userRepository.GetUserExams(id);
+            var userExams = _mapper.Map<IEnumerable<UserExamDto>>(await _userRepository.GetUserExams(id));
+            return Ok(Pagination<UserExamDto>.GetData(page,limit,userExams));
         }
 
 
