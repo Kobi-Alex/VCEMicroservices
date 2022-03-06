@@ -24,6 +24,7 @@ using Report.Infrastructure.Persistance.Repositories;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Report.Infrastructure.Persistance.Idempotency;
 
 namespace Report.API
 {
@@ -78,12 +79,15 @@ namespace Report.API
             services.AddDbContext<ReportDbContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
 
-            // ReviewQueries configuration
+            // Review queries configuration
             services.AddScoped<IReviewQueries, ReviewQueries>(provider => new ReviewQueries
             (Configuration.GetConnectionString("ReportsConnection")));
 
-            // ReviewRepository configuration
+            // Review repository configuration
             services.AddScoped<IReviewRepository, ReviewRepository>();
+
+            // Request manager configuration
+            services.AddScoped<IRequestManager, RequestManager>();
 
             // gRPC configuration
             services.AddGrpcClient<QuestionGrpc.QuestionGrpcClient>

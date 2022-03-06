@@ -2,12 +2,12 @@ using System;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 
-namespace Report.API.Application.Features.Commands.SendReview
+namespace Report.API.Application.Features.Commands.ActionReview
 {
 
-    public class SendReviewCommandValidator : AbstractValidator<SendReviewCommand>
+    public class ActionReviewCommandValidator : AbstractValidator<ActionReviewCommand>
     {
-        public SendReviewCommandValidator(ILogger<SendReviewCommandValidator> logger)
+        public ActionReviewCommandValidator(ILogger<ActionReviewCommandValidator> logger)
         {
             RuleFor(command => command.ExamId).NotEmpty();
             RuleFor(command => command.UserId).NotEmpty();

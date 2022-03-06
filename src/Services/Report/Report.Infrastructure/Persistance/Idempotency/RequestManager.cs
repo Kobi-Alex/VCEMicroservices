@@ -14,7 +14,7 @@ namespace Report.Infrastructure.Persistance.Idempotency
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task CreateRequestForCommandAsync<T>(Guid id)
+        public async Task CreateRequestForCommandAsync<T>(string id)
         {
             var exists = await ExistAsync(id);
 
@@ -31,7 +31,7 @@ namespace Report.Infrastructure.Persistance.Idempotency
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ExistAsync(Guid id)
+        public async Task<bool> ExistAsync(string id)
         {
             var request = await _context.FindAsync<ClientRequest>(id);
 

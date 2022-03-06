@@ -1,22 +1,20 @@
-﻿using Report.Domain.SeedWork;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Report.Domain.SeedWork;
+using System.Collections.Generic;
 
 namespace Report.Domain.AggregatesModel.ReviewAggregate
 {
     public class Review : Entity, IAggregateRoot
     {
 
-        public int _examId;                                    // ID іспиту
-        public string _applicantId;                            // ID абітурієнта(userId)
-        private decimal _totalScore;                           // K-сть правельних відповідей
-        private decimal _persentScore;                         // K-сть правельних відповідей у відсотках(%)
-        private string _grade;                                 // Оцінка за іспит
-        private DateTime _reportDate;                          // дата звіту
-        private readonly List<QuestionUnit> _questionUnits;    // список питань екзамену на які відповів абітурієнт
+        public int _examId;                                    // ID exam
+        public string _applicantId;                            // ID applicant (userId)
+        private decimal _totalScore;                           // Count of correct answers
+        private decimal _persentScore;                         // Count of correct answers in %
+        private string _grade;                                 // Grade
+        private DateTime _reportDate;                          // Date of report
+        private readonly List<QuestionUnit> _questionUnits;    // Exam answer list answered by applicant
 
         public IReadOnlyCollection<QuestionUnit> QuestionUnits => _questionUnits;
 
@@ -63,9 +61,17 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
         }
 
 
+        /// <summary>
+        /// Adding new or update current answer 
+        /// </summary>
+        /// <param name="questionName"></param>
+        /// <param name="answerKeys"></param>
+        /// <param name="currentKeys"></param>
+        /// <param name="totalNumberAnswer"></param>
+        /// <param name="questionId"></param>
         public void AddQuestionUnit(string questionName, string answerKeys, string currentKeys, 
             int totalNumberAnswer, int questionId)
-            {
+        {
             var existingReportForQuestion = _questionUnits
                 .Where(o => o.QuestionId == questionId)
                 .SingleOrDefault();
@@ -76,7 +82,6 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
                 {
                     existingReportForQuestion.SetCurrentAnswer(currentKeys);
                 }
-
             }
             else
             {
@@ -100,31 +105,68 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
                 _questionUnits.Add(questionUnit);
 
             }
-
         }
 
-        // Method for counting total score result
-        private void AddScore(decimal score, string currentKeys, string answerKeys)
+
+        /// <summary>
+        /// Calculating score by report
+        /// </summary>
+        public void CalculateScores()
         {
-            if (currentKeys.Equals(answerKeys))
+            int totalScore = 0;
+
+            foreach (var item in _questionUnits)
             {
-                SetTotalScore(score += 1);
+                if (item.GetTotalNumberAnswer == 1)
+                {
+                    double totalCorrectAnswer = 0;
+                    char[] delimiterChars = { ' ', ',', '.', ':', '\t' };
+
+                    string[] keyAnswerWords = item.GetAnswerKeys.Split(delimiterChars, System.StringSplitOptions.RemoveEmptyEntries);
+                    string[] currentAnswerWords = item.GetCurrentKeys.Split(delimiterChars, System.StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (string word in currentAnswerWords)
+                    {
+                        if (!item.GetAnswerKeys.Contains(word))
+                        {
+                            return;
+                        }
+                        totalCorrectAnswer++;
+                    }
+
+                    if ((totalCorrectAnswer / keyAnswerWords.Length) > 0.7)
+                    {
+                        totalScore++;
+                    }
+                }
+                else
+                {
+                    if(item.GetTotalNumberAnswer > 1)
+                    {
+                        if(item.GetCurrentKeys.Equals(item.GetAnswerKeys))
+                        {
+                            totalScore++;
+                        }
+                    }
+                }
             }
+
+            _totalScore = totalScore;
+            _persentScore = (totalScore * 100) / _questionUnits.Count;
+            _grade = GetGradeByPersentScore();
         }
 
 
-        public decimal GetTotalScore()
+        /// <summary>
+        /// Get a grade depending on the score
+        /// </summary>
+        /// <returns> Return value of grade </returns>
+        public string GetGradeByPersentScore()
         {
-            //TODO add logic total score.. -> загальний підрахунок правильних відповідей
-
-            return 0.0m;
-        }
-
-        public decimal GetGrade()
-        {
-            //TODO add logic total grade of exam.. (A, B, C, D, E)
-            return 0.0m;
-            //return _orderItems.Sum(o => o.GetUnits() * o.GetUnitPrice());
+            if (_persentScore > 89) return "A";
+            if (_persentScore > 74) return "B";
+            if (_persentScore > 59) return "C";
+                                    return "F";
         }
 
     }

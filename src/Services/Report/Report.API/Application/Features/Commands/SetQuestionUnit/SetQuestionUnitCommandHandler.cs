@@ -60,7 +60,7 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
             }
 
             // Add questionUnits data for review aggregate;
-            review.AddQuestionUnit(questionUnit.Context, questionUnit.AnswerKey, request.CurrentKeys,
+            review.AddQuestionUnit(questionUnit.Context, questionUnit.AnswerKey, request.CurrentKeys.ToUpper(),
                 questionUnit.TotalNumberAnswer, request.QuestionId);
 
             _reviewRepository.Update(review);

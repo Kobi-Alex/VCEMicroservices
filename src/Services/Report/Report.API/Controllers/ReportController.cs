@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Report.API.Application.Features.Queries;
 using MediatR;
-using Report.API.Application.Features.Commands.CancelReview;
+using Report.API.Application.Features.Commands.ActionReview;
 using Report.API.Application.Features.Commands.SetQuestionUnit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Report.API.Application.Features.Commands.Identified;
 
 namespace Report.API.Controllers
 {
@@ -30,6 +31,7 @@ namespace Report.API.Controllers
         }
 
         // GET api/report/items/1
+        // Get all reports by exam Id
         [Route("items/{examId:int}")]
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
@@ -47,7 +49,26 @@ namespace Report.API.Controllers
             }
         }
 
+        // GET api/report/items/applicants/a1875c21-b82e-4e87-962b-9777c351f989
+        // Get all reports by user Id 
+        [Route("items/applicants/{userId}")]
+        [HttpGet]
+        public async Task<ActionResult> GetReportsByApplicantIdAsync(string userId)
+        {
+            try
+            {
+                var reports = await _reviewQueries.GetReportByUserIdAsync(userId);
+                return Ok(reports);
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+
+
         // GET api/report/items/1/applicants/3
+        // Get all reports by exam and user Id
         [Route("items{examId:int}/applicants/{userId}")]
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
@@ -66,7 +87,7 @@ namespace Report.API.Controllers
 
 
         // POST api/report/items
-        // Create and add new applicant answer or update
+        // Create and add new applicant answer(update)
         [Route("items")]
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student")]
@@ -80,21 +101,35 @@ namespace Report.API.Controllers
         }
 
 
-        ////PUT api/
-        //[Route("cancel")]
-        //[HttpPut]
-        //public async Task<IActionResult> CancelReviewAsync([FromBody] CancelReviewCommand cancelReviewCommand, CancellationToken cancellationToken)
-        //{
-        //    bool commandResult = false;
+        // PUT api/report/action
+        // Generate review (In the exam end!!)
+        [Route("action")]
+        [HttpPut]
+        public async Task<IActionResult> ActionReviewAsync([FromBody] ActionReviewCommand command, CancellationToken cancellationToken)
+        {
+            bool commandResult = false;
 
-        //    //if ((cancelReviewCommand.UserId, out Guid guid) && guid != Guid.Empty))
-        //    //{
+            if (!String.IsNullOrEmpty(command.UserId))
+            {
+                var requestActionReview = new IdentifiedCommand<ActionReviewCommand, bool>(command, command.UserId);
 
-        //    //}
+                _logger.LogInformation(
+               "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
+               requestActionReview.GetType(),
+               nameof(requestActionReview.Command.ExamId),
+               requestActionReview.Command.ExamId,
+               requestActionReview);
 
-        //    return Ok();
-        //}
+                commandResult = await _mediator.Send(requestActionReview, cancellationToken);
+            }
 
+            if (!commandResult)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
 
     }
 }

@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Report.Infrastructure.Persistance.Idempotency;
-using Report.API.Application.Features.Commands.SendReview;
+using Report.API.Application.Features.Commands.ActionReview;
 using MediatR;
 
 namespace Report.API.Application.Features.Commands.Identified
@@ -68,7 +68,7 @@ namespace Report.API.Application.Features.Commands.Identified
 
                     switch (command)
                     {
-                        case SendReviewCommand cancelReviewCommand:
+                        case ActionReviewCommand cancelReviewCommand:
                             idProperty = nameof(cancelReviewCommand.ExamId);
                             commandId = $"{cancelReviewCommand.ExamId}";
                             break;
