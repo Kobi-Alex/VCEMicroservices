@@ -41,7 +41,7 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
             _applicantId = applicantId;
             _totalScore = totalScore;
             _persentScore = persentScore;
-            _reportDate = DateTime.UtcNow;
+            _reportDate = DateTime.Now;
         }
 
 
@@ -127,14 +127,13 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
 
                     foreach (string word in currentAnswerWords)
                     {
-                        if (!item.GetAnswerKeys.Contains(word))
+                        if (item.GetAnswerKeys.Contains(word, StringComparison.OrdinalIgnoreCase))
                         {
-                            return;
+                            totalCorrectAnswer++;
                         }
-                        totalCorrectAnswer++;
                     }
 
-                    if ((totalCorrectAnswer / keyAnswerWords.Length) > 0.7)
+                    if ((totalCorrectAnswer / keyAnswerWords.Length) > 0.69)
                     {
                         totalScore++;
                     }
@@ -143,10 +142,28 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
                 {
                     if(item.GetTotalNumberAnswer > 1)
                     {
-                        if(item.GetCurrentKeys.Equals(item.GetAnswerKeys))
+                        int correctCharacter = 0;
+
+                        // Array user answer characters
+                        string[] currentAnswerChars = item.GetCurrentKeys.Split(',', System.StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (string character in currentAnswerChars)
+                        {
+                            // Checking answer
+                            if (item.GetAnswerKeys.Contains(character, StringComparison.OrdinalIgnoreCase))
+                            {
+                                correctCharacter++;
+                            }
+                        }
+
+                        // Arrey correct chars
+                        char[]  keyAnswerChars = item.GetAnswerKeys.ToCharArray();
+
+                        if ((correctCharacter / keyAnswerChars.Length) * 100 == 1)
                         {
                             totalScore++;
                         }
+
                     }
                 }
             }

@@ -44,6 +44,7 @@ namespace Question.Infrastructure
                          Name = "Home",
                          QuestionItems = (ICollection<QuestionItem>)GetPreconfiguredQuestionItemTest3()
                      }
+
                 );
 
                 context.SaveChanges();
@@ -67,11 +68,11 @@ namespace Question.Infrastructure
         {
             return new List<QuestionAnswer>()
             {
-                new QuestionAnswer() { CharKey = "A", Context = "This is a pattern",   IsCorrectAnswer = false},
-                new QuestionAnswer() { CharKey = "B", Context = "This is a injection", IsCorrectAnswer = false},
-                new QuestionAnswer() { CharKey = "C", Context = "This is a banding",   IsCorrectAnswer = false},
-                new QuestionAnswer() { CharKey = "D", Context = "This is a Windows Presentation Fundation",   IsCorrectAnswer = true},
-               // new QuestionAnswer() { CharKey = "E", Context = "This is a test",   IsCorrectAnswer = true},
+                new QuestionAnswer() { CharKey = "A", Context = "This is a pattern",   IsCorrectAnswer = false },
+                new QuestionAnswer() { CharKey = "B", Context = "This is a injection", IsCorrectAnswer = false },
+                new QuestionAnswer() { CharKey = "C", Context = "This is a banding",   IsCorrectAnswer = false },
+                new QuestionAnswer() { CharKey = "D", Context = "This is a Windows Presentation Fundation",   IsCorrectAnswer = true }
+                // new QuestionAnswer() { CharKey = "E", Context = "This is a test", IsCorrectAnswer = true},
             };
         }
 
@@ -79,9 +80,11 @@ namespace Question.Infrastructure
         {
             return new List<QuestionAnswer>()
             {
-                //new QuestionAnswer() { CharKey = "T", Context = "This is a pet", IsCorrectAnswer = true},
+                new QuestionAnswer() { CharKey = "T", Context = "pet", IsCorrectAnswer = true},
             };
         }
+
+
 
         private static IEnumerable<QuestionItem> GetPreconfiguredQuestionItemTest1()
         {
@@ -121,6 +124,14 @@ namespace Question.Infrastructure
                     ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 28)),
                     AnswerType = AnswerType.Text,
                     QuestionAnswers = (ICollection<QuestionAnswer>)GetPreconfiguredQuestionAnswerTest3()
+                },
+
+                new QuestionItem()
+                {
+                    Context = "Docker is it?",
+                    ReleaseDate = new DateTimeOffset(new DateTime(2021, 12, 26)),
+                    AnswerType = AnswerType.Single,
+                    QuestionAnswers = (ICollection<QuestionAnswer>)GetPreconfiguredQuestionAnswerTest1()
                 }
             };
         }
