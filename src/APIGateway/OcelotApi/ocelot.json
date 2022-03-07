@@ -301,10 +301,22 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": "6004"
         }
       ],
       "UpstreamPathTemplate": "/api/report/items/{examId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Report/items/applicants/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "6004"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/items/a/{userId}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -313,7 +325,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": "6004"
         }
       ],
       "UpstreamPathTemplate": "/api/report/items{examId:int}/a/{userId}",
@@ -325,11 +337,23 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": "6004"
         }
       ],
       "UpstreamPathTemplate": "/api/report/items",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Report/action",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "6004"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/action",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ]
 

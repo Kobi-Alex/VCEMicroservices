@@ -513,7 +513,7 @@ namespace UserService.Controllers
 
         [HttpGet]
         [Route("Exams/{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager, Student")]
 
         public async Task<IActionResult> GetUserExams(string id, int page, int limit)
         {
