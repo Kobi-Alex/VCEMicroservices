@@ -159,7 +159,7 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
                         // Arrey correct chars
                         char[]  keyAnswerChars = item.GetAnswerKeys.ToCharArray();
 
-                        if ((correctCharacter / keyAnswerChars.Length) * 100 == 1)
+                        if ((correctCharacter / keyAnswerChars.Length) == 1)
                         {
                             totalScore++;
                         }
