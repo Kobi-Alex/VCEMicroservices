@@ -131,10 +131,10 @@ namespace Question.API.Application.Services
 
             var answer = await _repositoryManager.QuestionAnswerRepository.GetByIdAsync(answerId, cancellationToken);
 
+            CheckCorrectAnswerTypeWhenUpdate(question, answerUpdateDto, answers, answer);
+            
             answer.Context = answerUpdateDto.Context;
             answer.IsCorrectAnswer = answerUpdateDto.IsCorrectAnswer;
-
-            CheckCorrectAnswerTypeWhenUpdate(question, answerUpdateDto, answers);
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync();
         }
@@ -206,7 +206,7 @@ namespace Question.API.Application.Services
                         var countCorrectAnswer = answers.Where(k => k.IsCorrectAnswer == true).ToList();
 
                         // Check for count correct answer.
-                        if (countCorrectAnswer.Count >= 1 && questionAnswerCreateDto.IsCorrectAnswer == true)
+                        if (countCorrectAnswer.Count > 1 && questionAnswerCreateDto.IsCorrectAnswer == true)
                         {
                             throw new QuestionAnswerArgumentException($"For questions with answer type {question.AnswerType}, count correct answer must be only ONE");
                         }
@@ -252,7 +252,8 @@ namespace Question.API.Application.Services
             }
         }
 
-        private void CheckCorrectAnswerTypeWhenUpdate(QuestionItem question, QuestionAnswerUpdateDto answerUpdateDto, List<QuestionAnswer> answers)
+        private void CheckCorrectAnswerTypeWhenUpdate(QuestionItem question, QuestionAnswerUpdateDto answerUpdateDto, 
+            List<QuestionAnswer> answers, QuestionAnswer currentAnswer)
         {
             if (question.AnswerType == AnswerType.Text)
             {
@@ -265,14 +266,31 @@ namespace Question.API.Application.Services
 
             if (question.AnswerType == AnswerType.Single)
             {
-                // Finding count correct answers
-                var countCorrectAnswer = answers.Where(k => k.IsCorrectAnswer == true).ToList();
-
-                // Check for count correct answer.
-                if (countCorrectAnswer.Count >= 1 && answerUpdateDto.IsCorrectAnswer == true)
+                // Check update and current answer 
+                if(answerUpdateDto.IsCorrectAnswer != currentAnswer.IsCorrectAnswer)
                 {
-                    throw new QuestionAnswerArgumentException($"For questions with answer type {question.AnswerType}, count correct answer must be only ONE");
+                    // If the updated answer equal true then other answers equal false
+                    // and on the contrary
+                    if (answerUpdateDto.IsCorrectAnswer == true)
+                    {
+                        foreach (var item in answers)
+                        {
+                            item.IsCorrectAnswer = false;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in answers)
+                        {
+                            if(item.Id != currentAnswer.Id)
+                            {
+                                item.IsCorrectAnswer = true;
+                                return;
+                            }
+                        }
+                    }
                 }
+
             }
         }
 

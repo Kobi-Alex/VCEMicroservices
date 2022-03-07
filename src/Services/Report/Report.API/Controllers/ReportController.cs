@@ -49,7 +49,7 @@ namespace Report.API.Controllers
 
         // GET api/report/items/1
         // Get all reports by exam Id
-        [Route("items/{reportId:int}")]
+        [Route("{reportId:int}")]
         [HttpGet]
         public async Task<ActionResult> GetReportsByIdAsync(int reportId)
         {
