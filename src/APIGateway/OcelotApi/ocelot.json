@@ -341,7 +341,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/report/items",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "GET","POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/Report/action",

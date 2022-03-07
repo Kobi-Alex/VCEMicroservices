@@ -30,9 +30,6 @@ namespace Report.API.Controllers
             _reviewQueries = reviewQueries ?? throw new ArgumentNullException(nameof(reviewQueries));
         }
 
-
-
-
         // GET api/report/items
         // Get all reports
         [Route("items")]
