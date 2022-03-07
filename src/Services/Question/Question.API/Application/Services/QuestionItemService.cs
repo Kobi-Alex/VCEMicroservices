@@ -126,7 +126,7 @@ namespace Question.API.Application.Services
                 throw new QuestionItemNotFoundException(questionId);
             }
 
-            //TODO normal change answers
+            // TODO normal change answers
             if (question.AnswerType != questionUpdateDto.AnswerType)
             {
                 question.QuestionAnswers.Clear();

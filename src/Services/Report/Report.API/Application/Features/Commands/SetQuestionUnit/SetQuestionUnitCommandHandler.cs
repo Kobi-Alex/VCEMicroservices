@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -51,6 +52,7 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
                 throw new ReviewNotFoundException(nameof(Review), request);
             }
 
+
             // gRPC request to Question service
             var questionUnit = await _questionGrpcService.GetQuestionUnitFromQuestionData(request.QuestionId);
             
@@ -59,8 +61,16 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
                 throw new QuestionUnitNotFoundException(request.QuestionId);
             }
 
+            if (questionUnit.TotalNumberAnswer > 1)
+            {
+                if (Regex.IsMatch(request.CurrentKeys, @"^[A-Z]+(?:,[A-Z]+)*$"))
+                {
+                    throw new QuestionUnitCurrentKeyException(request.QuestionId);
+                }
+            }
+
             // Add questionUnits data for review aggregate;
-            review.AddQuestionUnit(questionUnit.Context, questionUnit.AnswerKey, request.CurrentKeys.ToUpper(),
+            review.AddQuestionUnit(questionUnit.Context, questionUnit.AnswerKey, request.CurrentKeys,
                 questionUnit.TotalNumberAnswer, request.QuestionId);
 
             _reviewRepository.Update(review);

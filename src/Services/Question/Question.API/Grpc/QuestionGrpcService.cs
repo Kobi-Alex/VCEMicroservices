@@ -41,8 +41,17 @@ namespace Question.API.Grpc
 
             foreach (var item in answers)
             {
-                if(item.IsCorrectAnswer == true)
-                    answerKeys += item.CharKey;
+                if (item.IsCorrectAnswer == true)
+                {
+                    if(item.CharKey != "T")
+                    {
+                        answerKeys += item.CharKey;
+                    }
+                    else
+                    {
+                        answerKeys = item.Context;
+                    }
+                }
             }
 
             return answerKeys;

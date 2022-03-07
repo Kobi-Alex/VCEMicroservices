@@ -121,5 +121,22 @@ namespace Report.API.Application.Features.Queries
                 return reviews.Distinct().ToList();
             }
         }
+
+
+        // Dapper comment
+        // Get all reports
+        public async Task<IEnumerable<Review>> GetAll()
+        {
+            var query = "SELECT * FROM report.reviews";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var companies = await connection.QueryAsync<Review>(query);
+                
+                return companies.ToList();
+            }
+        }
     }
 }

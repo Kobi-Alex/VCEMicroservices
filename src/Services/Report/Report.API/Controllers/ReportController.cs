@@ -30,6 +30,27 @@ namespace Report.API.Controllers
             _reviewQueries = reviewQueries ?? throw new ArgumentNullException(nameof(reviewQueries));
         }
 
+
+
+
+        // GET api/report/items
+        // Get all reports
+        [Route("items")]
+        [HttpGet]
+        public async Task<ActionResult> GetAllAsync()
+        {
+            try
+            {
+                var reports = await _reviewQueries.GetAll();
+                return Ok(reports);
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+
+
         // GET api/report/items/1
         // Get all reports by exam Id
         [Route("items/{examId:int}")]
