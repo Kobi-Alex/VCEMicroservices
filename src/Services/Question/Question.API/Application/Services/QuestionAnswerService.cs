@@ -129,12 +129,12 @@ namespace Question.API.Application.Services
             var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository
                 .GetAllByQuestionItemIdAsync(question.Id);
 
-            CheckCorrectAnswerTypeWhenUpdate(question, answerUpdateDto, answers);
-           
             var answer = await _repositoryManager.QuestionAnswerRepository.GetByIdAsync(answerId, cancellationToken);
 
             answer.Context = answerUpdateDto.Context;
             answer.IsCorrectAnswer = answerUpdateDto.IsCorrectAnswer;
+
+            CheckCorrectAnswerTypeWhenUpdate(question, answerUpdateDto, answers);
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync();
         }

@@ -63,7 +63,7 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
 
             if (questionUnit.TotalNumberAnswer > 1)
             {
-                if (Regex.IsMatch(request.CurrentKeys, @"^[A-Z]+(?:,[A-Z]+)*$"))
+                if (!Regex.IsMatch(request.CurrentKeys, @"^[A-Z]+(?:,[A-Z]+)*$"))
                 {
                     throw new QuestionUnitCurrentKeyException(request.QuestionId);
                 }
