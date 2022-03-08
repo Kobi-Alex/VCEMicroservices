@@ -50,8 +50,8 @@ namespace Report.API.Controllers
 
         // GET api/report/items/1
         // Get all reports by exam Id
-        [Route("items/{reportId:int}")]
-        [HttpGet]
+        //[Route("{reportId:int}")]
+        [HttpGet("{reportId:int}")]
         public async Task<ActionResult> GetReportsByIdAsync(int reportId)
         {
             try
@@ -105,7 +105,7 @@ namespace Report.API.Controllers
 
         // GET api/report/items/1/applicants/3
         // Get all reports by exam and user Id
-        [Route("items{examId:int}/applicants/{userId}")]
+        [Route("items/exam/{examId:int}/applicants/{userId}")]
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
         public async Task<ActionResult> GetReportsByExamIdAndUserIdAsync(int examId, string userId)
