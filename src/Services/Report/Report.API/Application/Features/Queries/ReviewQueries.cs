@@ -133,42 +133,25 @@ namespace Report.API.Application.Features.Queries
             {
                 connection.Open();
 
-                var companies = await connection.QueryAsync<Review>(query);
+                var reviews = await connection.QueryAsync<Review>(query);
                 
-                return companies.ToList();
+                return reviews.ToList();
             }
         }
 
         // Dapper comment
         // Get reports by ID
-        public async Task<IEnumerable<Review>> GetReportsById(int reportId)
+        public async Task<Review> GetReportsById(int reportId)
         {
-            var query = "SELECT* " +
-                       "FROM report.reviews r JOIN report.questionUnits qu ON r.Id = qu.ReviewId " +
-                       "WHERE r.Id = @reportId";
+            var query = "SELECT* FROM report.reviews r WHERE r.Id = @reportId";
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                var reviewDict = new Dictionary<int, Review>();
+                var reviews = await connection.QuerySingleOrDefaultAsync<Review>(query, new { reportId });
 
-                var reviews = await connection.QueryAsync<Review, QuestionUnit, Review>(
-                    query, (review, questionUnit) =>
-                    {
-                        if (!reviewDict.TryGetValue(review.Id, out var currentReview))
-                        {
-                            currentReview = review;
-                            reviewDict.Add(currentReview.Id, currentReview);
-                        }
-
-                        currentReview.QuestionUnits.Add(questionUnit);
-                        return currentReview;
-
-                    }, param: new { reportId }
-                );
-
-                return reviews.Distinct().ToList();
+                return reviews;
             }
         }
     }
