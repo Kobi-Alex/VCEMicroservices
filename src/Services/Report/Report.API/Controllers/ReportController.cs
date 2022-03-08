@@ -108,7 +108,7 @@ namespace Report.API.Controllers
         [Route("items/exam/{examId:int}/applicant/{appId}")]
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
-        public async Task<ActionResult> GetReportsByExamIdAndUserIdAsync(int examId, string userId)
+        public async Task<ActionResult> GetReportsByExamIdAndUserIdAsync(int examId, string appId)
         {
             try
             {

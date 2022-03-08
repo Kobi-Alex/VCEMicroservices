@@ -32,6 +32,7 @@ namespace UserService.Controllers
         private readonly IAccessCodeRepository _accessCodeRepository;
         private readonly IMapper _mapper;
         private readonly EmailConfiguration _emailConfig;
+       
         private Random randomNumbers = new Random();
         private Random randomPassword = new Random();
 
@@ -44,7 +45,6 @@ namespace UserService.Controllers
 
             _emailConfig = emailConfig;
         }
-
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Manager")]
@@ -514,7 +514,6 @@ namespace UserService.Controllers
         [HttpGet]
         [Route("Exams/{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager, Student")]
-
         public async Task<IActionResult> GetUserExams(string id, int page, int limit)
         {
             //_mapper.Map<IEnumerable<UserReadDto>>(users);
@@ -570,7 +569,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("RemoveExam")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
         public async Task<IActionResult> RemoveExamFromUser(UserExamDto userExamDto)
         {
             if(ModelState.IsValid)
@@ -588,6 +587,9 @@ namespace UserService.Controllers
             return BadRequest(GetModelStateErrors(ModelState.Values));
         }
 
+        /// <summary>
+        /// Gets all modelstate errors
+        /// </summary>
         private List<string> GetModelStateErrors(IEnumerable<ModelStateEntry> modelState)
         {
             var modelErrors = new List<string>();

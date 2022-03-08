@@ -304,7 +304,7 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/items/{examId}",
+      "UpstreamPathTemplate": "/api/report/items/e/{examId}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {

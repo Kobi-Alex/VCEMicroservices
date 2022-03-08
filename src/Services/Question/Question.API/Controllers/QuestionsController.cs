@@ -70,7 +70,6 @@ namespace Question.API.Controllers
             return CreatedAtAction(nameof(GetQuestionById), new { questionId = questionDto.Id }, questionDto);
         }
 
-
         // PUT api/Questions/1
         [HttpPut("{questionId:int}", Name = "UpdateQuestion")]
         public async Task<IActionResult> UpdateQuestion(int questionId, [FromBody] QuestionItemUpdateDto questionItemUpdateDto, CancellationToken cancellationToken)
@@ -82,7 +81,6 @@ namespace Question.API.Controllers
             return NoContent();
         }
 
-
         // DELETE api/Questions/5
         [HttpDelete("{questionId:int}", Name = "DeleteQuestion")]
         public async Task<IActionResult> DeleteQuestion(int questionId, CancellationToken cancellationToken)
@@ -92,6 +90,5 @@ namespace Question.API.Controllers
             Console.WriteLine($"--> Question with ID = {questionId} has been removed!!");
             return NoContent();
         }
-
     }
 }
