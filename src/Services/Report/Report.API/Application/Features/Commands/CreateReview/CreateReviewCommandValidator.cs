@@ -11,7 +11,6 @@ namespace Report.API.Application.Features.Commands.CreateReview
         {
             RuleFor(command => command.ExamId).NotEmpty();
             RuleFor(command => command.ApplicantId).NotEmpty();
-
             logger.LogTrace("--> INSTANCE CREATED - {ClassName}", GetType().Name);
         }
     }

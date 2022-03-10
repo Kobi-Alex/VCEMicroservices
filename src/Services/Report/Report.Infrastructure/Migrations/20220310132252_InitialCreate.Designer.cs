@@ -10,8 +10,8 @@ using Report.Infrastructure;
 namespace Report.Infrastructure.Migrations
 {
     [DbContext(typeof(ReportDbContext))]
-    [Migration("20220304175936_RequestsTable")]
-    partial class RequestsTable
+    [Migration("20220310132252_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -97,23 +97,6 @@ namespace Report.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("reviews", "report");
-                });
-
-            modelBuilder.Entity("Report.Infrastructure.Persistance.Idempotency.ClientRequest", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("requests", "report");
                 });
 
             modelBuilder.Entity("Report.Domain.AggregatesModel.ReviewAggregate.QuestionUnit", b =>

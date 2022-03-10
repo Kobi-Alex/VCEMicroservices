@@ -9,8 +9,7 @@ namespace Report.API.Application.Features.Commands.CreateReview
     {
         public SetQuestionUnitCommandValidator(ILogger<SetQuestionUnitCommandValidator> logger)
         {
-            RuleFor(command => command.ExamId).NotEmpty();
-            RuleFor(command => command.ApplicantId).NotEmpty();
+            RuleFor(command => command.ReviewId).NotEmpty();
             RuleFor(command => command.QuestionId).NotEmpty();
             RuleFor(command => command.CurrentKeys).NotEmpty();
 

@@ -99,8 +99,8 @@ namespace Report.Infrastructure.Migrations
 
             modelBuilder.Entity("Report.Infrastructure.Persistance.Idempotency.ClientRequest", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()

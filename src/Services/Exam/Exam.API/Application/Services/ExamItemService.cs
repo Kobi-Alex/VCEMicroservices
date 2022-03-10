@@ -58,6 +58,7 @@ namespace Exam.API.Application.Services
 
             if (exam is null)
             {
+                // TODO check gRPC test if exam is exception !!!!!
                 throw new ExamNotFoundException(examId);
             }
 
@@ -77,7 +78,6 @@ namespace Exam.API.Application.Services
             return _mapper.Map<ExamItemReadDto>(exam);
         }
 
-
         public async Task UpdateAsync(int examId, ExamItemUpdateDto examUpdateDto, CancellationToken cancellationToken = default)
         {
             var exam = await _repositoryManager.ExamItemRepository.GetByIdAsync(examId, cancellationToken);
@@ -94,7 +94,6 @@ namespace Exam.API.Application.Services
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
-
 
         public async Task DeleteAsync(int examId, CancellationToken cancellationToken = default)
         {

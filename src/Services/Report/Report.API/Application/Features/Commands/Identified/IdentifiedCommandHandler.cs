@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Report.Infrastructure.Persistance.Idempotency;
-using Report.API.Application.Features.Commands.ActionReview;
+using Report.API.Application.Features.Commands.CloseReview;
 using MediatR;
 
 namespace Report.API.Application.Features.Commands.Identified
@@ -52,6 +52,7 @@ namespace Report.API.Application.Features.Commands.Identified
         public async Task<R> Handle(IdentifiedCommand<T, R> message, CancellationToken cancellationToken)
         {
             var alreadyExists = await _requestManager.ExistAsync(message.Id);
+
             if (alreadyExists)
             {
                 return CreateResultForDuplicateRequest();
@@ -68,9 +69,9 @@ namespace Report.API.Application.Features.Commands.Identified
 
                     switch (command)
                     {
-                        case ActionReviewCommand cancelReviewCommand:
-                            idProperty = nameof(cancelReviewCommand.ExamId);
-                            commandId = $"{cancelReviewCommand.ExamId}";
+                        case CloseReviewCommand actionReviewCommand:
+                            idProperty = nameof(actionReviewCommand.ReviewId);
+                            commandId = $"{actionReviewCommand.ReviewId}";
                             break;
 
                         default:

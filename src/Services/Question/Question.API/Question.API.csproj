@@ -38,7 +38,6 @@
 
 	<ItemGroup>
 		<Protobuf Include="Proto\question.proto" GrpcServices="Server"/>
-		<!--//<None Remove="Proto\question.proto" />-->
 	</ItemGroup>
 
 </Project>

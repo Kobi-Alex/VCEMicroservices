@@ -10,7 +10,7 @@ namespace Report.API.Application.Features.Commands.CreateReview
     // http://cqrs.nu/Faq
     // https://docs.spine3.org/motivation/immutability.html 
 
-    public class CreateReviewCommand : IRequest<bool>
+    public class CreateReviewCommand : IRequest<int>
     {
         public int ExamId { get; private set; }
         public string ApplicantId { get; private set; }

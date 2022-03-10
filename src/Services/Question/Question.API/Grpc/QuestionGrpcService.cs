@@ -26,8 +26,8 @@ namespace Question.API.Grpc
             var questionUnit = await _serviceManager.QuestionItemService.GetByIdIncludeAnswersAsync(request.QuestionId);
 
             // Create response QuestionUnitModel
-            // Console.WriteLine(questionUnit.Context);
             var response = new QuestionUnitModel();
+
             response.Context = questionUnit.Context;
             response.AnswerKey = GetAnswerKeys(questionUnit.QuestionAnswers);
             response.TotalNumberAnswer = questionUnit.QuestionAnswers.Count;
