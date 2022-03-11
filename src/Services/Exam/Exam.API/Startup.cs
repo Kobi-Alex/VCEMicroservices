@@ -3,6 +3,7 @@ using Exam.API.Application.IntegrationEvents;
 using Exam.API.Application.IntegrationEvents.Events;
 using Exam.API.Application.Services;
 using Exam.API.Application.Services.Abstractions;
+using Exam.API.Grpc;
 using Exam.API.Middleware;
 using Exam.Domain.Repositories;
 using Exam.Infrastructure;
@@ -18,7 +19,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Exam.API
 {
@@ -96,6 +97,9 @@ namespace Exam.API
 
             services.AddScoped<IExamIntegrationEventService, ExamIntegrationEventService>();
 
+            // gRPC configuration
+            services.AddGrpc();
+
             // MassTransit-RabbitMQ Configuration
             services.AddMassTransit(config =>
             {
@@ -113,7 +117,9 @@ namespace Exam.API
             services.AddMassTransitHostedService();
 
 
-            services.AddControllers();
+            //services.AddControllers();
+            services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddSwaggerGen(c =>
@@ -148,6 +154,7 @@ namespace Exam.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<ExamGrpcService>();
             });
 
             //Seeding data

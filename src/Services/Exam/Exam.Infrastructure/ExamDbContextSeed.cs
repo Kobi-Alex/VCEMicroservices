@@ -44,16 +44,16 @@ namespace Exam.Infrastructure
                     new ExamItem()
                     {
                         Title = "Entity Framework Core",
-                        Description = "Microsoft EF Core, migrations, seedings data;",
+                        Description = "Microsoft EF Core, migrations, seedings data.",
                         DurationTime = 60,
                         PassingScore = 70,
                         Status = ExamStatus.NotAvailable,
-                        ExamQuestions = (ICollection<ExamQuestion>)GetPreconfiguredExamQuestionTest()
+                        //ExamQuestions = (ICollection<ExamQuestion>)GetPreconfiguredExamQuestionTest()
                     },
                     new ExamItem()
                     {
                         Title = "Begin in Docker",
-                        Description = "Docker and containerization",
+                        Description = "Docker and containerization.",
                         DurationTime = 120,
                         PassingScore = 68,
                         Status = ExamStatus.Finished
@@ -61,11 +61,11 @@ namespace Exam.Infrastructure
                     new ExamItem()
                     {
                          Title = "Docker and Kibernetis",
-                         Description = "Docker with kibernatis",
+                         Description = "Docker with kibernatis.",
                          DurationTime = 100,
                          PassingScore = 80,
                          Status = ExamStatus.NotAvailable,
-                         ExamQuestions = (ICollection<ExamQuestion>)GetPreconfiguredExamQuestionTest1()
+                         //ExamQuestions = (ICollection<ExamQuestion>)GetPreconfiguredExamQuestionTest1()
                     }
                 );
 
@@ -77,19 +77,19 @@ namespace Exam.Infrastructure
             }
         }
 
-        private static IEnumerable<ExamQuestion> GetPreconfiguredExamQuestionTest()
-        {
-            return new List<ExamQuestion>()
-            {
-                new ExamQuestion() { Question = "What is the dependency injection?", ExamItemId = 1, QuestionItemId = 1 },
-            };
-        } 
-        private static IEnumerable<ExamQuestion> GetPreconfiguredExamQuestionTest1()
-        {
-            return new List<ExamQuestion>()
-            {
-                new ExamQuestion() { Question = "What is the dependency injection?", ExamItemId = 3, QuestionItemId = 1 },
-            };
-        }
+        //private static IEnumerable<ExamQuestion> GetPreconfiguredExamQuestionTest()
+        //{
+        //    return new List<ExamQuestion>()
+        //    {
+        //        new ExamQuestion() { Question = "What is the dependency injection?", ExamItemId = 1, QuestionItemId = 1 },
+        //    };
+        //} 
+        //private static IEnumerable<ExamQuestion> GetPreconfiguredExamQuestionTest1()
+        //{
+        //    return new List<ExamQuestion>()
+        //    {
+        //        new ExamQuestion() { Question = "What is the dependency injection?", ExamItemId = 3, QuestionItemId = 1 },
+        //    };
+        //}
     }
 }

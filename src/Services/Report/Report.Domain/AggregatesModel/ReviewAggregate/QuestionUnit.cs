@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using Report.Domain.SeedWork;
 
 namespace Report.Domain.AggregatesModel.ReviewAggregate
 {
     public class QuestionUnit : Entity
     {
-        private String _name;                         // саме питання
-        private String _answerKeys;                   // правильна відповідь [C, D, E]
-        private String _currentKeys;                  // поточна відповідь абітурієнта [A, B, C, D, E]
-        private int _totalNumberAnswer;               // загальна к-сть відповідей у питанні
+        private String _name;                         // the same question name
+        private String _answerKeys;                   // correct answer from QuestionService (Char: A, B, C ...)
+        private String _currentKeys;                  // current answer from applcant (Char: A,B or A, or Text answer..)
+        private int _totalNumberAnswer;               // total answers count in question
 
-        public int QuestionId { get; private set; }   // Id поточного питання
+        public int QuestionId { get; private set; }   // Id current question
 
 
         protected QuestionUnit() 

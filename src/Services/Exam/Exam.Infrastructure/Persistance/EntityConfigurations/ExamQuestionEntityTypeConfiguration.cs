@@ -17,6 +17,9 @@ namespace Exam.Infrastructure.Persistance.EntityConfigurations
             builder.Property(question => question.Question)
                 .IsRequired(true);
 
+            builder.Property(question => question.QuestionItemId)
+                .IsRequired();
+
             builder.HasOne(eq => eq.ExamItem)
                 .WithMany(question => question.ExamQuestions)
                 .HasForeignKey(eq => eq.ExamItemId);

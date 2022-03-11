@@ -7,7 +7,6 @@ using Grpc.Net.Client;
 
 namespace Report.API.Grpc
 {
-    //public class QuestionGrpcService : QuestionGrpc.QuestionGrpcClient
     public class QuestionGrpcService
     {
         private readonly ILogger<QuestionGrpcService> _logger;
@@ -36,5 +35,6 @@ namespace Report.API.Grpc
             return await _questionGrpcService.GetQuestionUnitFromQuestionDataAsync(request);
 
         }
+
     }
 }

@@ -2,22 +2,26 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Report.API.Application.Features.Commands.Identified;
 using Report.Domain.AggregatesModel.ReviewAggregate;
 using Report.Infrastructure.Persistance.Idempotency;
+using Report.API.Application.Features.Commands.Identified;
 using MediatR;
+using Report.API.Grpc;
+using Report.API.Application.Exceptions;
 
-namespace Report.API.Application.Features.Commands.ActionReview
+namespace Report.API.Application.Features.Commands.CloseReview
 {
 
     // Regular CommandHandler
-    public class ActionReviewCommandHandler : IRequestHandler<ActionReviewCommand, bool>
+    public class CloseReviewCommandHandler : IRequestHandler<CloseReviewCommand, bool>
     {
         private readonly IReviewRepository _reviewRepository;
+        private readonly ExamGrpcService _examGrpcService;
 
-        public ActionReviewCommandHandler(IReviewRepository reviewRepository)
+        public CloseReviewCommandHandler(IReviewRepository reviewRepository, ExamGrpcService examGrpcService)
         {
             _reviewRepository = reviewRepository;
+            _examGrpcService = examGrpcService;
         }
 
 
@@ -27,10 +31,13 @@ namespace Report.API.Application.Features.Commands.ActionReview
         /// </summary>
         /// <param name="command"></param>
         /// <returns>Return true or false</returns>
-        public async Task<bool> Handle(ActionReviewCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CloseReviewCommand request, CancellationToken cancellationToken)
         {
             // Getting review by application and exam ID
-            var reviewToUpdate = await _reviewRepository.GetReportByApplicantIdAsync(request.ExamId, request.UserId.ToString());
+            //var reviewToUpdate = await _reviewRepository.GetReportByApplicantIdAsync(request.ExamId, request.UserId.ToString());
+
+            // Getting review by review ID 
+            var reviewToUpdate = await _reviewRepository.GetReportByReviewIdAsync(request.ReviewId);
 
             // Check is null
             if(reviewToUpdate is null)
@@ -38,8 +45,17 @@ namespace Report.API.Application.Features.Commands.ActionReview
                 return false;
             }
 
+            // gRPC request to Exam service
+            // Getting examItem object from exam service.
+            var examItem = await _examGrpcService.GetExamItemFromExamData(request.ExamId);
+
+            if (examItem is null)
+            {
+                throw new ExamItemNotFoundException(request.ExamId);
+            }
+
             // Calculate review scores
-            reviewToUpdate.CalculateScores();
+            reviewToUpdate.CalculateScores(examItem.CountQuestions);
 
             // Save data
             return await _reviewRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
@@ -48,12 +64,12 @@ namespace Report.API.Application.Features.Commands.ActionReview
 
 
     // Use for Idempotency in Command process
-    public class ActionReviewIdentifiedCommandHandler : IdentifiedCommandHandler<ActionReviewCommand, bool>
+    public class ActionReviewIdentifiedCommandHandler : IdentifiedCommandHandler<CloseReviewCommand, bool>
     {
         public ActionReviewIdentifiedCommandHandler(
             IMediator mediator,
             IRequestManager requestManager,
-            ILogger<IdentifiedCommandHandler<ActionReviewCommand, bool>> logger)
+            ILogger<IdentifiedCommandHandler<CloseReviewCommand, bool>> logger)
             : base(mediator, requestManager, logger)
         {
         }

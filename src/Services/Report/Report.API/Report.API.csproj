@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Features\Commands\DeleteReview\" />
     <Folder Include="Application\Services\" />
   </ItemGroup>
 
@@ -36,6 +35,7 @@
 
 	<ItemGroup>
 		<Protobuf Include="Proto\question.proto" GrpcServices="Client" />
+		<Protobuf Include="Proto\exam.proto" GrpcServices="Client" />
 		<!--<None Remove="Proto\question.proto" />-->
 	</ItemGroup>
 

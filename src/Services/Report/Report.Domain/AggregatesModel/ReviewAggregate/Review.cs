@@ -14,7 +14,7 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
         private decimal _persentScore;                         // Count of correct answers in %
         private string _grade;                                 // Grade
         private DateTime _reportDate;                          // Date of report
-        private readonly List<QuestionUnit> _questionUnits;    // Exam answer list answered by applicant
+        private readonly List<QuestionUnit> _questionUnits;    // Exam answer list answered by the applicant
 
         public IReadOnlyCollection<QuestionUnit> QuestionUnits => _questionUnits;
 
@@ -102,6 +102,7 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
 
                 var questionUnit = new QuestionUnit(questionName, answerKeys, currentKeys, 
                     totalNumberAnswer, questionId);
+
                 _questionUnits.Add(questionUnit);
 
             }
@@ -111,7 +112,8 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
         /// <summary>
         /// Calculating score by report
         /// </summary>
-        public void CalculateScores()
+        /// <param name="examQuestionCount"></param>
+        public void CalculateScores(int examQuestionCount)
         {
             int totalScore = 0;
 
@@ -133,43 +135,49 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
                         }
                     }
 
-                    if ((totalCorrectAnswer / keyAnswerWords.Length) > 0.69)
+                    // Checking correct answer input text and set current char for displaying
+                    if (keyAnswerWords.Length != 0 && (totalCorrectAnswer / keyAnswerWords.Length) > 0.69)
                     {
                         totalScore++;
+                        // If application answer is correct we are setting currentKey field = "T"
+                        item.SetCurrentAnswer("T");
+                    }
+                    else
+                    {
+                        // If application answer is not correct we are setting currentKey field = "F"
+                        item.SetCurrentAnswer("F");
                     }
                 }
                 else
                 {
-                    if(item.GetTotalNumberAnswer > 1)
+                    // Array correct chars
+                    char[] keyAnswerChars = item.GetAnswerKeys.ToCharArray();
+                    // Array applicant answer characters
+                    string[] currentAnswerChars = item.GetCurrentKeys.Split(',', System.StringSplitOptions.RemoveEmptyEntries);
+
+                    if (keyAnswerChars.Length == currentAnswerChars.Length)
                     {
                         int correctCharacter = 0;
 
-                        // Array user answer characters
-                        string[] currentAnswerChars = item.GetCurrentKeys.Split(',', System.StringSplitOptions.RemoveEmptyEntries);
-
                         foreach (string character in currentAnswerChars)
                         {
-                            // Checking answer
                             if (item.GetAnswerKeys.Contains(character, StringComparison.OrdinalIgnoreCase))
                             {
                                 correctCharacter++;
                             }
                         }
 
-                        // Arrey correct chars
-                        char[]  keyAnswerChars = item.GetAnswerKeys.ToCharArray();
-
-                        if ((correctCharacter / keyAnswerChars.Length) == 1)
+                        if (keyAnswerChars.Length != 0 && (correctCharacter / keyAnswerChars.Length) == 1)
                         {
                             totalScore++;
                         }
-
                     }
+
                 }
             }
 
             _totalScore = totalScore;
-            _persentScore = (totalScore * 100) / _questionUnits.Count;
+            _persentScore = (totalScore * 100) / examQuestionCount;
             _grade = GetGradeByPersentScore();
         }
 

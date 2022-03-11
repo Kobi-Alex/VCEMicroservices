@@ -1,13 +1,12 @@
 using System;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using Microsoft.Extensions.Logging;
-using Report.API.Application.Exceptions;
-using Report.API.Application.Features.Commands.CreateReview;
+using System.Text.RegularExpressions;
 using Report.API.Grpc;
+using Report.API.Application.Exceptions;
 using Report.Domain.AggregatesModel.ReviewAggregate;
+using Microsoft.Extensions.Logging;
+using MediatR;
 
 namespace Report.API.Application.Features.Commands.SetQuestionUnit
 {
@@ -37,26 +36,27 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
             // methods and constructor so validations, invariants and business logic 
             // make sure that consistency is preserved across the whole aggregate
 
-
             // If review is NULL than crete new Review class
-            if (await _reviewRepository.GetReportByApplicantIdAsync(request.ExamId, request.ApplicantId) == null)
-            {
-                // request CreateReviewCommand
-                await _mediator.Send(new CreateReviewCommand(request.ExamId, request.ApplicantId), cancellationToken);
-            }
+            //if (await _reviewRepository.GetReportByApplicantIdAsync(request.ExamId, request.ApplicantId) == null)
+            //{
+            //    // request CreateReviewCommand
+            //    await _mediator.Send(new CreateReviewCommand(request.ExamId, request.ApplicantId), cancellationToken);
+            //}
+            // var review = await _reviewRepository.GetReportByApplicantIdAsync(request.ExamId, request.ApplicantId);
 
-            var review = await _reviewRepository.GetReportByApplicantIdAsync(request.ExamId, request.ApplicantId);
+            // Get review by Id
+            var review = await _reviewRepository.GetReportByReviewIdAsync(request.ReviewId);
 
+            // Check object
             if (review == null)
             {
                 throw new ReviewNotFoundException(nameof(Review), request);
             }
 
-
             // gRPC request to Question service
             var questionUnit = await _questionGrpcService.GetQuestionUnitFromQuestionData(request.QuestionId);
             
-            if(questionUnit == null)
+            if (questionUnit == null)
             {
                 throw new QuestionUnitNotFoundException(request.QuestionId);
             }

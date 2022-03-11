@@ -3,14 +3,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Report.API.Application.Features.Queries;
 using MediatR;
+using Report.API.Application.Features.Queries;
 using Report.API.Application.Features.Commands.ActionReview;
 using Report.API.Application.Features.Commands.SetQuestionUnit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Report.API.Application.Features.Commands.Identified;
+using Report.API.Application.Features.Commands.CreateReview;
+using Report.API.Application.Features.Commands.CloseReview;
+using Report.API.Application.Features.Commands.SetQuestionUnit;
 
 namespace Report.API.Controllers
 {
@@ -123,37 +126,51 @@ namespace Report.API.Controllers
 
 
         // POST api/report/items
-        // Create and add new applicant answer(update)
-        [Route("items")]
+        // Create new report
+        [Route("openreport")]
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student")]
-        public async Task<IActionResult> CreateQuestionUnit([FromBody] SetQuestionUnitCommand setQuestionUnitCommand, CancellationToken cancellationToken)
+        public async Task<IActionResult> OpenReport([FromBody] CreateReviewCommand command, CancellationToken cancellationToken)
+        {
+            Console.WriteLine("--> Create new report...");
+
+            var reportId = await _mediator.Send(command, cancellationToken);
+
+            return Ok(reportId);
+        }
+
+
+        // POST api/report/items
+        // add new applicant answer(update)
+        [Route("currentanswer")]
+        [HttpPost]
+        public async Task<IActionResult> SetAnswerInReport([FromBody] SetQuestionUnitCommand command, CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Adding current answer...");
 
-            await _mediator.Send(setQuestionUnitCommand, cancellationToken);
+            await _mediator.Send(command, cancellationToken);
 
             return Ok();
         }
 
 
-        // PUT api/report/action
-        // Generate review (In the exam end!!)
-        [Route("action")]
+        //PUT api/report/action
+        //Generate review(In the exam end!!)
+        [Route("closereport")]
         [HttpPut]
-        public async Task<IActionResult> ActionReviewAsync([FromBody] ActionReviewCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> CloseReportAsync([FromBody] CloseReviewCommand command, CancellationToken cancellationToken)
         {
             bool commandResult = false;
+            // Get reportId by userId and last exam date 
 
             if (!String.IsNullOrEmpty(command.UserId))
             {
-                var requestActionReview = new IdentifiedCommand<ActionReviewCommand, bool>(command, command.UserId);
+                var requestActionReview = new IdentifiedCommand<CloseReviewCommand, bool>(command, command.ReviewId);
 
                 _logger.LogInformation(
                "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
                requestActionReview.GetType(),
-               nameof(requestActionReview.Command.ExamId),
-               requestActionReview.Command.ExamId,
+               nameof(requestActionReview.Command.ReviewId),
+               requestActionReview.Command.ReviewId,
                requestActionReview);
 
                 commandResult = await _mediator.Send(requestActionReview, cancellationToken);

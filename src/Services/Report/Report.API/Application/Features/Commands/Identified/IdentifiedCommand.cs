@@ -8,10 +8,10 @@ namespace Report.API.Application.Features.Commands.Identified
         where T : IRequest<R>
     {
         public T Command { get; }
-        public string Id { get; }
+        public int Id { get; }
 
 
-        public IdentifiedCommand(T command, string id)
+        public IdentifiedCommand(T command, int id)
         {
             Command = command;
             Id = id;

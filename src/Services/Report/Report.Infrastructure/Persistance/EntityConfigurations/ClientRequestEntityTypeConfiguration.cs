@@ -12,7 +12,7 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
         public void Configure(EntityTypeBuilder<ClientRequest> builder)
         {
             builder.ToTable("requests", ReportDbContext.DEFAULT_SCHEMA);
-            builder.HasKey(cr => cr.Id);
+            builder.Property(cr => cr.Id).ValueGeneratedNever();
             builder.Property(cr => cr.Name).IsRequired();
             builder.Property(cr => cr.Time).IsRequired();
         }

@@ -3,6 +3,7 @@ using System.Reflection;
 
 using MediatR;
 using GrpcQuestion;
+using GrpcExam;
 using FluentValidation;
 
 using Microsoft.OpenApi.Models;
@@ -86,10 +87,15 @@ namespace Report.API
             // Request manager configuration
             services.AddScoped<IRequestManager, RequestManager>();
 
-            // gRPC configuration
+            // gRPC configuration (Question Service)
             services.AddGrpcClient<QuestionGrpc.QuestionGrpcClient>
-                        (o => o.Address = new Uri(Configuration["GrpcSettings:QuestionUrl"]));
+                        (o => o.Address = new Uri(Configuration["GrpcQuestionSettings:QuestionUrl"]));
             services.AddScoped<QuestionGrpcService>();
+
+            // gRPC configuration (Exam Service)
+            services.AddGrpcClient<ExamGrpc.ExamGrpcClient>
+                        (o => o.Address = new Uri(Configuration["GrpcExamSettings:ExamUrl"]));
+            services.AddScoped<ExamGrpcService>();
 
             // CQRS configuration
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

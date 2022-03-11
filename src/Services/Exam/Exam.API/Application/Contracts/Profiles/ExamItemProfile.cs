@@ -9,7 +9,6 @@ namespace Exam.API.Application.Contracts.Profiles
     {
         public ExamItemProfile()
         {
-            //<PackageReference Include="Mapster" Version="7.2.0" />
             //Source -> Target
             CreateMap<ExamItem, ExamItemReadDto>();
             CreateMap<ExamItemCreateDto, ExamItem>();
