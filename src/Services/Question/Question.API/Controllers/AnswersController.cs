@@ -27,6 +27,7 @@ namespace Question.API.Controllers
 
         // GET api/Answers
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles="Teacher, Student")]
         public async Task<IActionResult> GetAllAnswers(int? questionId, CancellationToken cancellationToken)
         {
             var answers = await _serviceManager.QuestionAnswerService.GetAllAsync(cancellationToken);
@@ -46,6 +47,8 @@ namespace Question.API.Controllers
         //// GET api/Answers/1
         [HttpGet]
         [Route("q/{questionId:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
+
         public async Task<IActionResult> GetAllAnswersByQuestionId(int questionId, CancellationToken cancellationToken)
         {
             var answer = await _serviceManager.QuestionAnswerService
@@ -58,6 +61,7 @@ namespace Question.API.Controllers
 
         // GET api/Answers/1
         [HttpGet("{answerId:int}", Name = "GetAnswerById")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
         public async Task<IActionResult> GetAnswerById(int answerId, CancellationToken cancellationToken)
         {
             var answer = await _serviceManager.QuestionAnswerService.GetByIdAsync(answerId, cancellationToken);
@@ -69,6 +73,8 @@ namespace Question.API.Controllers
 
         // POST api/Answers
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
+
         public async Task<IActionResult> CreateAnswer([FromBody] QuestionAnswerCreateDto questionAnswerCreateDto, CancellationToken cancellationToken)
         {
             var answerDto = await _serviceManager.QuestionAnswerService.CreateAsync(questionAnswerCreateDto, cancellationToken);
@@ -80,6 +86,8 @@ namespace Question.API.Controllers
 
         // PUT api/Answers/1
         [HttpPut("{answerId:int}", Name = "UpdateAnswer")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
+
         public async Task<IActionResult> UpdateAnswer(int answerId, [FromBody] QuestionAnswerUpdateDto questionItemUpdateDto, CancellationToken cancellationToken)
         {
             await _serviceManager.QuestionAnswerService.UpdateAsync(answerId, questionItemUpdateDto, cancellationToken);
@@ -90,6 +98,8 @@ namespace Question.API.Controllers
 
         // DELETE api/Answers/1
         [HttpDelete("{answerId:int}", Name = "DeleteAnswer")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
+
         public async Task<IActionResult> DeleteAnswer(int answerId, CancellationToken cancellationToken)
         {
             await _serviceManager.QuestionAnswerService.DeleteAsync(answerId, cancellationToken);

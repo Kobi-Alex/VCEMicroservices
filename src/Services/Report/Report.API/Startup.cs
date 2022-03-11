@@ -72,9 +72,6 @@ namespace Report.API
             //Auth <------------------------------------------------------------------------------------------------>
 
 
-
-
-
             // Database connection
             services.AddDbContext<ReportDbContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));

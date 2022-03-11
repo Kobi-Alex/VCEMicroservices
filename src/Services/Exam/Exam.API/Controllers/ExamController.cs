@@ -29,6 +29,7 @@ namespace Exam.API.Controllers
         // GET api/exam/items
         [HttpGet]
         [Route("items")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Manager, Student")]
         public async Task<IActionResult> Exams(int page, string title, string status, int limit ,CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Getting exams...");
@@ -53,6 +54,7 @@ namespace Exam.API.Controllers
         // GET api/exam/items/1
         [HttpGet]
         [Route("items/{examId:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Manager, Student")]
         public async Task<IActionResult> ExamById(int examId, CancellationToken cancellationToken)
         {
             Console.WriteLine($"--> Getting exam by Id = {examId}");

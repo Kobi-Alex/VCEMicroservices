@@ -28,6 +28,7 @@ namespace Question.API.Controllers
 
         // GET api/Questions
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
         public async Task<IActionResult> GetAllQuestions(int page, int limit, int? category, string context,CancellationToken cancellationToken)
         {
             var questions = await _serviceManager.QuestionItemService
@@ -50,6 +51,7 @@ namespace Question.API.Controllers
 
         // GET api/Questions/1
         [HttpGet("{questionId:int}", Name = "GetQuestionById")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
         public async Task<IActionResult> GetQuestionById(int questionId, CancellationToken cancellationToken)
         {
             var question = await _serviceManager.QuestionItemService
@@ -61,6 +63,7 @@ namespace Question.API.Controllers
 
         // POST api/Questions
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> CreateQuestion([FromBody] QuestionItemCreateDto questionItemCreateDto, CancellationToken cancellationToken)
         {
             var questionDto = await _serviceManager.QuestionItemService
@@ -72,6 +75,7 @@ namespace Question.API.Controllers
 
         // PUT api/Questions/1
         [HttpPut("{questionId:int}", Name = "UpdateQuestion")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> UpdateQuestion(int questionId, [FromBody] QuestionItemUpdateDto questionItemUpdateDto, CancellationToken cancellationToken)
         {
             await _serviceManager.QuestionItemService
@@ -83,6 +87,7 @@ namespace Question.API.Controllers
 
         // DELETE api/Questions/5
         [HttpDelete("{questionId:int}", Name = "DeleteQuestion")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> DeleteQuestion(int questionId, CancellationToken cancellationToken)
         {
             await _serviceManager.QuestionItemService.DeleteAsync(questionId, cancellationToken);
