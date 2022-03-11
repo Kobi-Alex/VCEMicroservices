@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MediatR;
 using Report.API.Application.Features.Queries;
-using Report.API.Application.Features.Commands.ActionReview;
 using Report.API.Application.Features.Commands.SetQuestionUnit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Net;
@@ -13,7 +12,6 @@ using Microsoft.AspNetCore.Authorization;
 using Report.API.Application.Features.Commands.Identified;
 using Report.API.Application.Features.Commands.CreateReview;
 using Report.API.Application.Features.Commands.CloseReview;
-using Report.API.Application.Features.Commands.SetQuestionUnit;
 
 namespace Report.API.Controllers
 {
@@ -92,6 +90,7 @@ namespace Report.API.Controllers
         // Get all reports by user Id 
         [Route("items/applicants/{userId}")]
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
         public async Task<ActionResult> GetReportsByApplicantIdAsync(string userId)
         {
             try
@@ -129,6 +128,7 @@ namespace Report.API.Controllers
         // Create new report
         [Route("openreport")]
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student")]
         public async Task<IActionResult> OpenReport([FromBody] CreateReviewCommand command, CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Create new report...");
@@ -157,6 +157,7 @@ namespace Report.API.Controllers
         //Generate review(In the exam end!!)
         [Route("closereport")]
         [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student")]
         public async Task<IActionResult> CloseReportAsync([FromBody] CloseReviewCommand command, CancellationToken cancellationToken)
         {
             bool commandResult = false;
