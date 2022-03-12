@@ -3,12 +3,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+
 using Exam.Domain.Entities;
 using Exam.Domain.Repositories;
 using Exam.API.Application.Exceptions;
-using Exam.API.Application.Services.Abstractions;
+using Exam.API.Application.Services.Interfaces;
 using Exam.API.Application.Contracts.ExamItemDtos;
+
 using AutoMapper;
+
 
 namespace Exam.API.Application.Services
 {
@@ -51,10 +54,23 @@ namespace Exam.API.Application.Services
             return examsDto;
         }
 
-
         public async Task<ExamItemReadDto> GetByIdAsync(int examId, CancellationToken cancellationToken = default)
         {
             var exam = await _repositoryManager.ExamItemRepository.GetByIdAsync(examId, cancellationToken);
+
+            if (exam is null)
+            {
+                throw new ExamNotFoundException(examId);
+            }
+
+            var examDto = _mapper.Map<ExamItemReadDto>(exam);
+
+            return examDto;
+        }
+
+        public async Task<ExamItemReadDto> GetByIdIncludeExamQuestionsAsync(int examId, CancellationToken cancellationToken = default)
+        {
+            var exam = await _repositoryManager.ExamItemRepository.GetByIdIncludeExamQustionsAsync(examId, cancellationToken);
 
             if (exam is null)
             {
@@ -67,10 +83,12 @@ namespace Exam.API.Application.Services
             return examDto;
         }
 
-
         public async Task<ExamItemReadDto> CreateAsync(ExamItemCreateDto examCreateDto, CancellationToken cancellationToken = default)
         {
             var exam = _mapper.Map<ExamItem>(examCreateDto);
+
+            // When creating exam, exam status equal not available
+            exam.Status = ExamStatus.NotAvailable;
 
             _repositoryManager.ExamItemRepository.Insert(exam);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);

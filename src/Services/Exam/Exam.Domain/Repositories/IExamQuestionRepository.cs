@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading;
+using Exam.Domain.Entities;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Exam.Domain.Entities;
+
 
 namespace Exam.Domain.Repositories
 {

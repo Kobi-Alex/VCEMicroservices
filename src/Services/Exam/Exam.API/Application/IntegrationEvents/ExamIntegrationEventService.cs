@@ -1,11 +1,11 @@
 using System;
 using AutoMapper;
 using MassTransit;
-using System.Threading.Tasks;
-using Exam.API.Application.IntegrationEvents.Events;
-using Exam.Domain.Repositories;
-using Exam.Domain.Entities;
 using System.Linq;
+using Exam.Domain.Entities;
+using System.Threading.Tasks;
+using Exam.Domain.Repositories;
+using Exam.API.Application.IntegrationEvents.Events;
 
 namespace Exam.API.Application.IntegrationEvents
 {

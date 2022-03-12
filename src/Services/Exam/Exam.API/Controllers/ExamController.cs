@@ -1,15 +1,19 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
+
+using Exam.API.Application.Services.Interfaces;
 using Exam.API.Application.Contracts.ExamItemDtos;
 using Exam.API.Application.Contracts.ExamQuestionDtos;
-using Exam.API.Application.Services.Abstractions;
-using Microsoft.AspNetCore.Mvc;
+
+
 
 namespace Exam.API.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class ExamController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
@@ -21,8 +25,8 @@ namespace Exam.API.Controllers
 
 
         // GET api/exam/items
-        [HttpGet]
         [Route("items")]
+        [HttpGet]
         public async Task<IActionResult> Exams(CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Getting exams...");
@@ -33,8 +37,8 @@ namespace Exam.API.Controllers
 
 
         // GET api/exam/items/1
-        [HttpGet]
         [Route("items/{examId:int}")]
+        [HttpGet]
         public async Task<IActionResult> ExamById(int examId, CancellationToken cancellationToken)
         {
             Console.WriteLine($"--> Getting exam by Id = {examId}");
@@ -56,9 +60,21 @@ namespace Exam.API.Controllers
         }
 
 
-        // GET api/exam/items/1
-        [HttpDelete]
+        // PUT api/exam/items/1
         [Route("items/{examId:int}")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateExam(int examId, [FromBody] ExamItemUpdateDto examItemUpdateDto, CancellationToken cancellationToken)
+        {
+            Console.WriteLine("--> Update exam...");
+            await _serviceManager.ExamItemService.UpdateAsync(examId, examItemUpdateDto, cancellationToken);
+
+            return NoContent();
+        }
+
+
+        // GET api/exam/items/1
+        [Route("items/{examId:int}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteExam(int examId, CancellationToken cancellationToken)
         {
             Console.WriteLine($"--> Delete Exam...");
@@ -68,11 +84,9 @@ namespace Exam.API.Controllers
         }
 
 
-
-
         // GET api/[controller]/items/5/questions
-        [HttpGet]
         [Route("items/{examId:int}/questions")]
+        [HttpGet]
         public async Task<IActionResult> QuestionsByExamItemId(int examId, CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Getting questions...");
@@ -83,8 +97,8 @@ namespace Exam.API.Controllers
 
 
         // GET api/[controller]/items/5/question/1
-        [HttpGet]
         [Route("items/{examId:int}/questions/{questionId:int}")]
+        [HttpGet]
         public async Task<IActionResult> QuestionById(int examId, int questionId, CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Getting question by Id...");
@@ -95,8 +109,8 @@ namespace Exam.API.Controllers
 
 
         // POST api/[controller]/items/5/questions
-        [HttpPost]
         [Route("items/{examId:int}/questions")]
+        [HttpPost]
         public async Task<IActionResult> CreateQuestionAsync(int examId, [FromBody] ExamQuestionCreateDto questionCreateDto, CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Creating question...");
@@ -108,8 +122,8 @@ namespace Exam.API.Controllers
 
 
         // GET api/[controller]/items/5/question/1
-        [HttpDelete]
         [Route("items/{examId:int}/questions/{questionId:int}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteQuestion(int examId, int questionId, CancellationToken cancellationToken)
         {
             Console.WriteLine($"--> Delete question by Id = {questionId}");

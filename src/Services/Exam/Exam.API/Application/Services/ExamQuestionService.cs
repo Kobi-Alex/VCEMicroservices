@@ -2,12 +2,16 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using AutoMapper;
-using Exam.API.Application.Services.Abstractions;
-using Exam.Domain.Repositories;
-using Exam.API.Application.Contracts.ExamQuestionDtos;
-using Exam.API.Application.Exceptions;
+
 using Exam.Domain.Entities;
+using Exam.Domain.Repositories;
+using Exam.API.Application.Exceptions;
+using Exam.API.Application.Services.Interfaces;
+using Exam.API.Application.Contracts.ExamQuestionDtos;
+
+using AutoMapper;
+
+
 
 namespace Exam.API.Application.Services
 {
@@ -71,7 +75,6 @@ namespace Exam.API.Application.Services
             }
 
             var question = _mapper.Map<ExamQuestion>(examQuestionCreateDto);
-
             question.ExamItemId = exam.Id;
 
             _repositoryManager.ExamQuestionRepository.Insert(question);
