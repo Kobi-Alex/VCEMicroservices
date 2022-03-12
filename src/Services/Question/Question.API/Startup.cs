@@ -1,4 +1,5 @@
 using System;
+
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,15 +9,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Question.API.Middleware;
-using Question.API.Application.Services;
-using Question.API.Application.Services.Interfaces;
 using Question.Infrastructure;
 using Question.Domain.Repositories;
+using Question.API.Application.Services;
+using Question.API.Application.Services.Interfaces;
 using Question.Infrastructure.Persistance.Repositories;
 
 using MassTransit;
 using RabbitMQ.Client;
 using Question.API.Grpc;
+
 
 namespace Question.API
 {
@@ -39,6 +41,7 @@ namespace Question.API
             {
                 Console.WriteLine("--> Using SQL DB");
 
+                // SQL DB configuration
                 services.AddDbContext<QuestionDbContext>(opt =>
                     opt.UseSqlServer(Configuration.GetConnectionString("QuestionsConnection")));
 

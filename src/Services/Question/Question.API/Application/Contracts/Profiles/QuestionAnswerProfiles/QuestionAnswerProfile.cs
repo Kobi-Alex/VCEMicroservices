@@ -1,7 +1,7 @@
-using AutoMapper;
-using Question.API.Application.Contracts.Dtos.QuestionAnswerDtos;
-using Question.Domain.Entities;
 using System;
+using AutoMapper;
+using Question.Domain.Entities;
+using Question.API.Application.Contracts.Dtos.QuestionAnswerDtos;
 
 
 namespace Question.API.Application.Contracts.Profiles.QuestionAnswerProfiles

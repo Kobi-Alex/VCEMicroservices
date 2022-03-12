@@ -23,5 +23,6 @@ namespace Question.Infrastructure.Persistance.Repositories
         public IQuestionCategoryRepository QuestionCategoryRepository => _lazyQuestionCategoryRepository.Value;
         public IQuestionAnswerRepository QuestionAnswerRepository => _lazyQuestionAnswerRepository.Value;
         public IUnitOfWork UnitOfWork => _lazyUnitOfWork.Value;
+
     }
 }

@@ -1,11 +1,16 @@
 using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
 using Grpc.Core;
 using GrpcQuestion;
-using System.Threading.Tasks;
+
 using Question.Domain.Entities;
-using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
+using Question.API.Application.Exceptions;
 using Question.API.Application.Services.Interfaces;
+
+using Microsoft.Extensions.Logging;
+
 
 namespace Question.API.Grpc
 {
@@ -20,10 +25,17 @@ namespace Question.API.Grpc
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+
         public override async Task<QuestionUnitModel> GetQuestionUnitFromQuestionData(GetQuestionUnit request, ServerCallContext context)
         {
             // Get data from DB
             var questionUnit = await _serviceManager.QuestionItemService.GetByIdIncludeAnswersAsync(request.QuestionId);
+
+            if (questionUnit is null)
+            {
+                throw new QuestionItemNotFoundException(request.QuestionId);
+            }
+
 
             // Create response QuestionUnitModel
             var response = new QuestionUnitModel();
@@ -34,6 +46,7 @@ namespace Question.API.Grpc
 
             return await Task.FromResult(response);
         }
+
 
         private string GetAnswerKeys(ICollection<QuestionAnswer> answers)
         {

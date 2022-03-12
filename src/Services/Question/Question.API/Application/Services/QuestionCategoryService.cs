@@ -2,12 +2,15 @@ using System;
 using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using Question.Domain.Entities;
 using Question.Domain.Repositories;
 using Question.API.Application.Exceptions;
-using Question.API.Application.Contracts.Dtos.QuestionCategoryDtos;
 using Question.API.Application.Services.Interfaces;
+using Question.API.Application.Contracts.Dtos.QuestionCategoryDtos;
+
 using AutoMapper;
+
 
 namespace Question.API.Application.Services
 {
@@ -25,7 +28,12 @@ namespace Question.API.Application.Services
         }
 
 
-        // Get all categories from DB
+
+        /// <summary>
+        /// Get all categories from DB
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<QuestionCategoryReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var categories = await _repositoryManager.QuestionCategoryRepository.GetAllAsync(cancellationToken);
@@ -35,7 +43,12 @@ namespace Question.API.Application.Services
         }
 
 
-        // Get question by ID from DB
+        /// <summary>
+        /// Get question by ID from DB
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<QuestionCategoryReadDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var category = await _repositoryManager.QuestionCategoryRepository.GetByIdAsync(id, cancellationToken);
@@ -51,7 +64,12 @@ namespace Question.API.Application.Services
         }
 
 
-        // Create new category
+        /// <summary>
+        /// Create new category
+        /// </summary>
+        /// <param name="categoryCreateDto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<QuestionCategoryReadDto> CreateAsync(QuestionCategoryCreateDto categoryCreateDto, CancellationToken cancellationToken = default)
         {
             if (categoryCreateDto is null)
@@ -69,7 +87,13 @@ namespace Question.API.Application.Services
         }
 
 
-        // Update current category
+        /// <summary>
+        /// Update current category
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="categoryUpdateDto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task UpdateAsync(int id, QuestionCategoryUpdateDto categoryUpdateDto, CancellationToken cancellationToken = default)
         {
             if (categoryUpdateDto is null)

@@ -2,8 +2,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
 using Question.API.Application.Services.Interfaces;
+using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
+
 
 namespace Question.API.Controllers
 {
@@ -18,6 +19,7 @@ namespace Question.API.Controllers
         {
             _serviceManager = serviceManager;
         }
+
 
         // GET api/Questions
         [HttpGet]
@@ -52,7 +54,6 @@ namespace Question.API.Controllers
             return CreatedAtAction(nameof(GetQuestionById), new { questionId = questionDto.Id }, questionDto);
         }
 
-
         // PUT api/Questions/1
         [HttpPut("{questionId:int}", Name = "UpdateQuestion")]
         public async Task<IActionResult> UpdateQuestion(int questionId, [FromBody] QuestionItemUpdateDto questionItemUpdateDto, CancellationToken cancellationToken)
@@ -63,7 +64,6 @@ namespace Question.API.Controllers
             Console.WriteLine($"--> Updating question by ID = {questionId}");
             return NoContent();
         }
-
 
         // DELETE api/Questions/5
         [HttpDelete("{questionId:int}", Name = "DeleteQuestion")]

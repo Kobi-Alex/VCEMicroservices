@@ -1,7 +1,9 @@
 ﻿using System;
 
+
 namespace Question.Domain.Repositories
 {
+    // Repository manager interface
     public interface IRepositoryManager
     {
         IQuestionItemRepository QuestionItemRepository { get; }

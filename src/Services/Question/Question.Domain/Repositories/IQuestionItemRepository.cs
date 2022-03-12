@@ -1,14 +1,14 @@
-﻿
-using Question.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+
+using Question.Domain.Entities;
+
 
 namespace Question.Domain.Repositories
 {
+    // Question item repository interface
     public interface IQuestionItemRepository
     {
         Task<IEnumerable<QuestionItem>> GetAllAsync(CancellationToken cancellationToken = default);
@@ -19,7 +19,5 @@ namespace Question.Domain.Repositories
         void Remove(QuestionItem item);
         bool IsQuestionExists(int id);
 
-
-        //Task<IEnumerable<QuestionItem>> GetAllByQuestionCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default);
     }
 }

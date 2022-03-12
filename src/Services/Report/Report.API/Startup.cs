@@ -24,6 +24,7 @@ using Report.Domain.AggregatesModel.ReviewAggregate;
 using Report.Infrastructure.Persistance.Repositories;
 using Report.Infrastructure.Persistance.Idempotency;
 
+
 namespace Report.API
 {
     public class Startup

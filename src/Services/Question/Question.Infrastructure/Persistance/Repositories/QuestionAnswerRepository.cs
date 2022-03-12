@@ -3,9 +3,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+
 using Question.Domain.Entities;
 using Question.Domain.Repositories;
+
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Question.Infrastructure.Persistance.Repositories
 {
@@ -52,5 +55,6 @@ namespace Question.Infrastructure.Persistance.Repositories
         {
             _dbContext.Answers.Remove(item);
         }
+
     }
 }

@@ -3,12 +3,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+
 using Question.Domain.Entities;
 using Question.Domain.Repositories;
 using Question.API.Application.Exceptions;
 using Question.API.Application.Services.Interfaces;
 using Question.API.Application.Contracts.Dtos.QuestionAnswerDtos;
+
 using AutoMapper;
+
 
 namespace Question.API.Application.Services
 {
@@ -96,7 +99,7 @@ namespace Question.API.Application.Services
             var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository
                 .GetAllByQuestionItemIdAsync(question.Id);
 
-            CheckCorrectAnswerTypeWhenCreate(question, answerCreateDto, answers);
+            CheckCorrectAnswerType(question, answerCreateDto, answers);
 
             var answer = _mapper.Map<QuestionAnswer>(answerCreateDto);
             answer.QuestionItemId = question.Id;
@@ -131,7 +134,7 @@ namespace Question.API.Application.Services
 
             var answer = await _repositoryManager.QuestionAnswerRepository.GetByIdAsync(answerId, cancellationToken);
 
-            CheckCorrectAnswerTypeWhenUpdate(question, answerUpdateDto, answers, answer);
+            CheckCorrectAnswerType(question, answerUpdateDto, answers, answer);
             
             answer.Context = answerUpdateDto.Context;
             answer.IsCorrectAnswer = answerUpdateDto.IsCorrectAnswer;
@@ -156,7 +159,13 @@ namespace Question.API.Application.Services
         }
 
 
-        private void CheckCorrectAnswerTypeWhenCreate(QuestionItem question, QuestionAnswerCreateDto questionAnswerCreateDto, List<QuestionAnswer> answers)
+        /// <summary>
+        /// Checking correct answer type
+        /// </summary>
+        /// <param name="question"></param>
+        /// <param name="questionAnswerCreateDto"></param>
+        /// <param name="answers"></param>        
+        private void CheckCorrectAnswerType(QuestionItem question, QuestionAnswerCreateDto questionAnswerCreateDto, List<QuestionAnswer> answers)
         {
 
             string[] CorrectCharKeys = { "A", "B", "C", "D", "E" };
@@ -206,7 +215,7 @@ namespace Question.API.Application.Services
                         var countCorrectAnswer = answers.Where(k => k.IsCorrectAnswer == true).ToList();
 
                         // Check for count correct answer.
-                        if (countCorrectAnswer.Count > 1 && questionAnswerCreateDto.IsCorrectAnswer == true)
+                        if (countCorrectAnswer.Count >= 1 && questionAnswerCreateDto.IsCorrectAnswer == true)
                         {
                             throw new QuestionAnswerArgumentException($"For questions with answer type {question.AnswerType}, count correct answer must be only ONE");
                         }
@@ -214,7 +223,7 @@ namespace Question.API.Application.Services
                         // Finding char key
                         var isCharKeyExistInDataBase = answers.FirstOrDefault(k => k.CharKey == questionAnswerCreateDto.CharKey);
 
-                        // Check is exist current key in questions
+                        // Checking if exist current key in questions
                         if (isCharKeyExistInDataBase != null)
                         {
                             throw new QuestionAnswerFieldException(questionAnswerCreateDto.CharKey);
@@ -252,13 +261,22 @@ namespace Question.API.Application.Services
             }
         }
 
-        private void CheckCorrectAnswerTypeWhenUpdate(QuestionItem question, QuestionAnswerUpdateDto answerUpdateDto, 
+
+
+        /// <summary>
+        /// Checking correct answer type
+        /// </summary>
+        /// <param name="question"></param>
+        /// <param name="answerUpdateDto"></param>
+        /// <param name="answers"></param>
+        /// <param name="currentAnswer"></param>
+        private void CheckCorrectAnswerType(QuestionItem question, QuestionAnswerUpdateDto answerUpdateDto, 
             List<QuestionAnswer> answers, QuestionAnswer currentAnswer)
         {
             if (question.AnswerType == AnswerType.Text)
             {
                 // Check for correct answer. They must be only one correct answer
-                if (answerUpdateDto.IsCorrectAnswer != true)
+                if (answerUpdateDto.IsCorrectAnswer == false)
                 {
                     throw new QuestionAnswerArgumentException($"For questions with answer type {question.AnswerType}, correct answer must be only TRUE!");
                 }

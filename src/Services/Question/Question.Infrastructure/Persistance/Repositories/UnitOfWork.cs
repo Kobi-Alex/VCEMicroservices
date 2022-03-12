@@ -1,10 +1,9 @@
-﻿using Question.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Question.Domain.Repositories;
+
 
 namespace Question.Infrastructure.Persistance.Repositories
 {
@@ -16,5 +15,6 @@ namespace Question.Infrastructure.Persistance.Repositories
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
             _dbContext.SaveChangesAsync(cancellationToken);
+
     }
 }

@@ -1,13 +1,14 @@
-﻿using Question.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+
+using Question.Domain.Entities;
+
 
 namespace Question.Domain.Repositories
 {
+    // Question category repository interface
     public interface IQuestionCategoryRepository
     {
         Task<IEnumerable<QuestionCategory>> GetAllAsync(CancellationToken cancellationToken = default);
@@ -15,5 +16,6 @@ namespace Question.Domain.Repositories
 
         void Insert(QuestionCategory item);
         bool IsCategoryExists(int id);
+
     }
 }

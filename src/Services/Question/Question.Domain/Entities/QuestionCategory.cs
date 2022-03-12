@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 namespace Question.Domain.Entities
 {
     public class QuestionCategory
