@@ -13,6 +13,7 @@ namespace Exam.Infrastructure
         public ExamDbContext(DbContextOptions options)
             : base(options)
         {
+            Database.EnsureCreated();
         }
 
         public DbSet<ExamItem> Exams { get; set; }

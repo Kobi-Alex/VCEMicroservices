@@ -268,6 +268,7 @@ namespace UserService.Controllers
         [Route("SendMessage")]
         public async Task<IActionResult> SendMessage([FromBody] UserEmailDto userChangeEmail)
         {
+            //Send message on the email
 
             if (ModelState.IsValid)
             {

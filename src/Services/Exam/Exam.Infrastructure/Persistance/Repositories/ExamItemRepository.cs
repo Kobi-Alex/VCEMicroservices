@@ -21,14 +21,14 @@ namespace Exam.Infrastructure.Persistance.Repositories
         public async Task<IEnumerable<ExamItem>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dbContext.Exams
-                .Include(e => e.ExamQuestions)
+                //.Include(e => e.ExamQuestions)
                 .ToListAsync(cancellationToken);
         }
 
         public async Task<ExamItem> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Exams
-                .Include(e => e.ExamQuestions)
+                //.Include(e => e.ExamQuestions)
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 

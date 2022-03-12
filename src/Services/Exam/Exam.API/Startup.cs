@@ -118,9 +118,8 @@ namespace Exam.API
             services.AddMassTransitHostedService();
 
 
-            //services.AddControllers();
-            services.AddControllers().AddJsonOptions(x =>
-                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+            services.AddControllers();
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddSwaggerGen(c =>

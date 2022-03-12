@@ -252,7 +252,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5001"
+          "Port": "6012"
         }
       ],
       "UpstreamPathTemplate": "/api/exams",
@@ -264,7 +264,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5001"
+          "Port": "6012"
         }
       ],
       "UpstreamPathTemplate": "/api/exams/{id}",
@@ -276,7 +276,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5001"
+          "Port": "6012"
         }
       ],
       "UpstreamPathTemplate": "/api/exams/{examId}/questions",
@@ -288,7 +288,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5001"
+          "Port": "6012"
         }
       ],
       "UpstreamPathTemplate": "/api/exams/{examId}/questions/{questionId}",
@@ -356,7 +356,7 @@
       "UpstreamHttpMethod": [ "GET"]
     },
     {
-      "DownstreamPathTemplate": "/api/Report/action",
+      "DownstreamPathTemplate": "/api/Report/openreport",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -364,8 +364,32 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/action",
+      "UpstreamPathTemplate": "/api/report/openreport",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Report/closereport",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "6004"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/closereport",
       "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Report/currentanswer",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "6004"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/currentanswer",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 
