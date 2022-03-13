@@ -2,6 +2,10 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
+
+using Exam.API.Application.Services.Interfaces;
 using Exam.API.Application.Contracts.ExamItemDtos;
 using Exam.API.Application.Contracts.ExamQuestionDtos;
 using Exam.API.Application.Services.Abstractions;
@@ -10,9 +14,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Question.API.Application.Paggination;
 
+
+
 namespace Exam.API.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
@@ -27,6 +32,7 @@ namespace Exam.API.Controllers
 
 
         // GET api/exam/items
+        [Route("items")]
         [HttpGet]
         [Route("items")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Manager, Student")]
@@ -52,6 +58,7 @@ namespace Exam.API.Controllers
 
 
         // GET api/exam/items/1
+        [Route("items/{examId:int}")]
         [HttpGet]
         [Route("items/{examId:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Manager, Student")]
@@ -90,7 +97,20 @@ namespace Exam.API.Controllers
         }
 
 
+        // PUT api/exam/items/1
+        [Route("items/{examId:int}")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateExam(int examId, [FromBody] ExamItemUpdateDto examItemUpdateDto, CancellationToken cancellationToken)
+        {
+            Console.WriteLine("--> Update exam...");
+            await _serviceManager.ExamItemService.UpdateAsync(examId, examItemUpdateDto, cancellationToken);
+
+            return NoContent();
+        }
+
+
         // GET api/exam/items/1
+        [Route("items/{examId:int}")]
         [HttpDelete]
         [Route("items/{examId:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
@@ -102,8 +122,8 @@ namespace Exam.API.Controllers
             return NoContent();
         }
 
+
         // GET api/[controller]/items/5/questions
-        [HttpGet]
         [Route("items/{examId:int}/questions")]
         public async Task<IActionResult> QuestionsByExamItemId(int examId, int page, int limit, CancellationToken cancellationToken)
         {
@@ -116,8 +136,8 @@ namespace Exam.API.Controllers
 
 
         // GET api/[controller]/items/5/question/1
-        [HttpGet]
         [Route("items/{examId:int}/questions/{questionId:int}")]
+        [HttpGet]
         public async Task<IActionResult> QuestionById(int examId, int questionId, CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Getting question by Id...");
@@ -128,6 +148,7 @@ namespace Exam.API.Controllers
 
 
         // POST api/[controller]/items/5/questions
+        [Route("items/{examId:int}/questions")]
         [HttpPost]
         [Route("items/{examId:int}/questions")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
@@ -142,6 +163,7 @@ namespace Exam.API.Controllers
 
 
         // GET api/[controller]/items/5/question/1
+        [Route("items/{examId:int}/questions/{questionId:int}")]
         [HttpDelete]
         [Route("items/{examId:int}/questions/{questionId:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]

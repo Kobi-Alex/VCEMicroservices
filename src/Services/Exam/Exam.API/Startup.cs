@@ -1,26 +1,25 @@
-using EventBus.Common;
-using Exam.API.Application.IntegrationEvents;
-using Exam.API.Application.IntegrationEvents.Events;
-using Exam.API.Application.Services;
-using Exam.API.Application.Services.Abstractions;
-using Exam.API.Grpc;
-using Exam.API.Middleware;
-using Exam.Domain.Repositories;
-using Exam.Infrastructure;
-using Exam.Infrastructure.Persistance.Repositories;
+using System;
+
 using MassTransit;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using EventBus.Common;
+
+using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Text;
-using System.Text.Json.Serialization;
+
+using Exam.API.Grpc;
+using Exam.API.Middleware;
+using Exam.Infrastructure;
+using Exam.Domain.Repositories;
+using Exam.API.Application.Services;
+using Exam.API.Application.IntegrationEvents;
+using Exam.API.Application.Services.Interfaces;
+using Exam.Infrastructure.Persistance.Repositories;
+
 
 namespace Exam.API
 {
@@ -120,7 +119,9 @@ namespace Exam.API
 
             services.AddControllers();
 
+            services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
             services.AddSwaggerGen(c =>
             {

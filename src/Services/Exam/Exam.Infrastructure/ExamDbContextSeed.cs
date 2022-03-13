@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Exam.Domain.Entities;
 using Microsoft.AspNetCore.Builder;
@@ -48,7 +47,6 @@ namespace Exam.Infrastructure
                         DurationTime = 60,
                         PassingScore = 70,
                         Status = ExamStatus.NotAvailable,
-                        //ExamQuestions = (ICollection<ExamQuestion>)GetPreconfiguredExamQuestionTest()
                     },
                     new ExamItem()
                     {
@@ -65,7 +63,6 @@ namespace Exam.Infrastructure
                          DurationTime = 100,
                          PassingScore = 80,
                          Status = ExamStatus.NotAvailable,
-                         //ExamQuestions = (ICollection<ExamQuestion>)GetPreconfiguredExamQuestionTest1()
                     }
                 );
 
@@ -77,19 +74,5 @@ namespace Exam.Infrastructure
             }
         }
 
-        //private static IEnumerable<ExamQuestion> GetPreconfiguredExamQuestionTest()
-        //{
-        //    return new List<ExamQuestion>()
-        //    {
-        //        new ExamQuestion() { Question = "What is the dependency injection?", ExamItemId = 1, QuestionItemId = 1 },
-        //    };
-        //} 
-        //private static IEnumerable<ExamQuestion> GetPreconfiguredExamQuestionTest1()
-        //{
-        //    return new List<ExamQuestion>()
-        //    {
-        //        new ExamQuestion() { Question = "What is the dependency injection?", ExamItemId = 3, QuestionItemId = 1 },
-        //    };
-        //}
     }
 }

@@ -5,8 +5,7 @@ namespace Exam.API.Application.Contracts.ExamQuestionDtos
 {
     public class ExamQuestionCreateDto
     {
-        [Required(ErrorMessage = "Question context is required")]
-        public string Question { get; set; }
+        [Range(1, Int64.MaxValue, ErrorMessage = "The field {0} must be greater than or equal {1}.")]
         public int QuestionItemId { get; set; }
     }
 

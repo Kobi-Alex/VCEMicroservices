@@ -1,5 +1,6 @@
 using System;
 
+
 namespace Exam.API.Application.Exceptions
 {
     public sealed class QuestionNotFoundException : NotFoundException

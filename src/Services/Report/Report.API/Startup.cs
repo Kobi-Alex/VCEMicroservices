@@ -27,6 +27,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Report.Infrastructure.Persistance.Idempotency;
 
+
 namespace Report.API
 {
     public class Startup

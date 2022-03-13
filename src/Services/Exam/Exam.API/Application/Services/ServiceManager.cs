@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Exam.Domain.Repositories;
-using Exam.API.Application.Services.Abstractions;
+using Exam.API.Application.Services.Interfaces;
 
 
 namespace Exam.API.Application.Services

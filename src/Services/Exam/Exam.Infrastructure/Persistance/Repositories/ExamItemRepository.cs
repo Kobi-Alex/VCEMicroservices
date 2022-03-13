@@ -3,9 +3,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+
 using Exam.Domain.Entities;
 using Exam.Domain.Repositories;
+
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Exam.Infrastructure.Persistance.Repositories
 {
@@ -21,14 +24,19 @@ namespace Exam.Infrastructure.Persistance.Repositories
         public async Task<IEnumerable<ExamItem>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dbContext.Exams
-                //.Include(e => e.ExamQuestions)
                 .ToListAsync(cancellationToken);
         }
 
         public async Task<ExamItem> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Exams
-                //.Include(e => e.ExamQuestions)
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        }
+
+        public async Task<ExamItem> GetByIdIncludeExamQustionsAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Exams
+                .Include(e => e.ExamQuestions)
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 

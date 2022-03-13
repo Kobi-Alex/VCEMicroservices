@@ -10,7 +10,7 @@
 
 
   <ItemGroup>
-	  <PackageReference Include="Grpc.AspNetCore" Version="2.38.0"/>
+	  <PackageReference Include="Grpc.AspNetCore" Version="2.38.0" />
 	  <PackageReference Include="MassTransit" Version="7.3.0" />
 	  <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
 	  <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.0" />
@@ -33,12 +33,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Configurations\" />
     <Folder Include="Application\Models\" />
   </ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="Proto\question.proto" GrpcServices="Server"/>
+		<Protobuf Include="Proto\question.proto" GrpcServices="Server" />
 	</ItemGroup>
 
 </Project>

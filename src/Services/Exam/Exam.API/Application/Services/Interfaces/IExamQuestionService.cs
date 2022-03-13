@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Exam.API.Application.Contracts.ExamQuestionDtos;
 
-namespace Exam.API.Application.Services.Abstractions
+namespace Exam.API.Application.Services.Interfaces
 {
     public interface IExamQuestionService
     {

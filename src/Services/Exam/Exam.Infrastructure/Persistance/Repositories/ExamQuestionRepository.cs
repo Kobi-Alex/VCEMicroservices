@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+
 using Exam.Domain.Entities;
 using Exam.Domain.Repositories;
-using System.Linq;
+
 using Microsoft.EntityFrameworkCore;
+
 
 namespace Exam.Infrastructure.Persistance.Repositories
 {

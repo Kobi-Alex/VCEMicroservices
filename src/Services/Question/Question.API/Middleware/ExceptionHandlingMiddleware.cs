@@ -1,10 +1,12 @@
-
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+
 using Question.API.Application.Exceptions;
+
 
 namespace Question.API.Middleware
 {
@@ -12,6 +14,7 @@ namespace Question.API.Middleware
     {
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
         public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger) => _logger = logger;
+
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -24,6 +27,7 @@ namespace Question.API.Middleware
                 await HandleExceptionAsync(context, e);
             }
         }
+
         private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
         {
             httpContext.Response.ContentType = "application/json";

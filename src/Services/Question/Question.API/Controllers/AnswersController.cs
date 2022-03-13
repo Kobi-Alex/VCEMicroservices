@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Question.API.Application.Contracts.Dtos.QuestionAnswerDtos;
 using Question.API.Application.Services.Interfaces;
+using Question.API.Application.Contracts.Dtos.QuestionAnswerDtos;
+
 
 namespace Question.API.Controllers
 {

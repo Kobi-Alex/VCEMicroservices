@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore;
 using Question.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Question.Infrastructure

@@ -1,7 +1,7 @@
 using System;
 using AutoMapper;
-using Question.API.Application.Contracts.Dtos.QuestionCategoryDtos;
 using Question.Domain.Entities;
+using Question.API.Application.Contracts.Dtos.QuestionCategoryDtos;
 
 
 namespace Question.API.Application.Contracts.Profiles.QuestionCategoriesProfiles

@@ -1,7 +1,6 @@
 using System;
-using System.Threading.Tasks;
 using EventBus.Events;
-using MassTransit;
+
 
 namespace Exam.API.Application.IntegrationEvents.Events
 {

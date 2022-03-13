@@ -3,7 +3,7 @@ using GrpcExam;
 using Grpc.Core;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Exam.API.Application.Services.Abstractions;
+using Exam.API.Application.Services.Interfaces;
 
 namespace Exam.API.Grpc
 {
@@ -23,7 +23,7 @@ namespace Exam.API.Grpc
         public override async Task<ExamItemModel> GetExamItemFromExamData(GetExamItem request, ServerCallContext context)
         {
             // Get data from exam service DB by exam ID
-            var examItem = await _serviceManager.ExamItemService.GetByIdAsync(request.ExamId);
+            var examItem = await _serviceManager.ExamItemService.GetByIdIncludeExamQuestionsAsync(request.ExamId);
 
             // Create response ExamItem Model
             var response = new ExamItemModel();

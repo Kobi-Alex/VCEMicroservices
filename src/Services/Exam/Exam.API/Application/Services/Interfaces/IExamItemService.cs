@@ -1,19 +1,18 @@
-﻿using Exam.API.Application.Contracts.ExamItemDtos;
-using Exam.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading;
+using Exam.Domain.Entities;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Exam.API.Application.Contracts.ExamItemDtos;
 
-namespace Exam.API.Application.Services.Abstractions
+namespace Exam.API.Application.Services.Interfaces
 {
     public interface IExamItemService
     {
         Task<IEnumerable<ExamItemReadDto>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<ExamItemReadDto>> GetAllByStatusAsync(ExamStatus status, CancellationToken cancellationToken = default);
         Task<ExamItemReadDto> GetByIdAsync(int examId, CancellationToken cancellationToken = default);
+        Task<ExamItemReadDto> GetByIdIncludeExamQuestionsAsync(int examId, CancellationToken cancellationToken = default);
 
 
         Task<ExamItemReadDto> CreateAsync(ExamItemCreateDto examCreateDto, CancellationToken cancellationToken = default);
