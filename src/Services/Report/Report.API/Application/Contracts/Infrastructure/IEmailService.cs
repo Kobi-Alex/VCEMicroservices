@@ -1,6 +1,7 @@
 using System;
-using Report.API.Application.Models;
 using System.Threading.Tasks;
+using Report.API.Application.Models;
+
 
 namespace Report.API.Application.Contracts.Infrastructure
 {

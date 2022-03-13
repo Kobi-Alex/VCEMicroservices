@@ -1,5 +1,6 @@
 ﻿using System;
 
+
 namespace Report.Domain.Exceptions
 {
     /// <summary>

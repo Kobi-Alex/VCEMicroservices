@@ -1,5 +1,6 @@
 using System;
 
+
 namespace Report.API.Application.Models
 {
     public class Email

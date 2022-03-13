@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Report.Domain.Exceptions;
+
 
 namespace Report.Infrastructure.Persistance.Idempotency
 {

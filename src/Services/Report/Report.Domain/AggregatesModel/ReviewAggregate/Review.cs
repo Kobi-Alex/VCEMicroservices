@@ -3,6 +3,7 @@ using System.Linq;
 using Report.Domain.SeedWork;
 using System.Collections.Generic;
 
+
 namespace Report.Domain.AggregatesModel.ReviewAggregate
 {
     public class Review : Entity, IAggregateRoot
@@ -64,12 +65,11 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
         /// <summary>
         /// Adding new or update current answer 
         /// </summary>
-        /// <param name="questionName"></param>
         /// <param name="answerKeys"></param>
         /// <param name="currentKeys"></param>
         /// <param name="totalNumberAnswer"></param>
         /// <param name="questionId"></param>
-        public void AddQuestionUnit(string questionName, string answerKeys, string currentKeys, 
+        public void AddQuestionUnit(string answerKeys, string currentKeys, 
             int totalNumberAnswer, int questionId)
         {
             var existingReportForQuestion = _questionUnits
@@ -90,17 +90,17 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
                     throw new ArgumentOutOfRangeException(nameof(questionId));
                 }
 
-                if (string.IsNullOrEmpty(questionName))
-                {
-                    throw new ArgumentNullException(nameof(questionName));
-                }
+                //if (string.IsNullOrEmpty(questionName))
+                //{
+                //    throw new ArgumentNullException(nameof(questionName));
+                //}
 
                 if (totalNumberAnswer <= 0)
                 {
                     throw new ArgumentOutOfRangeException(nameof(questionId));
                 }
 
-                var questionUnit = new QuestionUnit(questionName, answerKeys, currentKeys, 
+                var questionUnit = new QuestionUnit(answerKeys, currentKeys, 
                     totalNumberAnswer, questionId);
 
                 _questionUnits.Add(questionUnit);

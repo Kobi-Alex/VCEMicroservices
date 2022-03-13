@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+
 namespace Report.API.Application.Features.Queries
 {
     //Interface for Dapper

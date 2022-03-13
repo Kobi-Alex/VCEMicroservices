@@ -1,5 +1,6 @@
 ﻿using System;
 
+
 namespace Report.API.Application.Exceptions
 {
     public sealed class ExamItemNotFoundException : NotFoundException

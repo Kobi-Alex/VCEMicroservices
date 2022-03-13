@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using MediatR;
+
 using Report.API.Application.Features.Queries;
 using Report.API.Application.Features.Commands.Identified;
-using Report.API.Application.Features.Commands.CreateReview;
+using Report.API.Application.Features.Commands.OpenReview;
 using Report.API.Application.Features.Commands.CloseReview;
 using Report.API.Application.Features.Commands.SetQuestionUnit;
+
 
 namespace Report.API.Controllers
 {
@@ -26,7 +30,6 @@ namespace Report.API.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _reviewQueries = reviewQueries ?? throw new ArgumentNullException(nameof(reviewQueries));
         }
-
 
 
 
@@ -83,6 +86,7 @@ namespace Report.API.Controllers
             }
         }
 
+
         // GET api/report/items/applicants/a1875c21-b82e-4e87-962b-9777c351f989
         // Get all reports by user Id 
         [Route("items/applicants/{userId}")]
@@ -123,12 +127,11 @@ namespace Report.API.Controllers
         // Create new report
         [Route("openreport")]
         [HttpPost]
-        public async Task<IActionResult> OpenReport([FromBody] CreateReviewCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> OpenReportAsync([FromBody] OpenReviewCommand command, CancellationToken cancellationToken)
         {
-            Console.WriteLine("--> Create new report...");
-
             var reportId = await _mediator.Send(command, cancellationToken);
 
+            Console.WriteLine("--> Open repotr...");
             return Ok(reportId);
         }
 
@@ -137,12 +140,11 @@ namespace Report.API.Controllers
         // add new applicant answer(update)
         [Route("currentanswer")]
         [HttpPost]
-        public async Task<IActionResult> SetAnswerInReport([FromBody] SetQuestionUnitCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> SetAnswerInReportAsync([FromBody] SetQuestionUnitCommand command, CancellationToken cancellationToken)
         {
-            Console.WriteLine("--> Adding current answer...");
-
             await _mediator.Send(command, cancellationToken);
 
+            Console.WriteLine("--> Adding current answer...");
             return Ok();
         }
 
@@ -156,7 +158,7 @@ namespace Report.API.Controllers
             bool commandResult = false;
             // Get reportId by userId and last exam date 
 
-            if (!String.IsNullOrEmpty(command.UserId))
+            if (!commandResult)
             {
                 var requestActionReview = new IdentifiedCommand<CloseReviewCommand, bool>(command, command.ReviewId);
 

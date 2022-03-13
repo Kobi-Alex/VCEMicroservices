@@ -17,11 +17,11 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
             questionUnitConfiguration.Property(o => o.Id).ValueGeneratedOnAdd();
 
             //name
-            questionUnitConfiguration
-                .Property<string>("_name")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("QuestionName")
-                .IsRequired();
+            //questionUnitConfiguration
+            //    .Property<string>("_name")
+            //    .UsePropertyAccessMode(PropertyAccessMode.Field)
+            //    .HasColumnName("QuestionName")
+            //    .IsRequired();
             
             //answerKeys
             questionUnitConfiguration
@@ -48,8 +48,8 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
             questionUnitConfiguration
                 .Property<int>("QuestionId")
                 .IsRequired();
+
         }
 
     }
-    
 }

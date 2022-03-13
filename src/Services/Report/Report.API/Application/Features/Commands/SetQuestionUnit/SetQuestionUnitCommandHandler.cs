@@ -2,11 +2,14 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+
+using MediatR;
+using Microsoft.Extensions.Logging;
+
 using Report.API.Grpc;
 using Report.API.Application.Exceptions;
 using Report.Domain.AggregatesModel.ReviewAggregate;
-using Microsoft.Extensions.Logging;
-using MediatR;
+
 
 namespace Report.API.Application.Features.Commands.SetQuestionUnit
 {
@@ -70,7 +73,7 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
             }
 
             // Add questionUnits data for review aggregate;
-            review.AddQuestionUnit(questionUnit.Context, questionUnit.AnswerKey, request.CurrentKeys,
+            review.AddQuestionUnit(questionUnit.AnswerKey, request.CurrentKeys,
                 questionUnit.TotalNumberAnswer, request.QuestionId);
 
             _reviewRepository.Update(review);
