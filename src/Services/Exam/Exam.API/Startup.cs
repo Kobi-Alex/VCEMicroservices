@@ -19,7 +19,9 @@ using Exam.API.Application.Services;
 using Exam.API.Application.IntegrationEvents;
 using Exam.API.Application.Services.Interfaces;
 using Exam.Infrastructure.Persistance.Repositories;
-
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Exam.API
 {

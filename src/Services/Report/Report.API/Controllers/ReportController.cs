@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 using Report.API.Application.Features.Commands.Identified;
 using Report.API.Application.Features.Commands.CreateReview;
 using Report.API.Application.Features.Commands.CloseReview;
+using Report.API.Application.Paggination;
+using System.Linq;
 
 namespace Report.API.Controllers
 {
@@ -35,12 +37,30 @@ namespace Report.API.Controllers
         // Get all reports
         [Route("items")]
         [HttpGet]
-        public async Task<ActionResult> GetAllAsync()
+        public async Task<ActionResult> GetAllAsync(int page, int limit, string user, int? exam, DateTime? date)
         {
             try
             {
                 var reports = await _reviewQueries.GetAll();
-                return Ok(reports);
+
+                if(!string.IsNullOrEmpty(user))
+                {
+                    reports = reports.Where(x => x.ApplicantId == user);
+                }
+
+                if(exam!=null)
+                {
+                    reports = reports.Where(x => x.ExamId == exam);
+                }
+
+                if(date != null)
+                {
+                    reports = reports.Where(x => x.ReportDate.ToShortDateString() == Convert.ToDateTime(date).ToShortDateString());
+                }
+
+
+                return Ok(Pagination<Review>.GetData(page, limit, reports));
+                //return Ok(reports);
             }
             catch
             {

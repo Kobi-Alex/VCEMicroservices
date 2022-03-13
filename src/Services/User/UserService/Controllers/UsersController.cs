@@ -66,8 +66,7 @@ namespace UserService.Controllers
 
             if (!String.IsNullOrEmpty(filter))
             {
-                userReadDto = userReadDto.Where(x => x.FirstName.ToLower().Contains(filter.ToLower())
-                || x.LastName.ToLower().Contains(filter.ToLower())
+                userReadDto = userReadDto.Where(x => (x.FirstName.ToLower() + " " + x.LastName.ToLower()).Contains(filter.ToLower())
                 || x.Email.ToLower().Contains(filter.ToLower()));
             }
 
