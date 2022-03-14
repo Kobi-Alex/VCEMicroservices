@@ -37,8 +37,6 @@ namespace Report.API.Controllers
             _reviewQueries = reviewQueries ?? throw new ArgumentNullException(nameof(reviewQueries));
         }
 
-
-
         // GET api/report/items
         // Get all reports
         [Route("items")]
@@ -155,6 +153,7 @@ namespace Report.API.Controllers
         // Create new report
         [Route("openreport")]
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student")]
         public async Task<IActionResult> OpenReportAsync([FromBody] OpenReviewCommand command, CancellationToken cancellationToken)
         {
             var reportId = await _mediator.Send(command, cancellationToken);
@@ -168,6 +167,7 @@ namespace Report.API.Controllers
         // add new applicant answer(update)
         [Route("currentanswer")]
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student")]
         public async Task<IActionResult> SetAnswerInReportAsync([FromBody] SetQuestionUnitCommand command, CancellationToken cancellationToken)
         {
             await _mediator.Send(command, cancellationToken);
