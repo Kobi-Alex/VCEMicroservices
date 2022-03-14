@@ -1,12 +1,21 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
+
 using Dapper;
+using Microsoft.Data.SqlClient;
+
 
 namespace Report.API.Application.Features.Queries
 {
+
+    // You can use any micro ORM, Entity Framework Core, or even plain ADO.NET for querying.
+    // In the sample application, Dapper was selected for the ordering microservice in
+    // VCEMicroservices as a good example of a popular micro ORM.
+    // It can run plain SQL queries with great performance, because it's a light framework.
+    // Using Dapper, you can write a SQL query that can access and join multiple tables.
+
     public class ReviewQueries : IReviewQueries
     {
         private string _connectionString = string.Empty;

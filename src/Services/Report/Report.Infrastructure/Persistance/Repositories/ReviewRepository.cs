@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.EntityFrameworkCore;
+
 using Report.Domain.SeedWork;
 using Report.Domain.AggregatesModel.ReviewAggregate;
 
+
+// Implementation pattern repository
 namespace Report.Infrastructure.Persistance.Repositories
 {
     public class ReviewRepository : IReviewRepository

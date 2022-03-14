@@ -18,7 +18,6 @@ namespace Report.API.Grpc
         }
 
 
-
         public async Task<ExamItemModel> GetExamItemFromExamData(int examId)
         {
             var request = new GetExamItem { ExamId = examId };

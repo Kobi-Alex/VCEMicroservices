@@ -45,7 +45,6 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
                 .IsRequired()
                 .HasPrecision(5, 2);
 
-
             //grade
             reviewConfiguration
                 .Property<string>("_grade")

@@ -1,13 +1,16 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+using MediatR;
 using Microsoft.Extensions.Logging;
+
+using Report.API.Grpc;
+using Report.API.Application.Exceptions;
 using Report.Domain.AggregatesModel.ReviewAggregate;
 using Report.Infrastructure.Persistance.Idempotency;
 using Report.API.Application.Features.Commands.Identified;
-using MediatR;
-using Report.API.Grpc;
-using Report.API.Application.Exceptions;
+
 
 namespace Report.API.Application.Features.Commands.CloseReview
 {
@@ -47,11 +50,11 @@ namespace Report.API.Application.Features.Commands.CloseReview
 
             // gRPC request to Exam service
             // Getting examItem object from exam service.
-            var examItem = await _examGrpcService.GetExamItemFromExamData(request.ExamId);
+            var examItem = await _examGrpcService.GetExamItemFromExamData(reviewToUpdate._examId);
 
             if (examItem is null)
             {
-                throw new ExamItemNotFoundException(request.ExamId);
+                throw new ExamItemNotFoundException(reviewToUpdate._examId);
             }
 
             // Calculate review scores

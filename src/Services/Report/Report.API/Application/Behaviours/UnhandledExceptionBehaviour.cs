@@ -1,8 +1,10 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+using MediatR;
+using Microsoft.Extensions.Logging;
+
 
 namespace Report.API.Application.Behaviours
 {
@@ -29,5 +31,6 @@ namespace Report.API.Application.Behaviours
                 throw;
             }
         }
+
     }
 }

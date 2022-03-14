@@ -2,12 +2,13 @@ using System;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 
-namespace Report.API.Application.Features.Commands.CreateReview
+
+namespace Report.API.Application.Features.Commands.OpenReview
 {
 
-    public class CreateReviewCommandValidator : AbstractValidator<CreateReviewCommand>
+    public class OpenReviewCommandValidator : AbstractValidator<OpenReviewCommand>
     {
-        public CreateReviewCommandValidator(ILogger<CreateReviewCommandValidator> logger)
+        public OpenReviewCommandValidator(ILogger<OpenReviewCommandValidator> logger)
         {
             RuleFor(command => command.ExamId).NotEmpty();
             RuleFor(command => command.ApplicantId).NotEmpty();

@@ -1,10 +1,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+using MediatR;
 using Microsoft.Extensions.Logging;
+
 using Report.Infrastructure.Persistance.Idempotency;
 using Report.API.Application.Features.Commands.CloseReview;
-using MediatR;
+
 
 namespace Report.API.Application.Features.Commands.Identified
 {

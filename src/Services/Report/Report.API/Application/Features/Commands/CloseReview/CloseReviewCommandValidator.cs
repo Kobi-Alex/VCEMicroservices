@@ -2,6 +2,7 @@ using System;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 
+
 namespace Report.API.Application.Features.Commands.CloseReview
 {
 
@@ -10,7 +11,6 @@ namespace Report.API.Application.Features.Commands.CloseReview
         public CloseReviewCommandValidator(ILogger<CloseReviewCommandValidator> logger)
         {
             RuleFor(command => command.ReviewId).NotEmpty();
-            RuleFor(command => command.UserId).NotEmpty();
 
             logger.LogTrace("--> INSTANCE CREATED - {ClassName}", GetType().Name);
         }

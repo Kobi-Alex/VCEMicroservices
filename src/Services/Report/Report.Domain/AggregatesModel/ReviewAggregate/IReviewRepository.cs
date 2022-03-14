@@ -1,9 +1,7 @@
-﻿using Report.Domain.SeedWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using Report.Domain.SeedWork;
 using System.Threading.Tasks;
+
 
 namespace Report.Domain.AggregatesModel.ReviewAggregate
 {

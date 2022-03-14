@@ -1,9 +1,11 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
-using MediatR;
 using System.Collections.Generic;
+
+using MediatR;
+using FluentValidation;
+
 
 namespace Report.API.Application.Behaviours
 {
@@ -31,5 +33,6 @@ namespace Report.API.Application.Behaviours
             }
             return await next();
         }
+
     }
 }

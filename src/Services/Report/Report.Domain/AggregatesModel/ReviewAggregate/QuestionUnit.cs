@@ -2,11 +2,12 @@
 using System.Linq;
 using Report.Domain.SeedWork;
 
+
 namespace Report.Domain.AggregatesModel.ReviewAggregate
 {
     public class QuestionUnit : Entity
     {
-        private String _name;                         // the same question name
+        //private String _name;                       // the same question name
         private String _answerKeys;                   // correct answer from QuestionService (Char: A, B, C ...)
         private String _currentKeys;                  // current answer from applcant (Char: A,B or A, or Text answer..)
         private int _totalNumberAnswer;               // total answers count in question
@@ -18,7 +19,7 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
         {
         }
 
-        public QuestionUnit( string questionName, string answerKeys, string currentKeys, 
+        public QuestionUnit( string answerKeys, string currentKeys, 
             int totalNumberAnswer, int questionId) : this()
         {
             if (questionId <= 0)
@@ -26,14 +27,13 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
                 throw new ArgumentOutOfRangeException(nameof(questionId));
             }
 
+            //if (string.IsNullOrEmpty(questionName))
+            //{
+            //    throw new ArgumentNullException(nameof(questionName));
+            //}
 
-            if (string.IsNullOrEmpty(questionName))
-            {
-                throw new ArgumentNullException(nameof(questionName));
-            }
 
-
-            _name = questionName;
+            //_name = questionName;
             _answerKeys = answerKeys;
             _currentKeys = currentKeys;
             _totalNumberAnswer = totalNumberAnswer;
@@ -41,7 +41,7 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
         }
 
 
-        public string GetQuestionName() => _name;
+        //public string GetQuestionName() => _name;
         public string GetAnswerKeys => _answerKeys;
         public string GetCurrentKeys => _currentKeys;
         public int GetTotalNumberAnswer => _totalNumberAnswer;

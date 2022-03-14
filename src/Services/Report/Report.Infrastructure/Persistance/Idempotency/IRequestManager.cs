@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+
 namespace Report.Infrastructure.Persistance.Idempotency
 {
     public interface IRequestManager
