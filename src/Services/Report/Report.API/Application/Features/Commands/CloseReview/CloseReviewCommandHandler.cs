@@ -6,9 +6,11 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 
 using Report.API.Grpc;
+using Report.API.Application.Models;
 using Report.API.Application.Exceptions;
 using Report.Domain.AggregatesModel.ReviewAggregate;
 using Report.Infrastructure.Persistance.Idempotency;
+using Report.API.Application.Contracts.Infrastructure;
 using Report.API.Application.Features.Commands.Identified;
 
 
@@ -20,11 +22,17 @@ namespace Report.API.Application.Features.Commands.CloseReview
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly ExamGrpcService _examGrpcService;
+        //private readonly IEmailService _emailService;
+        private readonly ILogger<CloseReviewCommandHandler> _logger;
 
-        public CloseReviewCommandHandler(IReviewRepository reviewRepository, ExamGrpcService examGrpcService)
+        public CloseReviewCommandHandler(IReviewRepository reviewRepository, ExamGrpcService examGrpcService,
+            ILogger<CloseReviewCommandHandler> logger)
         {
             _reviewRepository = reviewRepository;
             _examGrpcService = examGrpcService;
+            //_emailService = emailService;
+            _logger = logger;
+
         }
 
 
@@ -43,26 +51,59 @@ namespace Report.API.Application.Features.Commands.CloseReview
             var reviewToUpdate = await _reviewRepository.GetReportByReviewIdAsync(request.ReviewId);
 
             // Check is null
-            if(reviewToUpdate is null)
+            if (reviewToUpdate is null)
             {
                 return false;
             }
 
-            // gRPC request to Exam service
-            // Getting examItem object from exam service.
-            var examItem = await _examGrpcService.GetExamItemFromExamData(reviewToUpdate._examId);
-
-            if (examItem is null)
+            if (reviewToUpdate.QuestionUnits.Count != 0)
             {
-                throw new ExamItemNotFoundException(reviewToUpdate._examId);
+
+                // gRPC request to Exam service
+                // Getting examItem object from exam service.
+                var examItem = await _examGrpcService.GetExamItemFromExamData(reviewToUpdate._examId);
+
+                if (examItem is null)
+                {
+                    throw new ExamItemNotFoundException(reviewToUpdate._examId);
+                }
+
+                // Calculate review scores
+                reviewToUpdate.CalculateScores(examItem.CountQuestions);
+
+                // Save data
+                return await _reviewRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
             }
 
-            // Calculate review scores
-            reviewToUpdate.CalculateScores(examItem.CountQuestions);
+            return true;
 
-            // Save data
-            return await _reviewRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
         }
+
+
+        /// <summary>
+        /// Send mail method
+        /// </summary>
+        /// <param name="review"></param>
+        /// <returns></returns>
+        //private async Task SendMail(Review review)
+        //{
+        //    var email = new Email()
+        //    {
+        //        To = "steelalex.gk@gmail.com",
+        //        Body = $"Review was created.",
+        //        Subject = "Review was created"
+        //    };
+
+        //    try
+        //    {
+        //        await _emailService.SendEmail(email);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"Review {review.Id} failed due to an error with the mail service: {ex.Message}");
+        //    }
+        //}
+
     }
 
 
@@ -82,4 +123,7 @@ namespace Report.API.Application.Features.Commands.CloseReview
             return true; // Ignore duplicate requests for processing order.
         }
     }
+
+
+ 
 }
