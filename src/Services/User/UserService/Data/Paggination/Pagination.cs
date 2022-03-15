@@ -20,14 +20,25 @@ namespace UserService.Data.Paggination
 
     public static class Pagination<T>
     {
-        public static PagiData<T> GetData(int currentPage = -1, int limit = -1, IEnumerable<T> itemsData = null)
+        /// <summary>
+        /// Gets data by pagination
+        /// </summary>
+        /// <param name="currentPage">Current page</param>
+        /// <param name="limit">Qty of items on the page</param>
+        /// <param name="cntBetween">Qty of pages before and after the middle</param>
+        /// <param name="middleVal">Middle value. Must be more then cntBetween</param>
+        /// <param name="itemsData">Data</param>
+        /// <returns></returns>
+        public static PagiData<T> GetData(int currentPage = -1, int limit = 5, int cntBetween = 5, int middleVal = 10, IEnumerable<T> itemsData = null)
         {
-            if (itemsData == null) return null;
+            if (itemsData == null) throw new Exception("ItemsData was null");
+            if (middleVal < cntBetween) throw new Exception("MiddleVal must be more than cntBetween");
+            
             if (currentPage <= 0) return new PagiData<T>() { Items = itemsData, EndPage = 1, StartPage = 1, Pages = new List<int>() { 1 }, TotalPages = 1 };
+
             var itemsCntOnPage = limit >0 ? limit : itemsData.Count();
 
             var totalItems = itemsData.Count();
-
             var totalPages = (int)Math.Ceiling(totalItems / (double)itemsCntOnPage);
 
             var startInedx = (currentPage - 1) * itemsCntOnPage;
@@ -35,9 +46,9 @@ namespace UserService.Data.Paggination
             var startPage = 0;
             var endPage = 0;
 
-            if (currentPage >= 10)
+            if (currentPage >= middleVal)
             {
-                startPage = currentPage - 5;
+                startPage = currentPage - cntBetween;
 
                 if (currentPage > totalPages)
                 {
@@ -45,9 +56,9 @@ namespace UserService.Data.Paggination
                 }
                 else
                 {
-                    if (currentPage + 5 <= totalPages)
+                    if (currentPage + cntBetween <= totalPages)
                     {
-                        endPage = currentPage + 5;
+                        endPage = currentPage + cntBetween;
                     }
                     else
                     {
@@ -58,7 +69,7 @@ namespace UserService.Data.Paggination
             else
             {
                 startPage = 1;
-                endPage = (int)Math.Ceiling(totalItems / (double)itemsCntOnPage) > 10 ? 10 : (int)Math.Ceiling(totalItems / (double)itemsCntOnPage);
+                endPage = (int)Math.Ceiling(totalItems / (double)itemsCntOnPage) > middleVal ? middleVal : (int)Math.Ceiling(totalItems / (double)itemsCntOnPage);
             }
 
             if (endPage <= 0) endPage = 1;
@@ -76,7 +87,6 @@ namespace UserService.Data.Paggination
 
 
             return new PagiData<T>() { Items = items, EndPage = endPage, StartPage = startPage, Pages = pages, TotalPages = totalPages };
-
         }
     }
 }

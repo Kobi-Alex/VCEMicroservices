@@ -48,7 +48,7 @@ namespace UserService.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Manager")]
-        public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers(int page, string filter, string role, int limit = 15, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers(int page, string filter, string role, int middleVal = 10, int cntBetween = 5, int limit = 15,  CancellationToken cancellationToken = default)
         {
             Console.WriteLine("\n---> Getting All Users...");
 
@@ -75,33 +75,24 @@ namespace UserService.Controllers
                 userReadDto = userReadDto.Where(x => x.Roles.ToLower().Contains(role.ToLower()));
             }
 
-            //var list = new List<UserReadDto>();
+            var list = new List<UserReadDto>();
 
-            //string[] roles = new string[4] { "Student", "Admin", "Teacher", "Manager" };
+            string[] roles = new string[4] { "Student", "Admin", "Teacher", "Manager" };
 
-            //int k = 0;
+            int k = 0;
 
-            //for (int i = 0; i < 100; i++)
-            //{
-            //    list.Add(new UserReadDto { Id = i.ToString(), Roles = roles[k], Email = $"user{i}@google.com", FirstName = $"User{i}", LastName = $"L{i}", CreatedAt = DateTime.Now });
-            //    k++;
-            //    if (k >= roles.Length) k = 0;
-            //}
-
-
+            for (int i = 0; i < 300; i++)
+            {
+                list.Add(new UserReadDto { Id = i.ToString(), Roles = roles[k], Email = $"user{i}@google.com", FirstName = $"User{i}", LastName = $"L{i}", CreatedAt = DateTime.Now });
+                k++;
+                if (k >= roles.Length) k = 0;
+            }
 
             //return Ok(userReadDto);
 
-            return Ok(Pagination<UserReadDto>.GetData(page, limit, userReadDto));
+            if (middleVal < cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
 
-
-            //var list = new List<UserReadDto>();
-
-            //for (int i = 0; i < 500; i++)
-            //{
-            //    list.Add(new UserReadDto() { FirstName = $"User: {i}", AdditionalInfo = $"Additional Info user: {i}", Email = $"csuser{i}@google.com", LastName = $"Smith: {i}", Id = Guid.NewGuid().ToString(), Roles = "Student" });
-            //}
-            //return Ok(list);
+            return Ok(Pagination<UserReadDto>.GetData(currentPage: page, limit: limit,  itemsData: list, middleVal: middleVal, cntBetween: cntBetween));
         }
 
         [HttpGet("{id}", Name = "GetUserById")]
@@ -519,7 +510,7 @@ namespace UserService.Controllers
             //_mapper.Map<IEnumerable<UserReadDto>>(users);
             //var userExams = _mapper. await _userRepository.GetUserExams(id);
             var userExams = _mapper.Map<IEnumerable<UserExamDto>>(await _userRepository.GetUserExams(id));
-            return Ok(Pagination<UserExamDto>.GetData(page,limit,userExams));
+            return Ok(Pagination<UserExamDto>.GetData(currentPage: page, limit: limit,itemsData: userExams));
         }
 
 
