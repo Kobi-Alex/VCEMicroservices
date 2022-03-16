@@ -109,12 +109,12 @@ namespace Report.API.Controllers
         // Get all reports by exam and user Id
         [Route("items/exam/{examId:int}/applicant/{appId}")]
         [HttpGet]
-        public async Task<ActionResult> GetReportsByExamIdAndUserIdAsync(int examId, string appId)
+        public async Task<ActionResult> GetReportByExamIdAndUserIdAsync(int examId, string appId)
         {
             try
             {
-                var reports = await _reviewQueries.GetReportsByExamIdAndUserIdAsync(examId, appId);
-                return Ok(reports);
+                var report = await _reviewQueries.GetReportByExamIdAndUserIdAsync(examId, appId);
+                return Ok(report);
             }
             catch
             {
