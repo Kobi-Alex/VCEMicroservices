@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Question.API.Application.Services.Interfaces;
 using Question.API.Application.Contracts.Dtos.QuestionCategoryDtos;
 using Question.API.Application.Paggination;
-using Question.API.Application.Services.Interfaces;
+
 
 namespace Question.API.Controllers
 {
@@ -30,13 +30,17 @@ namespace Question.API.Controllers
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
 
-        public async Task<IActionResult> GetCategories(int page, string filter, int limit,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCategories(int page, string filter, int limit, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken = default)
         {
             var categories = await _serviceManager.QuestionCategoryService.GetAllAsync(cancellationToken);
 
             Console.WriteLine("--> Getting categories...");
 
-            return Ok(Pagination<QuestionCategoryReadDto>.GetData(page,limit,categories));
+
+            if (middleVal <= cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
+
+
+            return Ok(Pagination<QuestionCategoryReadDto>.GetData(currentPage: page,limit: limit, itemsData:categories, middleVal:middleVal, cntBetween:cntBetween));
             //return Ok(categories);
         }
 

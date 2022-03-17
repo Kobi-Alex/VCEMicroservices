@@ -90,9 +90,9 @@ namespace UserService.Controllers
 
             //return Ok(userReadDto);
 
-            if (middleVal < cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
+            if (middleVal <= cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
 
-            return Ok(Pagination<UserReadDto>.GetData(currentPage: page, limit: limit,  itemsData: list, middleVal: middleVal, cntBetween: cntBetween));
+            return Ok(Pagination<UserReadDto>.GetData(currentPage: page, limit: limit,  itemsData: list, middleVal:middleVal, cntBetween:cntBetween));
         }
 
         [HttpGet("{id}", Name = "GetUserById")]

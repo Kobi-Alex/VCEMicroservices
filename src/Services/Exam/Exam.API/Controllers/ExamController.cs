@@ -32,7 +32,7 @@ namespace Exam.API.Controllers
         [HttpGet]
         [Route("items")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Manager, Student")]
-        public async Task<IActionResult> Exams(int page, string title, string status, int limit ,CancellationToken cancellationToken)
+        public async Task<IActionResult> Exams(int page, string title, string status, int limit, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken=default)
         {
             Console.WriteLine("--> Getting exams...");
             var exams = await _serviceManager.ExamItemService.GetAllAsync(cancellationToken);
@@ -47,8 +47,8 @@ namespace Exam.API.Controllers
                 exams = exams.Where(x => x.Status.ToString().ToLower() == status.ToLower());
             }
 
-
-            return Ok(Pagination<ExamItemReadDto>.GetData(page,limit,exams));
+            if (middleVal <= cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
+            return Ok(Pagination<ExamItemReadDto>.GetData(currentPage: page,limit: limit,itemsData: exams, middleVal:middleVal, cntBetween:cntBetween));
             //return Ok(exams);
         }
 
@@ -104,12 +104,13 @@ namespace Exam.API.Controllers
 
         // GET api/[controller]/items/5/questions
         [Route("items/{examId:int}/questions")]
-        public async Task<IActionResult> QuestionsByExamItemId(int examId, int page, int limit, CancellationToken cancellationToken)
+        public async Task<IActionResult> QuestionsByExamItemId(int examId, int page, int limit, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken = default)
         {
             Console.WriteLine("--> Getting questions...");
             var questions = await _serviceManager.ExamQuestionService.GetAllByExamItemIdAsync(examId, cancellationToken);
 
-            return Ok(Pagination<ExamQuestionReadDto>.GetData(page, limit, questions));
+            if (middleVal <= cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
+            return Ok(Pagination<ExamQuestionReadDto>.GetData(currentPage: page,limit: limit,itemsData: questions, middleVal:middleVal, cntBetween:cntBetween));
             //return Ok(questions);
         }
 

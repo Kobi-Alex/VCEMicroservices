@@ -41,7 +41,7 @@ namespace Report.API.Controllers
         // Get all reports
         [Route("items")]
         [HttpGet]
-        public async Task<ActionResult> GetAllAsync(int page, int limit, string user, int? exam, DateTime? date)
+        public async Task<ActionResult> GetAllAsync(int page, int limit,  string user, int exam, DateTime? date, int middleVal = 10, int cntBetween = 5)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace Report.API.Controllers
                     reports = reports.Where(x => x.ApplicantId == user);
                 }
 
-                if(exam!=null)
+                if(exam>0)
                 {
                     reports = reports.Where(x => x.ExamId == exam);
                 }
@@ -62,8 +62,9 @@ namespace Report.API.Controllers
                     reports = reports.Where(x => x.ReportDate.ToShortDateString() == Convert.ToDateTime(date).ToShortDateString());
                 }
 
+                if (middleVal <= cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
 
-                return Ok(Pagination<Review>.GetData(page, limit, reports));
+                return Ok(Pagination<Review>.GetData(currentPage: page, limit: limit, itemsData: reports, middleVal: middleVal, cntBetween:cntBetween));
                 //return Ok(reports);
             }
             catch

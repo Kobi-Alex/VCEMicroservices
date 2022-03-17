@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Question.API.Application.Services.Interfaces;
 using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
 using Question.API.Application.Paggination;
-using Question.API.Application.Services.Interfaces;
 
 namespace Question.API.Controllers
 {
@@ -31,12 +30,12 @@ namespace Question.API.Controllers
         // GET api/Questions
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
-        public async Task<IActionResult> GetAllQuestions(int page, int limit, int? category, string context,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllQuestions(int page, int limit, int category, string context, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken = default)
         {
             var questions = await _serviceManager.QuestionItemService
                 .GetAllAsync(cancellationToken);
 
-            if(category != null)
+            if(category > 0)
             {
                 questions = questions.Where(x => x.QuestionCategoryId == category).ToList();
             }
@@ -46,8 +45,11 @@ namespace Question.API.Controllers
                 questions = questions.Where(x => x.Context.ToLower().Contains(context.ToLower()));
             }
 
+            if (middleVal <= cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
+
+
             Console.WriteLine("--> Getting all questions...");
-            return Ok(Pagination<QuestionItemReadDto>.GetData(page, limit, questions));
+            return Ok(Pagination<QuestionItemReadDto>.GetData(currentPage: page, limit: limit, itemsData: questions, middleVal:middleVal, cntBetween:cntBetween));
             //return Ok(questions);
         }
 
