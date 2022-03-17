@@ -31,46 +31,53 @@ namespace Report.API.Application.Features.Queries
         }
 
 
-        //Dapper comment
-        //Get all reports by exam id, include question Units
-        public async Task<IEnumerable<Review>> GetReportsByExamIdAsync(int examId)
+
+        // Dapper comment
+        // Get all reports
+        public async Task<IEnumerable<Review>> GetAll()
         {
-            var query = "SELECT* " +
-                        "FROM report.reviews r JOIN report.questionUnits qu ON r.Id = qu.ReviewId " +
-                        "WHERE r.ExamId = @examId";
+            var query = "SELECT * FROM report.reviews";
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                var reviewDict = new Dictionary<int, Review>();
+                var reviews = await connection.QueryAsync<Review>(query);
 
-                var reviews = await connection.QueryAsync<Review, QuestionUnit, Review>(
-                    query, (review, questionUnit) =>
-                    {
-                        if(!reviewDict.TryGetValue(review.Id, out var currentReview))
-                        {
-                            currentReview = review;
-                            reviewDict.Add(currentReview.Id, currentReview);
-                        }
-
-                        currentReview.QuestionUnits.Add(questionUnit);
-                        return currentReview;
-
-                    }, param: new { examId }
-                );
-
-                return reviews.Distinct().ToList();
+                return reviews.ToList();
             }
         }
 
+
+        // Dapper comment
+        // Get reports by ID
+        public async Task<Review> GetReportsById(int reportId)
+        {
+            var query = "SELECT * FROM report.reviews r WHERE r.Id = @reportId;" +
+                        "SELECT * FROM report.questionUnits qu WHERE qu.ReviewId = @reportId";
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var multi = await connection.QueryMultipleAsync(query, new { reportId }))
+            {
+                var report = await multi.ReadSingleOrDefaultAsync<Review>();
+                if (report != null)
+                {
+                    report.QuestionUnits = (await multi.ReadAsync<QuestionUnit>()).ToList();
+                }
+
+                return report;
+            }
+
+        }
+
+
         //Dapper comment
-        //Get all reports by exam id and user id, include question Units
-        public async Task<IEnumerable<Review>> GetReportsByExamIdAndUserIdAsync(int examId, string userId)
+        //Get all reports by exam id, include question Units
+        public async Task<IEnumerable<Review>> GetReportsByExamIdAsync(int examId)
         {
             var query = "SELECT* " +
-                        "FROM report.reviews r JOIN report.questionUnits qu ON r.Id = qu.ReviewId " +
-                        "WHERE r.ExamId = @examId and r.ApplicantId = @userId";
+                        "FROM report.reviews r LEFT JOIN report.questionUnits qu ON r.Id = qu.ReviewId " +
+                        "WHERE r.ExamId = @examId";
 
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -87,10 +94,15 @@ namespace Report.API.Application.Features.Queries
                             reviewDict.Add(currentReview.Id, currentReview);
                         }
 
+                        if (currentReview.QuestionUnits == null)
+                        {
+                            currentReview.QuestionUnits = new List<QuestionUnit>();
+                        }
+
                         currentReview.QuestionUnits.Add(questionUnit);
                         return currentReview;
 
-                    }, param: new { examId, userId }
+                    }, param: new { examId }
                 );
 
                 return reviews.Distinct().ToList();
@@ -103,7 +115,7 @@ namespace Report.API.Application.Features.Queries
         public async Task<IEnumerable<Review>> GetReportByUserIdAsync(string userId)
         {
             var query = "SELECT* " +
-                        "FROM report.reviews r JOIN report.questionUnits qu ON r.Id = qu.ReviewId " +
+                        "FROM report.reviews r LEFT JOIN report.questionUnits qu ON r.Id = qu.ReviewId " +
                         "WHERE r.ApplicantId = @userId";
 
             using (var connection = new SqlConnection(_connectionString))
@@ -132,65 +144,14 @@ namespace Report.API.Application.Features.Queries
         }
 
 
-        // Dapper comment
-        // Get all reports
-        public async Task<IEnumerable<Review>> GetAll()
+        //Dapper comment
+        //Get all reports by exam id and user id, include question Units
+        public async Task<Review> GetReportByExamIdAndUserIdAsync(int examId, string userId)
         {
-            var query = "SELECT * FROM report.reviews r " +
-                        "LEFT JOIN report.questionUnits qu ON r.Id = qu.ReviewId";
 
-            //using (var connection = new SqlConnection(_connectionString))
-            //{
-            //    connection.Open();
-
-            //    var reviews = await connection.QueryAsync<Review>(query);
-
-            //    return reviews.ToList();
-            //}
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                var reviewDict = new Dictionary<int, Review>();
-
-                var reviews = await connection.QueryAsync<Review, QuestionUnit, Review>(
-                    query, (review, questionUnit) =>
-                    {
-                        if (!reviewDict.TryGetValue(review.Id, out var currentReview))
-                        {
-                            currentReview = review;
-                            reviewDict.Add(currentReview.Id, currentReview);
-                        }
-
-                        currentReview.QuestionUnits.Add(questionUnit);
-                        return currentReview;
-                    }
-                );
-
-                return reviews.Distinct().ToList();
-            }
-
-        }
-
-        // Dapper comment
-        // Get reports by ID
-        public async Task<IEnumerable<Review>> GetReportsById(int reportId)
-        {
-            //var query = "SELECT* FROM report.reviews r WHERE r.Id = @reportId";
-
-            var query = "SELECT * " +
-                        "FROM report.reviews r JOIN report.questionUnits qu ON r.Id = qu.ReviewId " +
-                        "WHERE r.Id = @reportId";
-
-            //using (var connection = new SqlConnection(_connectionString))
-            //{
-            //    connection.Open();
-
-            //    var reviews = await connection.QuerySingleOrDefaultAsync<Review>(query, new { reportId });
-
-            //    return reviews;
-            //}
+            var query = "SELECT* " +
+                        "FROM report.reviews r LEFT JOIN report.questionUnits qu ON r.Id = qu.ReviewId " +
+                        "WHERE r.ExamId = @examId and r.ApplicantId = @userId";
 
 
             using (var connection = new SqlConnection(_connectionString))
@@ -208,16 +169,19 @@ namespace Report.API.Application.Features.Queries
                             reviewDict.Add(currentReview.Id, currentReview);
                         }
 
+                        if (currentReview.QuestionUnits == null)
+                        {
+                            currentReview.QuestionUnits = new List<QuestionUnit>();
+                        }
+
                         currentReview.QuestionUnits.Add(questionUnit);
                         return currentReview;
 
-                    }, param: new { reportId }
+                    }, param: new { examId, userId }
                 );
 
-                return reviews.Distinct().ToList();
+                return reviewDict.Values.First();
             }
-
-
         }
     }
 }

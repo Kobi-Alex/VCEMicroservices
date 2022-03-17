@@ -26,7 +26,6 @@ namespace Report.API.Application.Features.Queries
 
     public record QuestionUnit
     {
-        public string QuestionName { get; init; }        // Question
         public string AnswerKeys { get; init; }          // Correct answer in the form of a tape [C, D, E]
         public string CurrentKeys { get; init; }         // Current applicant answer in the form of a tape [A, B, C, D, E]
         public int TotalNumberAnswer { get; init; }      // Total number of answers to the question

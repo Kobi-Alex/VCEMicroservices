@@ -140,8 +140,8 @@ namespace Report.API.Controllers
         {
             try
             {
-                var reports = await _reviewQueries.GetReportsByExamIdAndUserIdAsync(examId, appId);
-                return Ok(reports);
+                var report = await _reviewQueries.GetReportByExamIdAndUserIdAsync(examId, appId);
+                return Ok(report);
             }
             catch
             {
