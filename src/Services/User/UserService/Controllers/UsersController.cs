@@ -75,24 +75,24 @@ namespace UserService.Controllers
                 userReadDto = userReadDto.Where(x => x.Roles.ToLower().Contains(role.ToLower()));
             }
 
-            var list = new List<UserReadDto>();
+            //var list = new List<UserReadDto>();
 
-            string[] roles = new string[4] { "Student", "Admin", "Teacher", "Manager" };
+            //string[] roles = new string[4] { "Student", "Admin", "Teacher", "Manager" };
 
-            int k = 0;
+            //int k = 0;
 
-            for (int i = 0; i < 300; i++)
-            {
-                list.Add(new UserReadDto { Id = i.ToString(), Roles = roles[k], Email = $"user{i}@google.com", FirstName = $"User{i}", LastName = $"L{i}", CreatedAt = DateTime.Now });
-                k++;
-                if (k >= roles.Length) k = 0;
-            }
+            //for (int i = 0; i < 300; i++)
+            //{
+            //    list.Add(new UserReadDto { Id = i.ToString(), Roles = roles[k], Email = $"user{i}@google.com", FirstName = $"User{i}", LastName = $"L{i}", CreatedAt = DateTime.Now });
+            //    k++;
+            //    if (k >= roles.Length) k = 0;
+            //}
 
             //return Ok(userReadDto);
 
             if (middleVal <= cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
 
-            return Ok(Pagination<UserReadDto>.GetData(currentPage: page, limit: limit,  itemsData: list, middleVal:middleVal, cntBetween:cntBetween));
+            return Ok(Pagination<UserReadDto>.GetData(currentPage: page, limit: limit,  itemsData: userReadDto, middleVal:middleVal, cntBetween:cntBetween));
         }
 
         [HttpGet("{id}", Name = "GetUserById")]
