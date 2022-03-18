@@ -56,6 +56,8 @@ namespace UserService.Controllers
 
             var userReadDto = _mapper.Map<IEnumerable<UserReadDto>>(users);
 
+           
+
             foreach (var item in users)
             {
                 if (item.Roles != null)
@@ -222,7 +224,6 @@ namespace UserService.Controllers
         [HttpPost]
         [Route("UpdateEmail")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
         public async Task<IActionResult> UpdateEmail(UserChangeEmailDto userChangeEmailDto)
         {
             var user = await _userRepository.GetByIdAsync(userChangeEmailDto.Id);
@@ -256,6 +257,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("SendMessage")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> SendMessage([FromBody] UserEmailDto userChangeEmail)
         {
             //Send message on the email

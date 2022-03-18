@@ -41,25 +41,27 @@ namespace Report.API.Controllers
         // Get all reports
         [Route("items")]
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
+
         public async Task<ActionResult> GetAllAsync(int page, int limit,  string user, int exam, DateTime? date, int middleVal = 10, int cntBetween = 5)
         {
             try
             {
-                var reports = await _reviewQueries.GetAll();
+                var reports = (await _reviewQueries.GetAll()).OrderByDescending(x => x.Id);    
 
                 if(!string.IsNullOrEmpty(user))
                 {
-                    reports = reports.Where(x => x.ApplicantId == user);
+                    reports = reports.Where(x => x.ApplicantId == user).OrderByDescending(x => x.Id);
                 }
 
                 if(exam>0)
                 {
-                    reports = reports.Where(x => x.ExamId == exam);
+                    reports = reports.Where(x => x.ExamId == exam).OrderByDescending(x => x.Id); ;
                 }
 
                 if(date != null)
                 {
-                    reports = reports.Where(x => x.ReportDate.ToShortDateString() == Convert.ToDateTime(date).ToShortDateString());
+                    reports = reports.Where(x => x.ReportDate.ToShortDateString() == Convert.ToDateTime(date).ToShortDateString()).OrderByDescending(x => x.Id);
                 }
 
                 if (middleVal <= cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
@@ -78,6 +80,8 @@ namespace Report.API.Controllers
         // Get all reports by exam Id
         [Route("{reportId:int}")]
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
+
         public async Task<ActionResult> GetReportsByIdAsync(int reportId)
         {
             try
@@ -98,12 +102,20 @@ namespace Report.API.Controllers
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
 
-        public async Task<ActionResult> GetReportsByExamIdAsync(int examId)
+        public async Task<ActionResult> GetReportsByExamIdAsync(int examId, int page, int limit, DateTime? date)
         {
             try
             {
-                var reports = await _reviewQueries.GetReportsByExamIdAsync(examId);
-                return Ok(reports);
+                var reports = (await _reviewQueries.GetReportsByExamIdAsync(examId)).OrderByDescending(x=>x.Id);
+
+                if (date != null)
+                {
+                    reports = reports.Where(x => x.ReportDate.ToShortDateString() == Convert.ToDateTime(date).ToShortDateString()).OrderByDescending(x => x.Id);
+                }
+
+
+                return Ok(Pagination<Review>.GetData(reports, page, limit));
+                //return Ok(reports);
             }
             catch
             {

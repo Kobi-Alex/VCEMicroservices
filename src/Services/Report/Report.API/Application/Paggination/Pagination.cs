@@ -29,7 +29,7 @@ namespace Report.API.Application.Paggination
         /// <param name="middleVal">Middle value. Must be more then cntBetween</param>
         /// <param name="itemsData">Data</param>
         /// <returns></returns>
-        public static PagiData<T> GetData(int currentPage, int limit = 10, int cntBetween = 5, int middleVal = 10, IEnumerable<T> itemsData = null)
+        public static PagiData<T> GetData(IEnumerable<T> itemsData, int currentPage, int limit = 10, int cntBetween = 5, int middleVal = 10 )
         {
             if (itemsData == null) throw new Exception("ItemsData was null");
             if (middleVal < cntBetween) throw new Exception("MiddleVal must be more than cntBetween");

@@ -104,6 +104,7 @@ namespace Exam.API.Controllers
 
         // GET api/[controller]/items/5/questions
         [Route("items/{examId:int}/questions")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> QuestionsByExamItemId(int examId, int page, int limit, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken = default)
         {
             Console.WriteLine("--> Getting questions...");
@@ -118,6 +119,7 @@ namespace Exam.API.Controllers
         // GET api/[controller]/items/5/question/1
         [Route("items/{examId:int}/questions/{questionId:int}")]
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> QuestionById(int examId, int questionId, CancellationToken cancellationToken)
         {
             Console.WriteLine("--> Getting question by Id...");
