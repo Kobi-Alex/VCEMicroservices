@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 using Dapper;
 using Microsoft.Data.SqlClient;
-
+using Report.API.Application.Exceptions;
 
 namespace Report.API.Application.Features.Queries
 {
@@ -60,11 +60,13 @@ namespace Report.API.Application.Features.Queries
             using (var multi = await connection.QueryMultipleAsync(query, new { reportId }))
             {
                 var report = await multi.ReadSingleOrDefaultAsync<Review>();
-                if (report != null)
+
+                if (report is null)
                 {
-                    report.QuestionUnits = (await multi.ReadAsync<QuestionUnit>()).ToList();
+                    throw new ReviewNotFoundException(reportId.ToString());
                 }
 
+                report.QuestionUnits = (await multi.ReadAsync<QuestionUnit>()).ToList();
                 return report;
             }
 

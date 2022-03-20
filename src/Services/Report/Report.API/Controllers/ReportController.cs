@@ -29,6 +29,7 @@ namespace Report.API.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _reviewQueries = reviewQueries ?? throw new ArgumentNullException(nameof(reviewQueries));
+
         }
 
 
@@ -39,15 +40,9 @@ namespace Report.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {
-            try
-            {
-                var reports = await _reviewQueries.GetAll();
-                return Ok(reports);
-            }
-            catch
-            {
-                return NotFound();
-            }
+            var reports = await _reviewQueries.GetAll();
+            return Ok(reports);
+
         }
 
 
@@ -57,15 +52,9 @@ namespace Report.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetReportsByIdAsync(int reportId)
         {
-            try
-            {
-                var reports = await _reviewQueries.GetReportsById(reportId);
-                return Ok(reports);
-            }
-            catch
-            {
-                return NotFound();
-            }
+            var reports = await _reviewQueries.GetReportsById(reportId);
+            return Ok(reports);
+
         }
 
 
@@ -75,15 +64,9 @@ namespace Report.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetReportsByExamIdAsync(int examId)
         {
-            try
-            {
-                var reports = await _reviewQueries.GetReportsByExamIdAsync(examId);
-                return Ok(reports);
-            }
-            catch
-            {
-                return NotFound();
-            }
+            var reports = await _reviewQueries.GetReportsByExamIdAsync(examId);
+            return Ok(reports);
+
         }
 
 
@@ -93,15 +76,9 @@ namespace Report.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetReportsByApplicantIdAsync(string userId)
         {
-            try
-            {
-                var reports = await _reviewQueries.GetReportByUserIdAsync(userId);
-                return Ok(reports);
-            }
-            catch
-            {
-                return NotFound();
-            }
+            var reports = await _reviewQueries.GetReportByUserIdAsync(userId);
+            return Ok(reports);
+
         }
 
 
@@ -111,15 +88,9 @@ namespace Report.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetReportByExamIdAndUserIdAsync(int examId, string appId)
         {
-            try
-            {
-                var report = await _reviewQueries.GetReportByExamIdAndUserIdAsync(examId, appId);
-                return Ok(report);
-            }
-            catch
-            {
-                return NotFound();
-            }
+            var report = await _reviewQueries.GetReportByExamIdAndUserIdAsync(examId, appId);
+            return Ok(report);
+
         }
 
 
@@ -133,6 +104,7 @@ namespace Report.API.Controllers
 
             Console.WriteLine("--> Open repotr...");
             return Ok(reportId);
+
         }
 
 
@@ -146,6 +118,7 @@ namespace Report.API.Controllers
 
             Console.WriteLine("--> Adding current answer...");
             return Ok();
+
         }
 
 
@@ -178,6 +151,7 @@ namespace Report.API.Controllers
             }
 
             return Ok();
+
         }
 
     }
