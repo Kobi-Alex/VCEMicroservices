@@ -55,8 +55,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "acme.com",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/users",
@@ -259,7 +259,7 @@
     },
     //Exams
     {
-      "DownstreamPathTemplate": "/api/Exam/items",
+      "DownstreamPathTemplate": "/api/Exam",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -271,7 +271,7 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Exam/items/{id}",
+      "DownstreamPathTemplate": "/api/Exam/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -283,7 +283,7 @@
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Exam/items/{examId}/questions",
+      "DownstreamPathTemplate": "/api/Exam/{examId}/questions",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -308,7 +308,7 @@
     },
     //Reports
     {
-      "DownstreamPathTemplate": "/api/Report/items/exams/{examId}",
+      "DownstreamPathTemplate": "/api/Report/exams/{examId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -316,7 +316,7 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/items/e/{examId}",
+      "UpstreamPathTemplate": "/api/report/e/{examId}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -332,7 +332,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Report/items/exam/{examId:int}/applicants/{userId}",
+      "DownstreamPathTemplate": "/api/Report/exam/{examId:int}/applicants/{userId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -340,11 +340,11 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/items/e/{examId:int}/a/{userId}",
+      "UpstreamPathTemplate": "/api/report/e/{examId:int}/a/{userId}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Report/items",
+      "DownstreamPathTemplate": "/api/Report",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -352,7 +352,7 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/items",
+      "UpstreamPathTemplate": "/api/report",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
