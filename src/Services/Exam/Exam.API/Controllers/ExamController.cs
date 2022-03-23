@@ -30,7 +30,6 @@ namespace Exam.API.Controllers
 
         // GET api/exam/items
         [HttpGet]
-        [Route("items")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Manager, Student")]
         public async Task<IActionResult> Exams(int page, string title, string status, int limit, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken=default)
         {
@@ -55,7 +54,7 @@ namespace Exam.API.Controllers
 
         // GET api/exam/items/1
         [HttpGet]
-        [Route("items/{examId:int}")]
+        [Route("{examId:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Manager, Student")]
         public async Task<IActionResult> ExamById(int examId, CancellationToken cancellationToken)
         {
@@ -67,7 +66,6 @@ namespace Exam.API.Controllers
 
 
         // POST api/exam/items
-        [Route("items")]
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> CreateExam([FromBody] ExamItemCreateDto examCreateDto, CancellationToken cancellationToken)
@@ -78,7 +76,7 @@ namespace Exam.API.Controllers
             return CreatedAtAction(nameof(ExamById), new { examId = examDto.Id }, examDto);
         }
         // POST api/exam/items
-        [Route("items/{examId:int}")]
+        [Route("{examId:int}")]
         [HttpPut]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> UpdateExam(int examId, [FromBody] ExamItemUpdateDto examItemUpdateDto, CancellationToken cancellationToken)
@@ -91,7 +89,7 @@ namespace Exam.API.Controllers
 
         // GET api/exam/items/1
         [HttpDelete]
-        [Route("items/{examId:int}")]
+        [Route("{examId:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> DeleteExam(int examId, CancellationToken cancellationToken)
         {
@@ -103,7 +101,7 @@ namespace Exam.API.Controllers
 
 
         // GET api/[controller]/items/5/questions
-        [Route("items/{examId:int}/questions")]
+        [Route("{examId:int}/questions")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> QuestionsByExamItemId(int examId, int page, int limit, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken = default)
         {
@@ -117,7 +115,7 @@ namespace Exam.API.Controllers
 
 
         // GET api/[controller]/items/5/question/1
-        [Route("items/{examId:int}/questions/{questionId:int}")]
+        [Route("{examId:int}/questions/{questionId:int}")]
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> QuestionById(int examId, int questionId, CancellationToken cancellationToken)
@@ -131,7 +129,7 @@ namespace Exam.API.Controllers
 
         // POST api/[controller]/items/5/questions
         [HttpPost]
-        [Route("items/{examId:int}/questions")]
+        [Route("{examId:int}/questions")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> CreateQuestionAsync(int examId, [FromBody] ExamQuestionCreateDto questionCreateDto, CancellationToken cancellationToken)
         {
@@ -145,7 +143,7 @@ namespace Exam.API.Controllers
 
         // GET api/[controller]/items/5/question/1
         [HttpDelete]
-        [Route("items/{examId:int}/questions/{questionId:int}")]
+        [Route("{examId:int}/questions/{questionId:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> DeleteQuestion(int examId, int questionId, CancellationToken cancellationToken)
         {

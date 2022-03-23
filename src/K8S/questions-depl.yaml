@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: questions-depl
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   app: questionservice
+ template:
+  metadata:
+   labels:
+    app: questionservice
+  spec:
+   containers:
+    - name: questionservice
+      image: ghostdockerhunter/questionservice:latest
+   

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: reports-depl
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   app: reportservice
+ template:
+  metadata:
+   labels: 
+    app: reportservice
+  spec: 
+   containers:
+    - name: reportservice
+      image: ghostdockerhunter/reportservice:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: reports-clusterip-srv
+spec:
+ type: ClusterIP
+ selector:
+  app: reportservice
+ ports:
+  - name: reportservice
+    protocol: TCP
+    port: 80
+    targetPort: 80

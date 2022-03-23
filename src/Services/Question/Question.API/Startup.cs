@@ -42,11 +42,14 @@ namespace Question.API
         {
             if (_env.IsProduction())
             {
-                Console.WriteLine("--> Using SQL DB");
+                Console.WriteLine("--> Using SQL DB Production");
 
                 // SQL DB configuration
+                //services.AddDbContext<QuestionDbContext>(opt =>
+                //    opt.UseSqlServer(Configuration.GetConnectionString("QuestionsConnection")));
+
                 services.AddDbContext<QuestionDbContext>(opt =>
-                    opt.UseSqlServer(Configuration.GetConnectionString("QuestionsConnection")));
+                   opt.UseInMemoryDatabase("InMem"));
 
             }
             else
@@ -59,8 +62,8 @@ namespace Question.API
                 //    opt.UseInMemoryDatabase("InMem"));
 
                 //add service InMemory DB
-                services.AddDbContext<QuestionDbContext>(opt =>
-                    opt.UseInMemoryDatabase("InMem"));
+                //services.AddDbContext<QuestionDbContext>(opt =>
+                //    opt.UseInMemoryDatabase("InMem"));
             }
 
 

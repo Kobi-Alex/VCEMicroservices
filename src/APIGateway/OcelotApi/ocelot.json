@@ -55,8 +55,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "7000"
+          "Host": "acme.com",
+          "Port": "80"
         }
       ],
       "UpstreamPathTemplate": "/api/users",
@@ -403,6 +403,10 @@
       "UpstreamPathTemplate": "/api/report/currentanswer",
       "UpstreamHttpMethod": [ "POST" ]
     }
-  ]
+  ],
+  "GlobalConfiguration": {
+    "RequestIdKey": "OcRequestId",
+    "AdministrationPath": "/administration"
+  }
 
 }

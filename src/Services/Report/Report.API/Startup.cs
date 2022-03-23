@@ -32,12 +32,15 @@ namespace Report.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+
+        private readonly IWebHostEnvironment _env;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -73,14 +76,35 @@ namespace Report.API
 
             //Auth <------------------------------------------------------------------------------------------------>
 
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
 
             // Database connection
-            services.AddDbContext<ReportDbContext>(opt =>
-                opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
+
+            if (_env.IsDevelopment())
+            {
+                Console.WriteLine("\n---> Using SqlServer Db Development\n");
+                //services.AddDbContext<ReportDbContext>(opt =>
+                //    opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
+
+
+                services.AddDbContext<ReportDbContext>(opt =>
+                   opt.UseInMemoryDatabase("InMem"));
+            }
+
+            if (_env.IsProduction())
+            {
+                Console.WriteLine("\n---> Using SqlServer Db Production\n");
+
+                services.AddDbContext<ReportDbContext>(opt =>
+                   opt.UseInMemoryDatabase("InMem"));
+            }
 
             // Review queries configuration
-            services.AddScoped<IReviewQueries, ReviewQueries>(provider => new ReviewQueries
-            (Configuration.GetConnectionString("ReportsConnection")));
+            services.AddScoped<IReviewQueries, ReviewQueries>(provider => new ReviewQueries(Configuration.GetConnectionString("ReportsConnection")));
+
 
             // Review repository configuration
             services.AddScoped<IReviewRepository, ReviewRepository>();
@@ -134,7 +158,7 @@ namespace Report.API
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseRouting();
-
+            app.UseCors("AllowOrigin");
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

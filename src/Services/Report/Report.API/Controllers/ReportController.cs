@@ -39,10 +39,8 @@ namespace Report.API.Controllers
 
         // GET api/report/items
         // Get all reports
-        [Route("items")]
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
-
         public async Task<ActionResult> GetAllAsync(int page, int limit,  string user, int exam, DateTime? date, int middleVal = 10, int cntBetween = 5)
         {
             try
@@ -78,8 +76,7 @@ namespace Report.API.Controllers
 
         // GET api/report/items/1
         // Get all reports by exam Id
-        [Route("{reportId:int}")]
-        [HttpGet]
+        [HttpGet ("{reportId:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
 
         public async Task<ActionResult> GetReportsByIdAsync(int reportId)
@@ -98,15 +95,15 @@ namespace Report.API.Controllers
 
         // GET api/report/items/1
         // Get all reports by exam Id
-        [Route("items/exams/{examId:int}")]
         [HttpGet]
+        [Route("exams/{examId:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
 
         public async Task<ActionResult> GetReportsByExamIdAsync(int examId, int page, int limit, DateTime? date)
         {
             try
             {
-                var reports = (await _reviewQueries.GetReportsByExamIdAsync(examId)).OrderByDescending(x=>x.Id);
+                var reports = (await _reviewQueries.GetReportsByExamIdAsync(examId)).OrderByDescending(x => x.Id);
 
                 if (date != null)
                 {
@@ -126,8 +123,8 @@ namespace Report.API.Controllers
 
         // GET api/report/items/applicants/a1875c21-b82e-4e87-962b-9777c351f989
         // Get all reports by user Id 
-        [Route("items/applicants/{userId}")]
         [HttpGet]
+        [Route("applicants/{userId}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
         public async Task<ActionResult> GetReportsByApplicantIdAsync(string userId)
         {
@@ -145,8 +142,8 @@ namespace Report.API.Controllers
 
         // GET api/report/items/1/applicants/3
         // Get all reports by exam and user Id
-        [Route("items/exam/{examId:int}/applicant/{appId}")]
         [HttpGet]
+        [Route("exam/{examId:int}/applicant/{appId}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
         public async Task<ActionResult> GetReportsByExamIdAndUserIdAsync(int examId, string appId)
         {
@@ -164,8 +161,8 @@ namespace Report.API.Controllers
 
         // POST api/report/items
         // Create new report
-        [Route("openreport")]
         [HttpPost]
+        [Route("openreport")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student")]
         public async Task<IActionResult> OpenReportAsync([FromBody] OpenReviewCommand command, CancellationToken cancellationToken)
         {
@@ -178,8 +175,8 @@ namespace Report.API.Controllers
 
         // POST api/report/items
         // add new applicant answer(update)
-        [Route("currentanswer")]
         [HttpPost]
+        [Route("currentanswer")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student")]
         public async Task<IActionResult> SetAnswerInReportAsync([FromBody] SetQuestionUnitCommand command, CancellationToken cancellationToken)
         {
@@ -192,8 +189,8 @@ namespace Report.API.Controllers
 
         //PUT api/report/action
         //Generate review(In the exam end!!)
-        [Route("closereport")]
         [HttpPut]
+        [Route("closereport")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student")]
         public async Task<IActionResult> CloseReportAsync([FromBody] CloseReviewCommand command, CancellationToken cancellationToken)
         {

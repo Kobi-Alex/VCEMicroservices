@@ -2,30 +2,35 @@ version: '3.4'
 
 services:
 
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
+  # rabbitmq:
+  #   image: rabbitmq:3-management-alpine
 
   exam.api:
-    image: ${DOCKER_REGISTRY-}examapi
+    image: ${DOCKER_REGISTRY-}ghostdockerhunter/examservice
+    container_name: examservice
     build:
       context: .
       dockerfile: Services/Exam/Exam.API/Dockerfile
 
   question.api:
-    image: ${DOCKER_REGISTRY-}questionapi
+    image: ${DOCKER_REGISTRY-}ghostdockerhunter/questionservice
+    container_name: questionservice
     build:
       context: .
       dockerfile: Services/Question/Question.API/Dockerfile
-
+  report.api:
+    image: ${DOCKER_REGISTRY-}ghostdockerhunter/reportservice
+    container_name: reportservice
+    build:
+     context: .
+     dockerfile: Services/Report/Report.API/Dockerfile
   userservice:
-    image: ${DOCKER_REGISTRY-}userservice
+    image: ${DOCKER_REGISTRY-}ghostdockerhunter/userservice
+    container_name: userservice
     build:
       context: .
       dockerfile:  Services/User/UserService/Dockerfile
-  ocelotApi:
-    image: ${DOCKER_REGISTRY-}ocelotApi
-    build:
-      context: .
-      dockerfile:  APIGateway/OcelotApi/Dockerfile
-      
 
+networks:
+  my-network:
+    external: true

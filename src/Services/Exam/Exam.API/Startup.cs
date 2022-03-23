@@ -81,6 +81,7 @@ namespace Exam.API
             if (_env.IsProduction())
             {
                 //add service InMemory DB
+                Console.WriteLine("\n---> Using SqlServer Db Production\n");
                 services.AddDbContext<ExamDbContext>(opt =>
               opt.UseInMemoryDatabase("InMem"));
             }

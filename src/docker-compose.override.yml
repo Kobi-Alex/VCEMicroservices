@@ -2,21 +2,49 @@ version: '3.4'
 
 services:
 
-  rabbitmq:
-    container_name: rabbitmq
-    restart: always
-    ports:
-        - "5672:5672"
-        - "15672:15672"
+  # rabbitmq:
+  #   container_name: rabbitmq
+  #   restart: always
+
 
   exam.api:
+    container_name: examservice
+    networks:
+      - my-network
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    ports:
+      - "80"
+  report.api:
+    container_name: reportservice
+    networks:
+      - my-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://0.0.0.0:80
     ports:
       - "80"
 
   question.api:
+    container_name: questionservice
+    networks:
+      - my-network
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://0.0.0.0:80
     ports:
       - "80"
+  userservice:
+    container_name: userservice
+    networks:
+      - my-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    ports:
+      - "80"
+  
+networks:
+  my-network:
+    external: true
