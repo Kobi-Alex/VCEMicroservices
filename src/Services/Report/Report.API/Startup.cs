@@ -86,12 +86,11 @@ namespace Report.API
             if (_env.IsDevelopment())
             {
                 Console.WriteLine("\n---> Using SqlServer Db Development\n");
-                //services.AddDbContext<ReportDbContext>(opt =>
-                //    opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
-
-
                 services.AddDbContext<ReportDbContext>(opt =>
-                   opt.UseInMemoryDatabase("InMem"));
+                    opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
+
+
+              
             }
 
             if (_env.IsProduction())

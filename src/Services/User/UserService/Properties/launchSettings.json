@@ -33,6 +33,7 @@
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true,
       "useSSL": true,
+      "ConnectionStrings": { "UsersConnection": "Server=(localdb)\\mssqllocaldb;Database=UserServiceDb;Trusted_Connection=True;MultipleActiveResultSets=true" }
     }
   }
 }

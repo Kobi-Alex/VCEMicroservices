@@ -64,20 +64,20 @@ namespace UserService.Data
 
 
                 //Add Admind and Manager
-                var adminAndManager = new User
+                var supremeAdmin = new User
                 {
-                    FirstName = "Alpha Admin Manager",
-                    LastName = "Mr. Alpha Admin Manager",
-                    AdditionalInfo = "AdditionaInfo Mr Admin Manger",
-                    Email = "adminmanager@google.com",
-                    Password = hasher.HashPassword(null, "AdminManager1!"),
+                    FirstName = "Supreme",
+                    LastName = "Admin",
+                    Email = "supreme@google.com",
+                    Password = hasher.HashPassword(null, "Admin1!"),
                     CreatedAt = new DateTimeOffset(DateTime.Now),
                     UpdatedAt = new DateTimeOffset(DateTime.Now),
                    // Roles = new List<Role>() { adminRole, managerRole }
                 };
-                adminAndManager.Roles.Add(context.Roles.FirstOrDefault(x=>x.Name == "Admin"));
-                adminAndManager.Roles.Add(context.Roles.FirstOrDefault(x=>x.Name == "Manager"));
-                context.Users.Add(adminAndManager);
+                supremeAdmin.Roles.Add(context.Roles.FirstOrDefault(x=>x.Name == "Admin"));
+                supremeAdmin.Roles.Add(context.Roles.FirstOrDefault(x=>x.Name == "Manager"));
+                supremeAdmin.Roles.Add(context.Roles.FirstOrDefault(x=>x.Name == "Teacher"));
+                context.Users.Add(supremeAdmin);
 
                 //Add Admin 
                 User adminUser = new User

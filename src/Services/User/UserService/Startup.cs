@@ -39,6 +39,14 @@ namespace UserService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            if(_env.IsStaging())
+            {
+                Console.WriteLine("\n---> Staging");
+                Console.WriteLine("\n---> Using InMemDb Staging\n");
+
+                services.AddDbContext<AppDbContext>(opt =>
+                 opt.UseInMemoryDatabase("InMem"));
+            }
 
             if (_env.IsProduction())
             {
@@ -51,16 +59,18 @@ namespace UserService
               //  services.AddDbContext<AppDbContext>(opt =>
                //     opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
             }
-            else
+
+            if (_env.IsDevelopment())
             {
                 Console.WriteLine("\n---> Development");
                 Console.WriteLine("\n---> Using SqlServer Db Development\n");
 
                 //services.AddDbContext<AppDbContext>(opt =>
-                //   opt.UseInMemoryDatabase("InMem"));
+                //    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+
 
                 services.AddDbContext<AppDbContext>(opt =>
-                    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+                   opt.UseInMemoryDatabase("InMem"));
             }
 
 

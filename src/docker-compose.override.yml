@@ -7,44 +7,46 @@ services:
   #   restart: always
 
 
-  exam.api:
-    container_name: examservice
-    networks:
-      - my-network
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-    ports:
-      - "80"
-  report.api:
-    container_name: reportservice
-    networks:
-      - my-network
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-    ports:
-      - "80"
 
-  question.api:
-    container_name: questionservice
-    networks:
-      - my-network
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-    ports:
-      - "80"
+  
+  # report.api:
+  #   container_name: reportservice
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=http://0.0.0.0:80
+  #   ports:
+  #     - "80"
+
+ 
   userservice:
     container_name: userservice
-    networks:
-      - my-network
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Staging
       - ASPNETCORE_URLS=http://0.0.0.0:80
     ports:
-      - "80"
-  
-networks:
-  my-network:
-    external: true
+      - "7010:80"
+  question.api:
+    container_name: questionservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    ports:
+      - "7020:80"
+  exam.api:
+    container_name: examservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    ports:
+      - "7030:80"
+
+  ocelotapigw:
+    container_name: ocelotapigw
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
+    depends_on:
+        - userservice
+        - question.api
+        - exam.api
+    ports:
+    - "9000:80"

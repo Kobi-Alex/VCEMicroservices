@@ -23,7 +23,7 @@ namespace UserService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
     public class UsersController : ControllerBase
     {
@@ -33,7 +33,7 @@ namespace UserService.Controllers
         private readonly IMapper _mapper;
         private readonly EmailConfiguration _emailConfig;
        
-        private Random randomNumbers = new Random();
+        private Random randomNumbers = new Random(); // for secret code 
         private Random randomPassword = new Random();
 
         public UsersController(IUserRepository userRepository, IRoleRepository roleRepository, IAccessCodeRepository accessCodeRepository, IMapper mapper, EmailConfiguration emailConfig)

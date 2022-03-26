@@ -52,7 +52,7 @@ namespace Question.API
                    opt.UseInMemoryDatabase("InMem"));
 
             }
-            else
+            if (_env.IsDevelopment())
             {
                 Console.WriteLine("\n---> Using SqlServer Db Development\n");
                 services.AddDbContext<QuestionDbContext>(opt =>
@@ -66,6 +66,13 @@ namespace Question.API
                 //    opt.UseInMemoryDatabase("InMem"));
             }
 
+            if(_env.IsStaging())
+            {
+                Console.WriteLine("\n---> Using InMem Db Staging\n");
+
+                services.AddDbContext<QuestionDbContext>(opt =>
+                   opt.UseInMemoryDatabase("InMem"));
+            }
 
             //Auth <------------------------------------------------------------------------------------------------>
 

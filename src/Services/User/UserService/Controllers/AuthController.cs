@@ -168,7 +168,6 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("RefreshToken")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> RefreshToken([FromBody] TokenRequest tokenRequest)
         {
             if (ModelState.IsValid)
