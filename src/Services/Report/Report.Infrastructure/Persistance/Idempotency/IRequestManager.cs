@@ -8,5 +8,6 @@ namespace Report.Infrastructure.Persistance.Idempotency
     {
         Task<bool> ExistAsync(int id);
         Task CreateRequestForCommandAsync<T>(int id);
+        void Remove(int id);
     }
 }

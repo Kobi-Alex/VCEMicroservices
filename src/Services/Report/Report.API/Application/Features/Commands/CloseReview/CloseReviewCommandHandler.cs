@@ -72,7 +72,7 @@ namespace Report.API.Application.Features.Commands.CloseReview
                 // Calculate review scores
                 reviewToUpdate.CalculateScores(examItem.CountQuestions);
 
-                // TODO Email content
+                // TODO add E-mail content
                 // Sending exam result to applicant email..
                 await SendMail(reviewToUpdate);
 

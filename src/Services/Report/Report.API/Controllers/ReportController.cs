@@ -11,8 +11,8 @@ using Report.API.Application.Features.Queries;
 using Report.API.Application.Features.Commands.Identified;
 using Report.API.Application.Features.Commands.OpenReview;
 using Report.API.Application.Features.Commands.CloseReview;
+using Report.API.Application.Features.Commands.RemoveReview;
 using Report.API.Application.Features.Commands.SetQuestionUnit;
-
 
 namespace Report.API.Controllers
 {
@@ -34,7 +34,7 @@ namespace Report.API.Controllers
 
 
 
-        // GET api/report/items
+        // GET api/Report/items
         // Get all reports
         [Route("items")]
         [HttpGet]
@@ -46,7 +46,7 @@ namespace Report.API.Controllers
         }
 
 
-        // GET api/report/items/1
+        // GET api/Report/items/1
         // Get all reports by exam Id
         [Route("{reportId:int}")]
         [HttpGet]
@@ -58,7 +58,7 @@ namespace Report.API.Controllers
         }
 
 
-        // GET api/report/items/1
+        // GET api/Report/items/1
         // Get all reports by exam Id
         [Route("items/exams/{examId:int}")]
         [HttpGet]
@@ -70,7 +70,7 @@ namespace Report.API.Controllers
         }
 
 
-        // GET api/report/items/applicants/a1875c21-b82e-4e87-962b-9777c351f989
+        // GET api/Report/items/applicants/a1875c21-b82e-4e87-962b-9777c351f989
         // Get all reports by user Id 
         [Route("items/applicants/{userId}")]
         [HttpGet]
@@ -82,7 +82,7 @@ namespace Report.API.Controllers
         }
 
 
-        // GET api/report/items/1/applicants/3
+        // GET api/Report/items/1/applicants/3
         // Get all reports by exam and user Id
         [Route("items/exam/{examId:int}/applicant/{appId}")]
         [HttpGet]
@@ -94,7 +94,7 @@ namespace Report.API.Controllers
         }
 
 
-        // POST api/report/items
+        // POST api/Report/items
         // Create new report
         [Route("openreport")]
         [HttpPost]
@@ -108,7 +108,7 @@ namespace Report.API.Controllers
         }
 
 
-        // POST api/report/items
+        // POST api/Report/items
         // add new applicant answer(update)
         [Route("currentanswer")]
         [HttpPost]
@@ -122,7 +122,7 @@ namespace Report.API.Controllers
         }
 
 
-        //PUT api/report/action
+        //PUT api/Report/action
         //Generate review(In the exam end!!)
         [Route("closereport")]
         [HttpPut]
@@ -152,6 +152,19 @@ namespace Report.API.Controllers
 
             return Ok();
 
+        }
+
+
+        // FOR TEST
+        // DELETE api/Report/items/remove
+        [Route("items/remove")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteReviewAsync([FromBody] RemoveReviewCommand command, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(command, cancellationToken);
+
+            Console.WriteLine($"--> Delete review by ID = {command.ReviewId}");
+            return NoContent();
         }
 
     }
