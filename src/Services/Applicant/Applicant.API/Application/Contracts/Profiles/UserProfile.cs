@@ -17,6 +17,7 @@ namespace Applicant.API.Application.Contracts.Profiles
             CreateMap<UserCreateDto, User>();
             CreateMap<UserExamDto, User>();
             CreateMap<User, UserExamDto>();
+            CreateMap<UserUpdateDto, User>();
         }
 
     }

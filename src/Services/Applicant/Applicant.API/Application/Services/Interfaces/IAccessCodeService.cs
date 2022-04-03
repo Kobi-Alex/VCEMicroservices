@@ -13,7 +13,7 @@ namespace Applicant.API.Application.Services.Interfaces
         Task<AuthResult> RegisterUserAsync(AuthRegisterDto authRegisterDto, CancellationToken cancellationToken = default);
         Task<AuthResult> LoginUserAsync(AuthLoginDto authLoginDto, CancellationToken cancellationToken = default);
         Task<AuthResult> RefreshTokenAsync(AuthTokenRequestDto tokenRequest, CancellationToken cancellationToken = default);
-        Task SendMessageAsync(AuthRegisterDto authRegisterDto, CancellationToken cancellationToken = default);
+        Task AccessCodeAsync(AuthRegisterDto authRegisterDto, CancellationToken cancellationToken = default);
 
     }
 

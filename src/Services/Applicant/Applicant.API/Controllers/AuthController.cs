@@ -83,7 +83,7 @@ namespace Applicant.API.Controllers
 
             if (ModelState.IsValid)
             {
-                await _serviceManager.AccessCodeService.SendMessageAsync(emailRequest);
+                await _serviceManager.AccessCodeService.AccessCodeAsync(emailRequest);
                 return NoContent();
             }
 

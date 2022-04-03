@@ -59,7 +59,9 @@ namespace Applicant.API.Application.Services
 
             if (userCodes.ToList().Count == 0)
             {
-                throw new AccessCodeNotFoundException();
+                 await AccessCodeAsync(authRegisterDto);
+                return null;
+                //throw new AccessCodeNotFoundException();
             }
 
             if (userCodes.ToList()[0].Code != authRegisterDto.Code)
@@ -137,7 +139,7 @@ namespace Applicant.API.Application.Services
         }
 
 
-        public async Task SendMessageAsync(AuthRegisterDto authRegisterDto, CancellationToken cancellationToken = default)
+        public async Task AccessCodeAsync(AuthRegisterDto authRegisterDto, CancellationToken cancellationToken = default)
         {
 
             var user = await _repositoryManager.UserRepository.GetByEmailAsync(authRegisterDto.Email);
