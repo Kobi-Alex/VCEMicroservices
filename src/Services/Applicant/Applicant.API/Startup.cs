@@ -54,7 +54,7 @@ namespace Applicant.API
             if (_env.IsProduction())
             {
                 Console.WriteLine("\n---> Production");
-                Console.WriteLine("\n---> Using SqlServer Db Production\n");
+                Console.WriteLine("\n---> Using InMem Db Production\n");
 
                 services.AddDbContext<AppDbContext>(opt =>
                    opt.UseInMemoryDatabase("InMem"));

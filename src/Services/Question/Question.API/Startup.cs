@@ -42,7 +42,7 @@ namespace Question.API
         {
             if (_env.IsProduction())
             {
-                Console.WriteLine("--> Using SQL DB Production");
+                Console.WriteLine("--> Using InMem DB Production");
 
                 // SQL DB configuration
                 //services.AddDbContext<QuestionDbContext>(opt =>

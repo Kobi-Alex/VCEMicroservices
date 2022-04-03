@@ -17,7 +17,7 @@ services:
     container_name: userservice
     build:
       context: .
-      dockerfile:  Services/User/UserService/Dockerfile
+      dockerfile:  Services/Applicant/Applicant.API/Dockerfile
     depends_on:
      - db
   
@@ -37,6 +37,15 @@ services:
       dockerfile: Services/Exam/Exam.API/Dockerfile
     depends_on:
      - db
+  report.api:
+    image: ${DOCKER_REGISTRY-}ghostdockerhunter/reportservice
+    container_name: reportservice
+    build:
+     context: .
+     dockerfile: Services/Report/Report.API/Dockerfile
+    depends_on:
+     - db
+
   ocelotapigw:
     image: ${DOCKER_REGISTRY-}ghostdockerhunter/ocelotapigw
     build:
@@ -44,10 +53,5 @@ services:
       dockerfile: APIGateway/OcelotApi/Dockerfile
 
  
-  # report.api:
-  #   image: ${DOCKER_REGISTRY-}ghostdockerhunter/reportservice
-  #   container_name: reportservice
-  #   build:
-  #    context: .
-  #    dockerfile: Services/Report/Report.API/Dockerfile
+  
   

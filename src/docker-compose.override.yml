@@ -6,15 +6,6 @@ services:
   #   container_name: rabbitmq
   #   restart: always
 
-  # report.api:
-  #   container_name: reportservice
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Development
-  #     - ASPNETCORE_URLS=http://0.0.0.0:80
-  #   ports:
-  #     - "80"
-
- 
   user.api:
     container_name: userservice
     environment:
@@ -37,6 +28,13 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:80
     ports:
       - "7030:80"
+  report.api:
+    container_name: reportservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    ports:
+      - "7040:80"
 
   ocelotapigw:
     container_name: ocelotapigw

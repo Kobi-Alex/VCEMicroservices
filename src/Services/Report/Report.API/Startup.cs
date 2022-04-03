@@ -103,7 +103,7 @@ namespace Report.API
 
             if (_env.IsProduction())
             {
-                Console.WriteLine("\n---> Using SqlServer Db Production\n");
+                Console.WriteLine("\n---> Using InMem Db Production\n");
 
                 services.AddDbContext<ReportDbContext>(opt =>
                    opt.UseInMemoryDatabase("InMem"));
