@@ -92,9 +92,13 @@ namespace Report.API
                 Console.WriteLine("\n---> Using SqlServer Db Development\n");
                 services.AddDbContext<ReportDbContext>(opt =>
                     opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
+            }
 
-
-              
+            if(_env.IsStaging())
+            {
+                Console.WriteLine("\n---> Using SqlServer Db Staging\n");
+                services.AddDbContext<ReportDbContext>(opt =>
+                    opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
             }
 
             if (_env.IsProduction())
