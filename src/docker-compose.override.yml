@@ -6,9 +6,6 @@ services:
   #   container_name: rabbitmq
   #   restart: always
 
-
-
-  
   # report.api:
   #   container_name: reportservice
   #   environment:
@@ -18,13 +15,14 @@ services:
   #     - "80"
 
  
-  userservice:
+  user.api:
     container_name: userservice
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
       - ASPNETCORE_URLS=http://0.0.0.0:80
     ports:
       - "7010:80"
+  
   question.api:
     container_name: questionservice
     environment:
@@ -45,7 +43,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
     depends_on:
-        - userservice
+        - user.api
         - question.api
         - exam.api
     ports:

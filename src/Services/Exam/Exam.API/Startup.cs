@@ -94,10 +94,10 @@ namespace Exam.API
 
             if(_env.IsStaging())
             {
-                Console.WriteLine("\n---> Using InMeme Db Staging\n");
+                Console.WriteLine("\n---> Using SQL Server Db Staging\n");
 
                 services.AddDbContext<ExamDbContext>(opt =>
-                    opt.UseInMemoryDatabase("InMem"));
+                   opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
             }
 
             //add service ServiceManager

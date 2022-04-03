@@ -5,25 +5,38 @@ services:
   # rabbitmq:
   #   image: rabbitmq:3-management-alpine
  
+  db:
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
+    container_name: sql-server-db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=1Secure*Password1
 
-  userservice:
+  user.api:
     image: ${DOCKER_REGISTRY-}ghostdockerhunter/userservice
     container_name: userservice
     build:
       context: .
       dockerfile:  Services/User/UserService/Dockerfile
+    depends_on:
+     - db
+  
   question.api:
     image: ${DOCKER_REGISTRY-}ghostdockerhunter/questionservice
     container_name: questionservice
     build:
       context: .
       dockerfile: Services/Question/Question.API/Dockerfile
+    depends_on:
+     - db
   exam.api:
     image: ${DOCKER_REGISTRY-}ghostdockerhunter/examservice
     container_name: examservice
     build:
       context: .
       dockerfile: Services/Exam/Exam.API/Dockerfile
+    depends_on:
+     - db
   ocelotapigw:
     image: ${DOCKER_REGISTRY-}ghostdockerhunter/ocelotapigw
     build:

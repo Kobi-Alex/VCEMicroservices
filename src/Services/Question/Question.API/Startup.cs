@@ -68,10 +68,10 @@ namespace Question.API
 
             if(_env.IsStaging())
             {
-                Console.WriteLine("\n---> Using InMem Db Staging\n");
+                Console.WriteLine("\n---> Using SQL Server Db Staging\n");
 
                 services.AddDbContext<QuestionDbContext>(opt =>
-                   opt.UseInMemoryDatabase("InMem"));
+                    opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
             }
 
             //Auth <------------------------------------------------------------------------------------------------>

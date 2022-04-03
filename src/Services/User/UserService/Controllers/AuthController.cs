@@ -78,7 +78,12 @@ namespace UserService.Controllers
 
                 //var userCodes = _context.AccessCodes.Where(x => x.Email == user.Email).OrderByDescending(x => x.ExpiryDate).ToList();
                 var userCodes = await _accessCodeRepository.GetByEmail(user.Email);
-                if (userCodes.ToList().Count == 0) return NotFound();
+                if (userCodes.ToList().Count == 0)
+                {
+                    return await AccessCode(user);
+
+                    //return NotFound();
+                }
 
                 if (userCodes.ToList()[0].Code != user.Code)
                 {
@@ -406,9 +411,9 @@ namespace UserService.Controllers
 
 
         [HttpPost]
-        [Route("SendMessage")]
+        [Route("AccessCode")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> SendMessage([FromBody] RegisterDto emailRequest)
+        public async Task<IActionResult> AccessCode([FromBody] RegisterDto emailRequest)
         {
 
             if (ModelState.IsValid)

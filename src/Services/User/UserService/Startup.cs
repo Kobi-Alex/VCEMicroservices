@@ -42,35 +42,36 @@ namespace UserService
             if(_env.IsStaging())
             {
                 Console.WriteLine("\n---> Staging");
-                Console.WriteLine("\n---> Using InMemDb Staging\n");
+                Console.WriteLine("\n---> Using SQL Server Staging\n");
 
                 services.AddDbContext<AppDbContext>(opt =>
-                 opt.UseInMemoryDatabase("InMem"));
+                     opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
             }
 
             if (_env.IsProduction())
             {
                 Console.WriteLine("\n---> Production");
                 Console.WriteLine("\n---> Using SqlServer Db Production\n");
-                
+
                 services.AddDbContext<AppDbContext>(opt =>
                    opt.UseInMemoryDatabase("InMem"));
 
-              //  services.AddDbContext<AppDbContext>(opt =>
-               //     opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+                //services.AddDbContext<AppDbContext>(opt =>
+                //    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
             }
 
             if (_env.IsDevelopment())
             {
                 Console.WriteLine("\n---> Development");
                 Console.WriteLine("\n---> Using SqlServer Db Development\n");
-
-                //services.AddDbContext<AppDbContext>(opt =>
-                //    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
-
+                Console.WriteLine();
 
                 services.AddDbContext<AppDbContext>(opt =>
-                   opt.UseInMemoryDatabase("InMem"));
+                    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+
+
+                //services.AddDbContext<AppDbContext>(opt =>
+                //   opt.UseInMemoryDatabase("InMem"));
             }
 
 
