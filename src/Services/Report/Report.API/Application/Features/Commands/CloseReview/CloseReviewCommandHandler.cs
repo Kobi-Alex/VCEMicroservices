@@ -22,15 +22,15 @@ namespace Report.API.Application.Features.Commands.CloseReview
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly ExamGrpcService _examGrpcService;
-        //private readonly IEmailService _emailService;
+        private readonly IEmailService _emailService;
         private readonly ILogger<CloseReviewCommandHandler> _logger;
 
         public CloseReviewCommandHandler(IReviewRepository reviewRepository, ExamGrpcService examGrpcService,
-            ILogger<CloseReviewCommandHandler> logger)
+            IEmailService emailService, ILogger<CloseReviewCommandHandler> logger)
         {
             _reviewRepository = reviewRepository;
             _examGrpcService = examGrpcService;
-            //_emailService = emailService;
+            _emailService = emailService;
             _logger = logger;
 
         }
@@ -56,7 +56,8 @@ namespace Report.API.Application.Features.Commands.CloseReview
                 return false;
             }
 
-            if (reviewToUpdate.QuestionUnits.Count != 0)
+
+            if (reviewToUpdate.QuestionUnits.Count != 0 )
             {
 
                 // gRPC request to Exam service
@@ -70,6 +71,10 @@ namespace Report.API.Application.Features.Commands.CloseReview
 
                 // Calculate review scores
                 reviewToUpdate.CalculateScores(examItem.CountQuestions);
+
+                // TODO add E-mail content
+                // Sending exam result to applicant email..
+                await SendMail(reviewToUpdate);
 
                 // Save data
                 return await _reviewRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
@@ -85,24 +90,25 @@ namespace Report.API.Application.Features.Commands.CloseReview
         /// </summary>
         /// <param name="review"></param>
         /// <returns></returns>
-        //private async Task SendMail(Review review)
-        //{
-        //    var email = new Email()
-        //    {
-        //        To = "steelalex.gk@gmail.com",
-        //        Body = $"Review was created.",
-        //        Subject = "Review was created"
-        //    };
+        private async Task SendMail(Review review)
+        {
+            var email = new Email()
+            {
+                To = "steelalex.gk@gmail.com",
+                Body = "<strong> Exam result: </strong>",
+                Subject = "VCE result"
+            };
 
-        //    try
-        //    {
-        //        await _emailService.SendEmail(email);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError($"Review {review.Id} failed due to an error with the mail service: {ex.Message}");
-        //    }
-        //}
+            try
+            {
+                await _emailService.SendEmail(email);
+                Console.WriteLine("--> Message sended");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Review {review.Id} failed due to an error with the mail service: {ex.Message}");
+            }
+        }
 
     }
 

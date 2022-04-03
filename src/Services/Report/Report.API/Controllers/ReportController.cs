@@ -15,9 +15,10 @@ using Microsoft.AspNetCore.Authorization;
 using Report.API.Application.Features.Commands.Identified;
 using Report.API.Application.Features.Commands.OpenReview;
 using Report.API.Application.Features.Commands.CloseReview;
+using Report.API.Application.Features.Commands.RemoveReview;
+using Report.API.Application.Features.Commands.SetQuestionUnit;
 using Report.API.Application.Paggination;
 using System.Linq;
-
 
 namespace Report.API.Controllers
 {
@@ -35,9 +36,12 @@ namespace Report.API.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _reviewQueries = reviewQueries ?? throw new ArgumentNullException(nameof(reviewQueries));
+
         }
 
-        // GET api/report/items
+
+
+        // GET api/Report/items
         // Get all reports
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
@@ -74,26 +78,20 @@ namespace Report.API.Controllers
         }
 
 
-        // GET api/report/items/1
+        // GET api/Report/items/1
         // Get all reports by exam Id
         [HttpGet ("{reportId:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
 
         public async Task<ActionResult> GetReportsByIdAsync(int reportId)
         {
-            try
-            {
-                var reports = await _reviewQueries.GetReportsById(reportId);
-                return Ok(reports);
-            }
-            catch
-            {
-                return NotFound();
-            }
+            var reports = await _reviewQueries.GetReportsById(reportId);
+            return Ok(reports);
+
         }
 
 
-        // GET api/report/items/1
+        // GET api/Report/items/1
         // Get all reports by exam Id
         [HttpGet]
         [Route("exams/{examId:int}")]
@@ -121,45 +119,33 @@ namespace Report.API.Controllers
         }
 
 
-        // GET api/report/items/applicants/a1875c21-b82e-4e87-962b-9777c351f989
+        // GET api/Report/items/applicants/a1875c21-b82e-4e87-962b-9777c351f989
         // Get all reports by user Id 
         [HttpGet]
         [Route("applicants/{userId}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
         public async Task<ActionResult> GetReportsByApplicantIdAsync(string userId)
         {
-            try
-            {
-                var reports = await _reviewQueries.GetReportByUserIdAsync(userId);
-                return Ok(reports);
-            }
-            catch
-            {
-                return NotFound();
-            }
+            var reports = await _reviewQueries.GetReportByUserIdAsync(userId);
+            return Ok(reports);
+
         }
 
 
-        // GET api/report/items/1/applicants/3
+        // GET api/Report/items/1/applicants/3
         // Get all reports by exam and user Id
         [HttpGet]
         [Route("exam/{examId:int}/applicant/{appId}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
         public async Task<ActionResult> GetReportsByExamIdAndUserIdAsync(int examId, string appId)
         {
-            try
-            {
-                var report = await _reviewQueries.GetReportByExamIdAndUserIdAsync(examId, appId);
-                return Ok(report);
-            }
-            catch
-            {
-                return NotFound();
-            }
+            var report = await _reviewQueries.GetReportByExamIdAndUserIdAsync(examId, appId);
+            return Ok(report);
+
         }
 
 
-        // POST api/report/items
+        // POST api/Report/items
         // Create new report
         [HttpPost]
         [Route("openreport")]
@@ -170,10 +156,11 @@ namespace Report.API.Controllers
 
             Console.WriteLine("--> Open repotr...");
             return Ok(reportId);
+
         }
 
 
-        // POST api/report/items
+        // POST api/Report/items
         // add new applicant answer(update)
         [HttpPost]
         [Route("currentanswer")]
@@ -184,10 +171,11 @@ namespace Report.API.Controllers
 
             Console.WriteLine("--> Adding current answer...");
             return Ok();
+
         }
 
 
-        //PUT api/report/action
+        //PUT api/Report/action
         //Generate review(In the exam end!!)
         [HttpPut]
         [Route("closereport")]
@@ -217,6 +205,20 @@ namespace Report.API.Controllers
             }
 
             return Ok();
+
+        }
+
+
+        // FOR TEST
+        // DELETE api/Report/items/remove
+        [Route("items/remove")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteReviewAsync([FromBody] RemoveReviewCommand command, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(command, cancellationToken);
+
+            Console.WriteLine($"--> Delete review by ID = {command.ReviewId}");
+            return NoContent();
         }
 
     }

@@ -37,5 +37,17 @@ namespace Report.Infrastructure.Persistance.Idempotency
             var request = await _context.FindAsync<ClientRequest>(id);
             return request != null;
         }
+
+        public void Remove(int id)
+        {
+            var clientRequest = _context.Find<ClientRequest>(id);
+
+            if (clientRequest is null)
+            {
+                throw new ReportDomainException($"Request with {id} was not found");
+            }
+
+            _context.Remove(clientRequest);
+        }
     }
 }

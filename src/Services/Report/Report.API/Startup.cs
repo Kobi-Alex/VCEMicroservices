@@ -2,8 +2,8 @@ using System;
 using System.Reflection;
 
 using MediatR;
-using GrpcQuestion;
 using GrpcExam;
+using GrpcQuestion;
 using FluentValidation;
 
 using Microsoft.OpenApi.Models;
@@ -18,14 +18,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Report.API.Grpc;
 using Report.API.Middleware;
 using Report.Infrastructure;
+using Report.API.Application.Models;
 using Report.API.Application.Behaviours;
+using Report.API.Application.Services.Mail;
 using Report.API.Application.Features.Queries;
+using Report.Infrastructure.Persistance.Idempotency;
 using Report.Domain.AggregatesModel.ReviewAggregate;
 using Report.Infrastructure.Persistance.Repositories;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Report.Infrastructure.Persistance.Idempotency;
+using Report.API.Application.Contracts.Infrastructure;
 
 
 namespace Report.API
@@ -105,21 +109,26 @@ namespace Report.API
             services.AddScoped<IReviewQueries, ReviewQueries>(provider => new ReviewQueries(Configuration.GetConnectionString("ReportsConnection")));
 
 
+
             // Review repository configuration
             services.AddScoped<IReviewRepository, ReviewRepository>();
 
-            // Request manager configuration
+
+            // Request manager configuration (Idempotency)
             services.AddScoped<IRequestManager, RequestManager>();
+
 
             // gRPC configuration (Question Service)
             services.AddGrpcClient<QuestionGrpc.QuestionGrpcClient>
                         (o => o.Address = new Uri(Configuration["GrpcQuestionSettings:QuestionUrl"]));
             services.AddScoped<QuestionGrpcService>();
 
+
             // gRPC configuration (Exam Service)
             services.AddGrpcClient<ExamGrpc.ExamGrpcClient>
                         (o => o.Address = new Uri(Configuration["GrpcExamSettings:ExamUrl"]));
             services.AddScoped<ExamGrpcService>();
+
 
             // CQRS configuration
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -127,8 +136,15 @@ namespace Report.API
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
+
+            // Email configuration
+            services.Configure<EmailSettings>(c => Configuration.GetSection("EmailSettings").Bind(c));
+            services.AddTransient<IEmailService, EmailService>();
+
+
             // Controller configuration
             services.AddControllers();
+
 
             // Swagger configuration
             services.AddSwaggerGen(c =>
