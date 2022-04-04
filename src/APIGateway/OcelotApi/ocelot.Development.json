@@ -317,10 +317,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/report/e/{examId}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Report/items/applicants/{userId}",
+      "DownstreamPathTemplate": "/api/Report/applicants/{userId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -328,7 +328,7 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/items/a/{userId}",
+      "UpstreamPathTemplate": "/api/report/a/{userId}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -353,7 +353,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/report",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "Delete" ]
     },
     {
       "DownstreamPathTemplate": "/api/Report/{reportId}",

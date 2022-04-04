@@ -211,15 +211,31 @@ namespace Report.API.Controllers
 
         // FOR TEST
         // DELETE api/Report/items/remove
-        [Route("items/remove")]
-        [HttpDelete]
-        public async Task<IActionResult> DeleteReviewAsync([FromBody] RemoveReviewCommand command, CancellationToken cancellationToken)
+
+        [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
+        public async Task<IActionResult> DeleteReviewAsync(int id,  CancellationToken cancellationToken)
         {
+            RemoveReviewCommand command = new RemoveReviewCommand(id);
             await _mediator.Send(command, cancellationToken);
 
             Console.WriteLine($"--> Delete review by ID = {command.ReviewId}");
-            return NoContent();
+            return  NoContent();
         }
 
+        [HttpDelete]
+        [Route ("exams/{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
+        public async Task<IActionResult> DeleteReviewsByExamIdAsync(int id, CancellationToken cancellationToken)
+        {
+            //RemoveReviewCommand command = new RemoveReviewCommand(id);
+            //await _mediator.Send(command, cancellationToken);
+
+            //Console.WriteLine($"--> Delete review by ID = {command.ReviewId}");
+
+            await _reviewQueries.RemoveAllReportsByExamId(id);
+
+            return NoContent();
+        }
     }
 }

@@ -16,7 +16,7 @@ using Applicant.API.Application.Contracts.Dtos.UserDtos;
 
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-
+using System.Linq.Expressions;
 
 namespace Applicant.API.Application.Services
 {
@@ -274,12 +274,13 @@ namespace Applicant.API.Application.Services
                 throw new UserNotFoundException(id);
             }
 
+            //If user have role Admin 
             var adminRole = await _repositoryManager.RoleRepository.GetByName("Admin");
-            var users = await _repositoryManager.UserRepository.GetAllAsync(cancellationToken);
-
-            foreach (var item in users)
+            if(user.Roles.Contains(adminRole))
             {
-                if(item.Roles.FirstOrDefault(x => x.Id == adminRole.Id) != null)
+                var admins = (await _repositoryManager.UserRepository.FindAllAsync(x => x.Roles.Where(x => x.Id == 1).Any())).ToList();
+
+                if(admins.Count() <=1)
                 {
                     throw new UserDeleteException();
                 }
@@ -388,7 +389,6 @@ namespace Applicant.API.Application.Services
                 throw new UserAddToExamException(user.Id);
             }
 
-            //var userExam = await _userRepository.GetUserExamAsync(userExamDto);
             var userExam = await _repositoryManager.UserExamsRepository.GetByUserIdAndExamId(userExamDto.UserId, userExamDto.ExamId);
 
             if (userExam != null)
@@ -404,22 +404,20 @@ namespace Applicant.API.Application.Services
 
             _repositoryManager.UserExamsRepository.Insert(newUserExam);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
-
         }
 
         public async Task RemoveExamFromUser(UserExamDto userExamDto, CancellationToken cancellationToken = default)
         {
             var userExam = await _repositoryManager.UserExamsRepository.GetByUserIdAndExamId(userExamDto.UserId, userExamDto.ExamId);
 
-            if (userExam != null)
+            if (userExam == null)
             {
-                throw new ExamIsAlreadyExistException(userExamDto.ExamId);
+                throw new ExamNotFoundInUserException(userExamDto.ExamId);
             }
+                _repositoryManager.UserExamsRepository.Remove(userExam);
 
-            _repositoryManager.UserExamsRepository.Remove(userExam);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
-
 
         private bool CheckPassword(User user, string password)
         {
@@ -444,6 +442,5 @@ namespace Applicant.API.Application.Services
 
             return new string(Enumerable.Repeat(chars, length).Select(x => x[randomPassword.Next(x.Length)]).ToArray());
         }
-
     }
 }

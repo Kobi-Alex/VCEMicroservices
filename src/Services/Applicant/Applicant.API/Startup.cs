@@ -22,8 +22,7 @@ using Applicant.API.Application.Services;
 using Applicant.API.Application.Configurations;
 using Applicant.API.Application.Services.Interfaces;
 using Applicant.Infrasructure.Persistance.Repositories;
-
-
+using Applicant.API.Middleware;
 
 namespace Applicant.API
 {
@@ -101,6 +100,8 @@ namespace Applicant.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Applicant.API", Version = "v1" });
             });
+
+            services.AddTransient<ExceptionHandlingMiddleware>();
         }
 
 

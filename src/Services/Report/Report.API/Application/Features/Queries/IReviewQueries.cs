@@ -13,5 +13,6 @@ namespace Report.API.Application.Features.Queries
         Task<IEnumerable<Review>> GetReportsByExamIdAsync(int examId);
         Task<IEnumerable<Review>> GetReportByUserIdAsync(string userId);
         Task<Review> GetReportByExamIdAndUserIdAsync(int examId, string userId);
+        Task RemoveAllReportsByExamId(int examId);
     }
 }

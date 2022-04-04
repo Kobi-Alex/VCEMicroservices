@@ -109,7 +109,6 @@ namespace Report.API.Application.Features.Commands.CloseReview
                 _logger.LogError($"Review {review.Id} failed due to an error with the mail service: {ex.Message}");
             }
         }
-
     }
 
 
@@ -129,7 +128,4 @@ namespace Report.API.Application.Features.Commands.CloseReview
             return true; // Ignore duplicate requests for processing order.
         }
     }
-
-
- 
 }

@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Applicant.API.Application.Contracts.Dtos.UserDtos;
-
+using System.Linq.Expressions;
 
 namespace Applicant.API.Application.Services.Interfaces
 {
@@ -22,6 +22,5 @@ namespace Applicant.API.Application.Services.Interfaces
         Task<IEnumerable<UserExamDto>> GetUserExamsAsync(string id, CancellationToken cancellationToken = default);
         Task AddExamToUserAsync(UserExamDto userExamDto, CancellationToken cancellationToken = default);
         Task RemoveExamFromUser(UserExamDto userExamDto, CancellationToken cancellationToken = default);
-
     }
 }

@@ -185,5 +185,19 @@ namespace Report.API.Application.Features.Queries
                 return reviewDict.Values.First();
             }
         }
+
+        //Dapper comment
+        //Remove all reports by exam id
+        public async Task RemoveAllReportsByExamId(int examId)
+        {
+            var query = $"DELETE FROM report.reviews WHERE examId={examId}";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                await connection.QueryAsync(query);
+            }
+        }
     }
 }
