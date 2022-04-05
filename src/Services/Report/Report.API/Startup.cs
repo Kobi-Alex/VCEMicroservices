@@ -28,7 +28,6 @@ using Report.Infrastructure.Persistance.Repositories;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Report.Infrastructure.Persistance.Idempotency;
 using Report.API.Application.Contracts.Infrastructure;
 
 
