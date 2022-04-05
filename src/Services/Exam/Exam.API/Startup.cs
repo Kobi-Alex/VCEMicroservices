@@ -22,6 +22,7 @@ using Exam.Infrastructure.Persistance.Repositories;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using GrpcReport;
 
 namespace Exam.API
 {
@@ -99,7 +100,7 @@ namespace Exam.API
                 services.AddDbContext<ExamDbContext>(opt =>
                    opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
             }
-
+            services.AddHealthChecks();
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();
 
@@ -111,21 +112,26 @@ namespace Exam.API
             // gRPC configuration
             services.AddGrpc();
 
-            // MassTransit-RabbitMQ Configuration
-            services.AddMassTransit(config =>
-            {
-                config.AddConsumer<ExamIntegrationEventService>();
+            // gRPC configuration (Report Service)
+            services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
+                        (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
+            services.AddScoped<ReportGrpcService>();
 
-                config.UsingRabbitMq((ctx, cfg) =>
-                {
-                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
-                    cfg.ReceiveEndpoint(EventBusConstants.QuestionItemDeleteQueue, c =>
-                    {
-                        c.ConfigureConsumer<ExamIntegrationEventService>(ctx);
-                    });
-                });
-            });
-            services.AddMassTransitHostedService();
+            // MassTransit-RabbitMQ Configuration
+            //services.AddMassTransit(config =>
+            //{
+            //    config.AddConsumer<ExamIntegrationEventService>();
+
+            //    config.UsingRabbitMq((ctx, cfg) =>
+            //    {
+            //        cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+            //        cfg.ReceiveEndpoint(EventBusConstants.QuestionItemDeleteQueue, c =>
+            //        {
+            //            c.ConfigureConsumer<ExamIntegrationEventService>(ctx);
+            //        });
+            //    });
+            //});
+            //services.AddMassTransitHostedService();
 
 
             services.AddControllers();

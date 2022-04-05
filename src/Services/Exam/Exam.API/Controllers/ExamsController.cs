@@ -11,8 +11,7 @@ using Exam.API.Application.Contracts.ExamQuestionDtos;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Question.API.Application.Paggination;
-
-
+using Exam.API.Grpc;
 
 namespace Exam.API.Controllers
 {
@@ -21,10 +20,11 @@ namespace Exam.API.Controllers
     public class ExamsController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
-
-        public ExamsController(IServiceManager serviceManager)
+        private readonly ReportGrpcService _reportGrpcService;
+        public ExamsController(IServiceManager serviceManager, ReportGrpcService reportGrpcService)
         {
             _serviceManager = serviceManager;
+            _reportGrpcService = reportGrpcService;
         }
 
 
@@ -95,6 +95,11 @@ namespace Exam.API.Controllers
         {
             Console.WriteLine($"--> Delete Exam...");
             await _serviceManager.ExamItemService.DeleteAsync(examId, cancellationToken);
+
+            //var res =  await _reportGrpcService.CheckIfExistsExamInReports(examId);
+
+
+            //Console.WriteLine("---> REsponse: " + res.Exists);
 
             return NoContent();
         }

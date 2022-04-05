@@ -11,7 +11,7 @@ using Exam.API.Application.Services.Interfaces;
 using Exam.API.Application.Contracts.ExamItemDtos;
 
 using AutoMapper;
-
+using Exam.API.Grpc;
 
 namespace Exam.API.Application.Services
 {
@@ -19,11 +19,13 @@ namespace Exam.API.Application.Services
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryManager _repositoryManager;
+        private readonly ReportGrpcService _reportGrpcService;
 
-        public ExamItemService(IRepositoryManager repositoryManager, IMapper mapper)
+        public ExamItemService(IRepositoryManager repositoryManager, IMapper mapper, ReportGrpcService reportGrpcService)
         {
             _mapper = mapper;
             _repositoryManager = repositoryManager;
+            _reportGrpcService = reportGrpcService;
         }
 
 
@@ -120,6 +122,13 @@ namespace Exam.API.Application.Services
             if (exam is null)
             {
                 throw new ExamNotFoundException(examId);
+            }
+
+            var res = await  _reportGrpcService.CheckIfExistsExamInReports(examId);
+
+            if(res.Exists)
+            {
+                throw new BadRequestMessage("Could not remove exam! This exam is in Reports!");
             }
 
             _repositoryManager.ExamItemRepository.Remove(exam);

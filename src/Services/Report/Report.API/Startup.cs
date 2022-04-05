@@ -29,7 +29,8 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Report.API.Application.Contracts.Infrastructure;
-
+using Report.API.Application.Services.Interfaces;
+using Report.API.Application.Services;
 
 namespace Report.API
 {
@@ -108,6 +109,9 @@ namespace Report.API
                    opt.UseInMemoryDatabase("InMem"));
             }
 
+
+            services.AddScoped<IServiceManager, ServiceManager>();
+
             // Review queries configuration
             services.AddScoped<IReviewQueries, ReviewQueries>(provider => new ReviewQueries(Configuration.GetConnectionString("ReportsConnection")));
 
@@ -120,6 +124,7 @@ namespace Report.API
             // Request manager configuration (Idempotency)
             services.AddScoped<IRequestManager, RequestManager>();
 
+            services.AddGrpc();
 
             // gRPC configuration (Question Service)
             services.AddGrpcClient<QuestionGrpc.QuestionGrpcClient>
@@ -182,6 +187,7 @@ namespace Report.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<ReportGrpcService>();
             });
         }
 
