@@ -25,13 +25,13 @@ namespace Report.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ReportController : ControllerBase
+    public class ReportsController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<ReportController> _logger;
+        private readonly ILogger<ReportsController> _logger;
         private readonly IReviewQueries _reviewQueries;
 
-        public ReportController(IMediator mediator, IReviewQueries reviewQueries, ILogger<ReportController> logger)
+        public ReportsController(IMediator mediator, IReviewQueries reviewQueries, ILogger<ReportsController> logger)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -94,7 +94,7 @@ namespace Report.API.Controllers
         // GET api/Report/items/1
         // Get all reports by exam Id
         [HttpGet]
-        [Route("exams/{examId:int}")]
+        [Route("e/{examId:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
 
         public async Task<ActionResult> GetReportsByExamIdAsync(int examId, int page, int limit, DateTime? date)
@@ -122,7 +122,7 @@ namespace Report.API.Controllers
         // GET api/Report/items/applicants/a1875c21-b82e-4e87-962b-9777c351f989
         // Get all reports by user Id 
         [HttpGet]
-        [Route("applicants/{userId}")]
+        [Route("a/{userId}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
         public async Task<ActionResult> GetReportsByApplicantIdAsync(string userId)
         {
@@ -135,7 +135,7 @@ namespace Report.API.Controllers
         // GET api/Report/items/1/applicants/3
         // Get all reports by exam and user Id
         [HttpGet]
-        [Route("exam/{examId:int}/applicant/{appId}")]
+        [Route("e/{examId:int}/a/{appId}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager,Student")]
         public async Task<ActionResult> GetReportsByExamIdAndUserIdAsync(int examId, string appId)
         {

@@ -141,8 +141,6 @@ namespace Applicant.Infrasructure
 
                 };
 
-                user1.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
-                context.Users.Add(user1);
                 var user2 = new User()
                 {
                     FirstName = "Echo User_2",
@@ -155,8 +153,123 @@ namespace Applicant.Infrasructure
                     //Roles = new List<Role>() { userRole }
 
                 };
+            
+                var user3 = new User()
+                {
+                    FirstName = "Raymond",
+                    LastName = "Red Raddington",
+                    Email = "raymond@google.com",
+                    Password = hasher.HashPassword(null, "Raymond1!"),
+                    CreatedAt = new DateTimeOffset(DateTime.Now),
+                    UpdatedAt = new DateTimeOffset(DateTime.Now),
+                    //Roles = new List<Role>() { userRole }
+
+                };
+                var user4 = new User()
+                {
+                    FirstName = "Diana",
+                    LastName = "Queen",
+                    Email = "queen@google.com",
+                    Password = hasher.HashPassword(null, "Queen1!"),
+                    CreatedAt = new DateTimeOffset(DateTime.Now),
+                    UpdatedAt = new DateTimeOffset(DateTime.Now),
+                    //Roles = new List<Role>() { userRole }
+                };
+                var user5 = new User()
+                {
+                    FirstName = "Sara",
+                    LastName = "Green",
+                    Email = "green@google.com",
+                    Password = hasher.HashPassword(null, "Green1!"),
+                    CreatedAt = new DateTimeOffset(DateTime.Now),
+                    UpdatedAt = new DateTimeOffset(DateTime.Now),
+                    //Roles = new List<Role>() { userRole }
+                };
+                var user6 = new User()
+                {
+                    FirstName = "Rodney",
+                    LastName = "McKey",
+                    Email = "mckey@google.com",
+                    Password = hasher.HashPassword(null, "McKey1!"),
+                    CreatedAt = new DateTimeOffset(DateTime.Now),
+                    UpdatedAt = new DateTimeOffset(DateTime.Now),
+                    //Roles = new List<Role>() { userRole }
+                };
+                var user7= new User()
+                {
+                    FirstName = "John",
+                    LastName = "Shepard",
+                    Email = "shepard@google.com",
+                    Password = hasher.HashPassword(null, "Shepard1!"),
+                    CreatedAt = new DateTimeOffset(DateTime.Now),
+                    UpdatedAt = new DateTimeOffset(DateTime.Now),
+                    //Roles = new List<Role>() { userRole }
+                };
+                var user8 = new User()
+                {
+                    FirstName = "Mike",
+                    LastName = "White",
+                    Email = "white@google.com",
+                    Password = hasher.HashPassword(null, "McKey1!"),
+                    CreatedAt = new DateTimeOffset(DateTime.Now),
+                    UpdatedAt = new DateTimeOffset(DateTime.Now),
+                    //Roles = new List<Role>() { userRole }
+                };
+                var user9 = new User()
+                {
+                    FirstName = "Marcus",
+                    LastName = "McNamara",
+                    Email = "mcnamara@google.com",
+                    Password = hasher.HashPassword(null, "McNamara1!"),
+                    CreatedAt = new DateTimeOffset(DateTime.Now),
+                    UpdatedAt = new DateTimeOffset(DateTime.Now),
+                    //Roles = new List<Role>() { userRole }
+                };
+                var user10 = new User()
+                {
+                    FirstName = "Steve",
+                    LastName = "McGarrett",
+                    Email = "mcgarrett@google.com",
+                    Password = hasher.HashPassword(null, "McGarrett1!"),
+                    CreatedAt = new DateTimeOffset(DateTime.Now),
+                    UpdatedAt = new DateTimeOffset(DateTime.Now),
+                    //Roles = new List<Role>() { userRole }
+                };
+                var user11 = new User()
+                {
+                    FirstName = "Sam",
+                    LastName = "Carter",
+                    Email = "carter@google.com",
+                    Password = hasher.HashPassword(null, "Carter1!"),
+                    CreatedAt = new DateTimeOffset(DateTime.Now),
+                    UpdatedAt = new DateTimeOffset(DateTime.Now),
+                    //Roles = new List<Role>() { userRole }
+                };
+
+                user1.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
                 user2.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                user3.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                user4.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                user5.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                user6.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                user7.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                user8.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                user9.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                user10.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                user11.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
+                
+                context.Users.Add(user1);
                 context.Users.Add(user2);
+                context.Users.Add(user3);
+                context.Users.Add(user4);
+                context.Users.Add(user5);
+                context.Users.Add(user6);
+                context.Users.Add(user7);
+                context.Users.Add(user8);
+                context.Users.Add(user9);
+                context.Users.Add(user10);
+                context.Users.Add(user11);
+
                 context.SaveChanges();
             }
             else

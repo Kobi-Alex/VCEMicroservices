@@ -37,8 +37,11 @@ namespace Report.API.Application.Features.Commands.RemoveReview
                 throw new ReviewNotFoundException(nameof(Review), request);
             }
 
-            // Remove client request
-            _requestManager.Remove(review.Id);
+            if (await _requestManager.ExistAsync(review.Id))
+            {
+                // Remove client request
+                _requestManager.Remove(review.Id);
+            }
 
             // Remove review
             _reviewRepository.Remove(review);

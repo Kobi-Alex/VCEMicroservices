@@ -18,11 +18,11 @@ namespace Exam.API.Controllers
 {
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ExamController : ControllerBase
+    public class ExamsController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
 
-        public ExamController(IServiceManager serviceManager)
+        public ExamsController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
         }

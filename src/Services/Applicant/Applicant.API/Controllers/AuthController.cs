@@ -75,20 +75,20 @@ namespace Applicant.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("SendMessage")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> SendMessage([FromBody] AuthRegisterDto emailRequest)
-        {
+        //[HttpPost]
+        //[Route("SendMessage")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //public async Task<IActionResult> SendMessage([FromBody] AuthRegisterDto emailRequest)
+        //{
 
-            if (ModelState.IsValid)
-            {
-                await _serviceManager.AccessCodeService.AccessCodeAsync(emailRequest);
-                return NoContent();
-            }
+        //    if (ModelState.IsValid)
+        //    {
+        //        await _serviceManager.AccessCodeService.AccessCodeAsync(emailRequest);
+        //        return NoContent();
+        //    }
 
-            return BadRequest(new { Error = "Invalid data" });
+        //    return BadRequest(new { Error = "Invalid data" });
 
-        }
+        //}
     }
 }

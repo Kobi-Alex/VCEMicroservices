@@ -37,18 +37,6 @@
       "UpstreamPathTemplate": "/api/auth/refreshToken",
       "UpstreamHttpMethod": [ "POST" ]
     },
-    {
-      "DownstreamPathTemplate": "/api/Auth/SendMessage",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "user.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/auth/sendMessage",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
     //Users
     {
       "DownstreamPathTemplate": "/api/Users",
@@ -123,7 +111,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Users/SendMessage",
+      "DownstreamPathTemplate": "/api/Users/:id/Exams",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -131,19 +119,7 @@
           "Port": "80"
         }
       ],
-      "UpstreamPathTemplate": "/api/users/sendMessage",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Users/Exams/:id",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "user.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/users/exams/:id",
+      "UpstreamPathTemplate": "/api/users/:id/exams",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -259,7 +235,7 @@
     },
     //Exams
     {
-      "DownstreamPathTemplate": "/api/Exam",
+      "DownstreamPathTemplate": "/api/Exams",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -271,7 +247,7 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Exam/{id}",
+      "DownstreamPathTemplate": "/api/Exams/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -283,7 +259,7 @@
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Exam/{examId}/questions",
+      "DownstreamPathTemplate": "/api/Exams/{examId}/questions",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -295,7 +271,7 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Exam/items/{examId}/questions/questions/{questionId}",
+      "DownstreamPathTemplate": "/api/Exams/{examId}/questions/questions/{questionId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -307,102 +283,102 @@
       "UpstreamHttpMethod": [ "GET", "DELETE" ]
     },
     //Reports
-    //{
-    //  "DownstreamPathTemplate": "/api/Report/exams/{examId}",
-    //  "DownstreamScheme": "http",
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": "6004"
-    //    }
-    //  ],
-    //  "UpstreamPathTemplate": "/api/report/e/{examId}",
-    //  "UpstreamHttpMethod": [ "GET" ]
-    //},
-    //{
-    //  "DownstreamPathTemplate": "/api/Report/items/applicants/{userId}",
-    //  "DownstreamScheme": "http",
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": "6004"
-    //    }
-    //  ],
-    //  "UpstreamPathTemplate": "/api/report/items/a/{userId}",
-    //  "UpstreamHttpMethod": [ "GET" ]
-    //},
-    //{
-    //  "DownstreamPathTemplate": "/api/Report/exam/{examId:int}/applicants/{userId}",
-    //  "DownstreamScheme": "http",
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": "6004"
-    //    }
-    //  ],
-    //  "UpstreamPathTemplate": "/api/report/e/{examId:int}/a/{userId}",
-    //  "UpstreamHttpMethod": [ "GET" ]
-    //},
-    //{
-    //  "DownstreamPathTemplate": "/api/Report",
-    //  "DownstreamScheme": "http",
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": "6004"
-    //    }
-    //  ],
-    //  "UpstreamPathTemplate": "/api/report",
-    //  "UpstreamHttpMethod": [ "GET", "POST" ]
-    //},
-    //{
-    //  "DownstreamPathTemplate": "/api/Report/{reportId}",
-    //  "DownstreamScheme": "http",
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": "6004"
-    //    }
-    //  ],
-    //  "UpstreamPathTemplate": "/api/report/{reportId}",
-    //  "UpstreamHttpMethod": [ "GET" ]
-    //},
-    //{
-    //  "DownstreamPathTemplate": "/api/Report/openreport",
-    //  "DownstreamScheme": "http",
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": "6004"
-    //    }
-    //  ],
-    //  "UpstreamPathTemplate": "/api/report/openreport",
-    //  "UpstreamHttpMethod": [ "POST" ]
-    //},
-    //{
-    //  "DownstreamPathTemplate": "/api/Report/closereport",
-    //  "DownstreamScheme": "http",
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": "6004"
-    //    }
-    //  ],
-    //  "UpstreamPathTemplate": "/api/report/closereport",
-    //  "UpstreamHttpMethod": [ "PUT" ]
-    //},
-    //{
-    //  "DownstreamPathTemplate": "/api/Report/currentanswer",
-    //  "DownstreamScheme": "http",
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": "6004"
-    //    }
-    //  ],
-    //  "UpstreamPathTemplate": "/api/report/currentanswer",
-    //  "UpstreamHttpMethod": [ "POST" ]
-    //}
+    {
+      "DownstreamPathTemplate": "/api/Reports/e/{examId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "report.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reports/e/{examId}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Report/a/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "report.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/a/{userId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Report/e/{examId:int}/a/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "report.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/e/{examId:int}/a/{userId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Reports",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "report.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reports",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Reports/{reportId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "report.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reports/{reportId}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Reports/openreport",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "report.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reports/openreport",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Reports/closereport",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "report.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reports/closereport",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Reports/currentanswer",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "report.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reports/currentanswer",
+      "UpstreamHttpMethod": [ "POST" ]
+    }
   ],
   "GlobalConfiguration": {
     "RequestIdKey": "OcRequestId",

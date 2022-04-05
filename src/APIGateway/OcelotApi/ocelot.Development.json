@@ -37,18 +37,6 @@
       "UpstreamPathTemplate": "/api/auth/refreshToken",
       "UpstreamHttpMethod": [ "POST" ]
     },
-    {
-      "DownstreamPathTemplate": "/api/Auth/SendMessage",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": "7000"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/auth/sendMessage",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
     //Users
     {
       "DownstreamPathTemplate": "/api/Users",
@@ -123,7 +111,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Users/SendMessage",
+      "DownstreamPathTemplate": "/api/Users/:id/Exams",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -131,19 +119,7 @@
           "Port": "7000"
         }
       ],
-      "UpstreamPathTemplate": "/api/users/sendMessage",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Users/Exams/:id",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": "7000"
-        }
-      ],
-      "UpstreamPathTemplate": "/api/users/exams/:id",
+      "UpstreamPathTemplate": "/api/users/:id/exams",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -259,7 +235,7 @@
     },
     //Exams
     {
-      "DownstreamPathTemplate": "/api/Exam",
+      "DownstreamPathTemplate": "/api/Exams",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -271,7 +247,7 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Exam/{id}",
+      "DownstreamPathTemplate": "/api/Exams/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -283,7 +259,7 @@
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Exam/{examId}/questions",
+      "DownstreamPathTemplate": "/api/Exams/{examId}/questions",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -295,7 +271,7 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Exam/items/{examId}/questions/questions/{questionId}",
+      "DownstreamPathTemplate": "/api/Exams/{examId}/questions/questions/{questionId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -308,7 +284,7 @@
     },
     //Reports
     {
-      "DownstreamPathTemplate": "/api/Report/exams/{examId}",
+      "DownstreamPathTemplate": "/api/Reports/e/{examId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -316,11 +292,11 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/e/{examId}",
+      "UpstreamPathTemplate": "/api/reports/e/{examId}",
       "UpstreamHttpMethod": [ "GET", "DELETE" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Report/applicants/{userId}",
+      "DownstreamPathTemplate": "/api/Report/a/{userId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -332,7 +308,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Report/exam/{examId:int}/applicants/{userId}",
+      "DownstreamPathTemplate": "/api/Report/e/{examId:int}/a/{userId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -344,7 +320,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Report",
+      "DownstreamPathTemplate": "/api/Reports",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -352,11 +328,11 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report",
-      "UpstreamHttpMethod": [ "GET", "POST", "Delete" ]
+      "UpstreamPathTemplate": "/api/reports",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Report/{reportId}",
+      "DownstreamPathTemplate": "/api/Reports/{reportId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -364,11 +340,11 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/{reportId}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/reports/{reportId}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Report/openreport",
+      "DownstreamPathTemplate": "/api/Reports/openreport",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -376,11 +352,11 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/openreport",
+      "UpstreamPathTemplate": "/api/reports/openreport",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Report/closereport",
+      "DownstreamPathTemplate": "/api/Reports/closereport",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -388,11 +364,11 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/closereport",
+      "UpstreamPathTemplate": "/api/reports/closereport",
       "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Report/currentanswer",
+      "DownstreamPathTemplate": "/api/Reports/currentanswer",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -400,7 +376,7 @@
           "Port": "6004"
         }
       ],
-      "UpstreamPathTemplate": "/api/report/currentanswer",
+      "UpstreamPathTemplate": "/api/reports/currentanswer",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ]

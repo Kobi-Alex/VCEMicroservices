@@ -118,29 +118,29 @@ namespace Applicant.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("SendMessage")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> SendMessage([FromBody] UserEmailDto userChangeEmail)
-        {
-            //Send message on the email
+        //[HttpPost]
+        //[Route("SendMessage")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //public async Task<IActionResult> SendMessage([FromBody] UserEmailDto userChangeEmail)
+        //{
+        //    //Send message on the email
 
-            if (ModelState.IsValid)
-            {
-                var existingUser = await _serviceManager.UserService.SendMessageAsync(userChangeEmail);
+        //    if (ModelState.IsValid)
+        //    {
+        //        var existingUser = await _serviceManager.UserService.SendMessageAsync(userChangeEmail);
 
-                if (!existingUser)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return Ok();
-                }
-            }
+        //        if (!existingUser)
+        //        {
+        //            return NoContent();
+        //        }
+        //        else
+        //        {
+        //            return Ok();
+        //        }
+        //    }
 
-            return BadRequest(new { Error = "Invalid data" });
-        }
+        //    return BadRequest(new { Error = "Invalid data" });
+        //}
 
 
         [HttpPost]
@@ -201,7 +201,7 @@ namespace Applicant.API.Controllers
 
 
         [HttpGet]
-        [Route("Exams/{id}")]
+        [Route("{id}/Exams")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager, Student")]
         public async Task<IActionResult> GetUserExams(string id, int page, int limit)
         {
