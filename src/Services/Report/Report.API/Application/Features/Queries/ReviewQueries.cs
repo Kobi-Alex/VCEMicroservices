@@ -191,13 +191,39 @@ namespace Report.API.Application.Features.Queries
         public async Task RemoveAllReportsByExamId(int examId)
         {
             var query = $"DELETE FROM report.reviews WHERE examId={examId}";
+            var list = await GetReportsByExamIdAsync(examId);
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
                 await connection.QueryAsync(query);
+
+                foreach (var item in list)
+                {
+                    await connection.QueryAsync($"DELETE FROM report.requests WHERE id={item.Id}");
+                }
             }
         }
+        //Dapper comment
+        //Remove all reports by applicant id
+        public async Task RemoveAllReportsByApplicantId(string applicantId)
+        {
+            var query = $"DELETE FROM report.reviews WHERE applicantId={applicantId}";
+            var list = await GetReportByUserIdAsync(applicantId);
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                await connection.QueryAsync(query);
+
+                foreach (var item in list)
+                {
+                    await connection.QueryAsync($"DELETE FROM report.requests WHERE id={item.Id}");
+                }
+            }
+        }
+
     }
 }

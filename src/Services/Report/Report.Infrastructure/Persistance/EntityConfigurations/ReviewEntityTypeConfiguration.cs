@@ -59,6 +59,10 @@ namespace Report.Infrastructure.Persistance.EntityConfigurations
                 .HasColumnName("ReportDate")
                 .IsRequired();
 
+            reviewConfiguration.HasMany(category => category.QuestionUnits)
+             .WithOne(c => c.Review)
+             .OnDelete(DeleteBehavior.Cascade);
+
 
             var navigation = reviewConfiguration.Metadata.FindNavigation(nameof(Review.QuestionUnits));
 

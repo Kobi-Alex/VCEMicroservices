@@ -14,6 +14,8 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
 
         public int QuestionId { get; private set; }   // Id current question
 
+        public int ReviewId { get; set; }
+        public Review Review { get; set; }
 
         protected QuestionUnit() 
         {
