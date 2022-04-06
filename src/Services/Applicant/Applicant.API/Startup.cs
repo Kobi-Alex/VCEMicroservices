@@ -114,7 +114,9 @@ namespace Applicant.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Applicant.API v1"));
             }
-
+            
+            //add ExceptionHandlingMiddleware
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseRouting();
             app.UseCors("AllowOrigin");
             app.UseAuthentication();

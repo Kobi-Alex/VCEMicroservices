@@ -21,7 +21,8 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Question.API.Grpc;
-
+using GrpcExam;
+using GrpcReport;
 
 namespace Question.API
 {
@@ -120,13 +121,22 @@ namespace Question.API
             services.AddGrpc();
 
             // MassTransit-RabbitMQ ñonfiguration
-            services.AddMassTransit(config => {
-                config.UsingRabbitMq((ctx, cfg) => {
+            services.AddMassTransit(config =>
+            {
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
                     cfg.Host(Configuration["EventBusSettings:HostAddress"]);
                 });
             });
             services.AddMassTransitHostedService();
 
+            services.AddGrpcClient<ExamGrpc.ExamGrpcClient>
+                      (o => o.Address = new Uri(Configuration["GrpcExamSettings:ExamUrl"]));
+            services.AddScoped<ExamGrpcService>();
+
+            services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
+                      (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
+            services.AddScoped<ReportGrpcService>();
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

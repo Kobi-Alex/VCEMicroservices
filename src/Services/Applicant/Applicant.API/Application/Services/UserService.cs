@@ -40,7 +40,6 @@ namespace Applicant.API.Application.Services
 
         public async Task<IEnumerable<UserReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-
             var users = await _repositoryManager.UserRepository.GetAllAsync(cancellationToken);
             var usersDto = _mapper.Map<IEnumerable<UserReadDto>>(users);
 
@@ -52,6 +51,7 @@ namespace Applicant.API.Application.Services
                         .Join(",", item.Roles.ToArray().Select(x => x.Name).ToArray());
                 }
             }
+
 
             return usersDto;
         }

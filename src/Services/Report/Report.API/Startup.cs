@@ -188,6 +188,7 @@ namespace Report.API
             {
                 endpoints.MapControllers();
                 endpoints.MapGrpcService<ReportGrpcService>();
+                endpoints.MapGrpcService<ExamGrpcService>();
             });
         }
 

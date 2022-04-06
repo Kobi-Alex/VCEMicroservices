@@ -35,7 +35,6 @@ namespace Applicant.API.Controllers
         public async Task<IActionResult> GetUsers(int page, string filter, string role, int middleVal = 10, 
             int cntBetween = 5, int limit = 15, CancellationToken cancellationToken = default)
         {
-
             Console.WriteLine("\n---> Getting All Users...");
             var users = await _serviceManager.UserService.GetAllAsync(cancellationToken);
 

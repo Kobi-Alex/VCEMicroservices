@@ -11,6 +11,7 @@ namespace Exam.API.Application.Services.Interfaces
     {
         Task<IEnumerable<ExamItemReadDto>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<ExamItemReadDto>> GetAllByStatusAsync(ExamStatus status, CancellationToken cancellationToken = default);
+        Task<IEnumerable<ExamItemReadDto>> GetAllByQuestionId(int questionId, CancellationToken cancellationToken = default);
         Task<ExamItemReadDto> GetByIdAsync(int examId, CancellationToken cancellationToken = default);
         Task<ExamItemReadDto> GetByIdIncludeExamQuestionsAsync(int examId, CancellationToken cancellationToken = default);
 

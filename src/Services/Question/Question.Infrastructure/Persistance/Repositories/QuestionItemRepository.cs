@@ -8,7 +8,7 @@ using Question.Domain.Entities;
 using Question.Domain.Repositories;
 
 using Microsoft.EntityFrameworkCore;
-
+using System.Linq.Expressions;
 
 namespace Question.Infrastructure.Persistance.Repositories
 {
@@ -62,5 +62,9 @@ namespace Question.Infrastructure.Persistance.Repositories
             return _dbContext.Questions.Any(e => e.Id == id);
         }
 
+        public async Task<IEnumerable<QuestionItem>> FindAll(Expression<Func<QuestionItem, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Questions.Where(predicate).ToListAsync();
+        }
     }
 }

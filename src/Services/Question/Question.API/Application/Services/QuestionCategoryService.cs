@@ -10,7 +10,8 @@ using Question.API.Application.Services.Interfaces;
 using Question.API.Application.Contracts.Dtos.QuestionCategoryDtos;
 
 using AutoMapper;
-
+using System.Linq;
+using Question.API.Grpc;
 
 namespace Question.API.Application.Services
 {
@@ -20,11 +21,15 @@ namespace Question.API.Application.Services
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryManager _repositoryManager;
+        private readonly ExamGrpcService _examGrpcService;
+        private readonly ReportGrpcService _reportGrpcService;
 
-        public QuestionCategoryService(IRepositoryManager repositoryManager, IMapper mapper)
+        public QuestionCategoryService(IRepositoryManager repositoryManager, IMapper mapper, ExamGrpcService examGrpcService, ReportGrpcService reportGrpcService)
         {
             _mapper = mapper;
             _repositoryManager = repositoryManager;
+            _examGrpcService = examGrpcService;
+            _reportGrpcService = reportGrpcService;
         }
 
 
@@ -110,6 +115,58 @@ namespace Question.API.Application.Services
 
             category.Name = categoryUpdateDto.Name;
 
+            await _repositoryManager.UnitOfWork.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var category = await _repositoryManager.QuestionCategoryRepository.GetByIdAsync(id);
+
+            if (category is null)
+            {
+                throw new QuestionCategoryNotFoundException(id);
+            }
+
+            var questions = await _repositoryManager.QuestionItemRepository.FindAll(x => x.QuestionCategoryId == id);
+
+            if(questions!=null && questions.Count()>0)
+            {
+                var exams = new List<int>();
+
+
+
+                foreach (var item in questions)
+                {
+                    var res = await _examGrpcService.CheckIfQuestionExistsInExam(item.Id);
+
+                    if(res.Exists)
+                    {
+                        throw new BadRequestMessage($"Could not delete category. The category with id: {id} already used in exams: {String.Join(",", res.Exams)}!");
+                        //exams.AddRange(res.Exams);
+                    }
+                }
+
+               // exams = exams.Distinct().ToList();
+
+
+                //foreach (var item in exams)
+                //{
+                //  var res = await  _reportGrpcService.CheckIfExistsExamInReports(item);
+
+                //    if(res.Exists)
+                //    {
+                //        isExistsInReport = true;
+                //        break;
+                //    }
+                //}
+
+                //if(isExistsInReport)
+                //{
+                //    throw new BadRequestMessage($"Could not delete category. The category with id: {id} already used");
+                //}
+            }
+
+            _repositoryManager.QuestionCategoryRepository.Remove(category);
             await _repositoryManager.UnitOfWork.SaveChangesAsync();
         }
     }

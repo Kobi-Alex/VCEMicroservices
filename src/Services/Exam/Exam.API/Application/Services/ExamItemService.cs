@@ -109,8 +109,14 @@ namespace Exam.API.Application.Services
 
             exam.Title = examUpdateDto.Title;
             exam.Description = examUpdateDto.Description;
-            exam.DurationTime = examUpdateDto.DurationTime;
-            exam.PassingScore = examUpdateDto.PassingScore;
+
+            if (exam.DurationTime != examUpdateDto.DurationTime || exam.PassingScore != examUpdateDto.PassingScore)
+            {
+                await CheckExam(examId);
+                
+                exam.DurationTime = examUpdateDto.DurationTime;
+                exam.PassingScore = examUpdateDto.PassingScore;
+            }
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
@@ -124,16 +130,34 @@ namespace Exam.API.Application.Services
                 throw new ExamNotFoundException(examId);
             }
 
-            var res = await  _reportGrpcService.CheckIfExistsExamInReports(examId);
 
-            if(res.Exists)
-            {
-                throw new BadRequestMessage("Could not remove exam! This exam is in Reports!");
-            }
-
+            await CheckExam(examId);
             _repositoryManager.ExamItemRepository.Remove(exam);
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<ExamItemReadDto>> GetAllByQuestionId(int questionId, CancellationToken cancellationToken = default)
+        {
+            var exams = await _repositoryManager.ExamItemRepository.FindAll(x => x.ExamQuestions.Where(x => x.QuestionItemId == questionId).Any());
+
+
+            return _mapper.Map<IEnumerable<ExamItemReadDto>>(exams);
+        }
+
+        /// <summary>
+        /// Checks if exam exists in Report
+        /// </summary>
+        /// <param name="id">Id Exam</param>
+        /// <returns></returns>
+        private async Task CheckExam(int id)
+        {
+            var res = await _reportGrpcService.CheckIfExistsExamInReports(id);
+
+            if (res.Exists)
+            {
+                throw new BadRequestMessage($"Could not change exam! This exam with id: {id} already used!");
+            }
         }
     }
 }

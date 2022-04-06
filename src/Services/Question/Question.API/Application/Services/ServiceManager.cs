@@ -2,6 +2,7 @@ using System;
 using AutoMapper;
 using MassTransit;
 using Question.API.Application.Services.Interfaces;
+using Question.API.Grpc;
 using Question.Domain.Repositories;
 
 namespace Question.API.Application.Services
@@ -16,12 +17,12 @@ namespace Question.API.Application.Services
         private readonly Lazy<IQuestionItemService> _lazyQuestionItemService;
         private readonly Lazy<IQuestionCategoryService> _lazyQuestionCategoryService;
         private readonly Lazy<IQuestionAnswerService> _lazyQuestionAnswerService;
-
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint)
+    
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint, ExamGrpcService examGrpcService, ReportGrpcService reportGrpcService)
         {
-            _lazyQuestionItemService = new Lazy<IQuestionItemService>(()          => new QuestionItemService(repositoryManager, mapper, publishEndpoint));
-            _lazyQuestionCategoryService = new Lazy<IQuestionCategoryService>(()  => new QuestionCategoryService(repositoryManager, mapper));
-            _lazyQuestionAnswerService = new Lazy<IQuestionAnswerService>(()      => new QuestionAnswerService(repositoryManager, mapper));
+            _lazyQuestionItemService = new Lazy<IQuestionItemService>(()          => new QuestionItemService(repositoryManager, mapper, publishEndpoint, examGrpcService, reportGrpcService));
+            _lazyQuestionCategoryService = new Lazy<IQuestionCategoryService>(()  => new QuestionCategoryService(repositoryManager, mapper, examGrpcService, reportGrpcService));
+            _lazyQuestionAnswerService = new Lazy<IQuestionAnswerService>(()      => new QuestionAnswerService(repositoryManager, mapper, examGrpcService, reportGrpcService));
         }
 
         public IQuestionCategoryService QuestionCategoryService => _lazyQuestionCategoryService.Value;

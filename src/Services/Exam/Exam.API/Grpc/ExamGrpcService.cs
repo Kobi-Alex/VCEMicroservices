@@ -4,6 +4,7 @@ using Grpc.Core;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Exam.API.Application.Services.Interfaces;
+using System.Linq;
 
 namespace Exam.API.Grpc
 {
@@ -35,6 +36,22 @@ namespace Exam.API.Grpc
             response.CountQuestions = examItem.ExamQuestions.Count;
 
             // Return object
+            return await Task.FromResult(response);
+        }
+
+        public override async Task<ExamResponse> CheckIfQuestionExistsInExam(ExamRequest request, ServerCallContext context)
+        {
+            var exams = await _serviceManager.ExamItemService.GetAllByQuestionId(request.QuestionId);
+
+            ExamResponse response = new ExamResponse();
+           
+            if (exams != null && exams.Count() > 0)
+            {
+                response.Exists = true;
+                response.Exams.AddRange(exams.Select(x => x.Id));
+                return await Task.FromResult(response);
+            }
+
             return await Task.FromResult(response);
         }
     }

@@ -78,5 +78,16 @@ namespace Question.API.Controllers
             Console.WriteLine($"--> Updating category by ID = {id}");
             return NoContent();
         }
+
+        // Delete api/Categories/5
+        [HttpDelete("{id}", Name = "DeleteCategory")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
+        public async Task<IActionResult> DeleteCategory(int id, CancellationToken cancellationToken)
+        {
+            await _serviceManager.QuestionCategoryService.DeleteAsync(id, cancellationToken);
+
+            Console.WriteLine($"--> Deleting category by ID = {id}");
+            return NoContent();
+        }
     }
 }

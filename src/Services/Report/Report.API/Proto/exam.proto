@@ -6,6 +6,7 @@ option csharp_namespace = "GrpcExam";
 service ExamGrpc{
 
 	rpc GetExamItemFromExamData(GetExamItem) returns (ExamItemModel) {}
+	rpc CheckIfQuestionExistsInExam(ExamRequest) returns (ExamResponse) {}
 }
 
 
@@ -18,4 +19,13 @@ message ExamItemModel {
 	string description = 2;
 	double passingScore = 3;
 	int32 countQuestions = 4;
+}
+
+message ExamRequest {
+	int32 questionId = 1;
+}
+
+message ExamResponse {
+	bool exists = 1;
+	repeated int32 exams = 2;
 }

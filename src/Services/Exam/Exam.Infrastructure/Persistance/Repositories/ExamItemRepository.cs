@@ -8,7 +8,7 @@ using Exam.Domain.Entities;
 using Exam.Domain.Repositories;
 
 using Microsoft.EntityFrameworkCore;
-
+using System.Linq.Expressions;
 
 namespace Exam.Infrastructure.Persistance.Repositories
 {
@@ -60,6 +60,11 @@ namespace Exam.Infrastructure.Persistance.Repositories
         public bool IsExamItemExists(int id)
         {
             return _dbContext.Exams.Any(i => i.Id == id);
+        }
+
+        public async Task<IEnumerable<ExamItem>> FindAll(Expression<Func<ExamItem, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Exams.Where(predicate).ToListAsync();
         }
     }
 }

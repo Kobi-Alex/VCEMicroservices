@@ -94,7 +94,8 @@ namespace Report.API.Application.Features.Commands.CloseReview
         {
             var email = new Email()
             {
-                To = "steelalex.gk@gmail.com",
+                //To = "steelalex.gk@gmail.com",
+                To = "foodd536@gmail.com",
                 Body = "<strong> Exam result: </strong>",
                 Subject = "VCE result"
             };

@@ -15,6 +15,7 @@ namespace Question.Domain.Repositories
         Task<QuestionCategory> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 
         void Insert(QuestionCategory item);
+        void Remove(QuestionCategory category);
         bool IsCategoryExists(int id);
 
     }

@@ -11,7 +11,7 @@ using Question.API.Application.Services.Interfaces;
 using Question.API.Application.Contracts.Dtos.QuestionAnswerDtos;
 
 using AutoMapper;
-
+using Question.API.Grpc;
 
 namespace Question.API.Application.Services
 {
@@ -23,11 +23,15 @@ namespace Question.API.Application.Services
 
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
+        private readonly ExamGrpcService _examGrpcService;
+        private readonly ReportGrpcService _reportGrpcService; 
 
-        public QuestionAnswerService(IRepositoryManager repositoryManager, IMapper mapper)
+        public QuestionAnswerService(IRepositoryManager repositoryManager, IMapper mapper, ExamGrpcService examGrpcService, ReportGrpcService reportGrpcService)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _examGrpcService = examGrpcService;
+            _reportGrpcService = reportGrpcService;
         }
 
 
@@ -96,6 +100,8 @@ namespace Question.API.Application.Services
                 throw new QuestionAnswerDoesNotBelongToQuestionItemException(answerCreateDto.QuestionItemId);
             }
 
+
+
             var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository
                 .GetAllByQuestionItemIdAsync(question.Id);
 
@@ -104,6 +110,8 @@ namespace Question.API.Application.Services
             var answer = _mapper.Map<QuestionAnswer>(answerCreateDto);
             answer.QuestionItemId = question.Id;
 
+            await CheckQuestion(question.Id);
+
             _repositoryManager.QuestionAnswerRepository.Insert(answer);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -111,6 +119,7 @@ namespace Question.API.Application.Services
 
         }
 
+   
 
         // Update current answer
         public async Task UpdateAsync(int answerId, QuestionAnswerUpdateDto answerUpdateDto, CancellationToken cancellationToken = default)
@@ -129,13 +138,15 @@ namespace Question.API.Application.Services
                 throw new QuestionAnswerDoesNotBelongToQuestionItemException(answerUpdateDto.QuestionItemId);
             }
 
+            await CheckQuestion(question.Id);
+
             var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository
                 .GetAllByQuestionItemIdAsync(question.Id);
 
             var answer = await _repositoryManager.QuestionAnswerRepository.GetByIdAsync(answerId, cancellationToken);
 
             CheckCorrectAnswerType(question, answerUpdateDto, answers, answer);
-            
+
             answer.Context = answerUpdateDto.Context;
             answer.IsCorrectAnswer = answerUpdateDto.IsCorrectAnswer;
             answer.CharKey = answerUpdateDto.CharKey;
@@ -154,6 +165,8 @@ namespace Question.API.Application.Services
             {
                 throw new QuestionAnswerNotFoundException(answerId);
             }
+
+            await CheckQuestion(answer.QuestionItemId);
 
             _repositoryManager.QuestionAnswerRepository.Remove(answer);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -259,6 +272,21 @@ namespace Question.API.Application.Services
 
                 default:
                     throw new ArgumentOutOfRangeException($"Attention! Answer type - {question.AnswerType} is not correct.");
+            }
+        }
+
+        /// <summary>
+        /// Checks if questions exists in Report
+        /// </summary>
+        /// <param name="id">Id Question</param>
+        /// <returns></returns>
+        private async Task CheckQuestion(int id)
+        {
+            var existsInExam = await _examGrpcService.CheckIfQuestionExistsInExam(id);
+
+            if (existsInExam.Exists)
+            {
+                throw new BadRequestMessage($"Could not change question.The question with id: {id} already used in exams: [ {String.Join("," , existsInExam.Exams)} ] !");
             }
         }
 

@@ -14,5 +14,6 @@ namespace Question.API.Application.Services.Interfaces
         Task<QuestionCategoryReadDto> GetByIdAsync(int id, CancellationToken cancellationToken = default);
         Task<QuestionCategoryReadDto> CreateAsync(QuestionCategoryCreateDto categoryCreateDto, CancellationToken cancellationToken = default);
         Task UpdateAsync(int id, QuestionCategoryUpdateDto categoryUpdateDto, CancellationToken cancellationToken = default);
+        Task DeleteAsync(int id, CancellationToken cancellationToken = default);
     }
 }

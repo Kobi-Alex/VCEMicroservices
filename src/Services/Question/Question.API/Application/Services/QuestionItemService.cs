@@ -13,7 +13,7 @@ using AutoMapper;
 using MassTransit;
 
 using Exam.API.Application.IntegrationEvents.Events;
-
+using Question.API.Grpc;
 
 namespace Question.API.Application.Services
 {
@@ -24,12 +24,15 @@ namespace Question.API.Application.Services
         private readonly IMapper _mapper;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IRepositoryManager _repositoryManager;
-
-        public QuestionItemService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint)
+        private readonly ExamGrpcService _examGrpcService;
+        private readonly ReportGrpcService _reportGrpcService;
+        public QuestionItemService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint, ExamGrpcService examGrpcService, ReportGrpcService reportGrpcService)
         {
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
             _repositoryManager = repositoryManager;
+            _examGrpcService = examGrpcService;
+            _reportGrpcService = reportGrpcService;
         }
 
 
@@ -130,6 +133,8 @@ namespace Question.API.Application.Services
                 throw new QuestionItemNotFoundException(questionId);
             }
 
+            await CheckQuestion(questionId);
+
             // TODO normal change answers
             if (question.AnswerType != questionUpdateDto.AnswerType)
             {
@@ -154,6 +159,7 @@ namespace Question.API.Application.Services
                 throw new QuestionItemNotFoundException(questionId);
             }
 
+            await CheckQuestion(questionId);
             // Event (send messaga to RubbitMQ server)
             var eventMessage = _mapper.Map<QuestionItemDeleteEvent>(question);
             await _publishEndpoint.Publish(eventMessage);
@@ -161,6 +167,22 @@ namespace Question.API.Application.Services
             _repositoryManager.QuestionItemRepository.Remove(question);
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+
+        /// <summary>
+        /// Checks if questions exists in Report
+        /// </summary>
+        /// <param name="id">Id Question</param>
+        /// <returns></returns>
+        private async Task CheckQuestion(int id)
+        {
+            var existsInExam = await _examGrpcService.CheckIfQuestionExistsInExam(id);
+
+            if (existsInExam.Exists)
+            {
+                throw new BadRequestMessage($"Could not change question.The question with id: {id} already used in exams: [{String.Join("," , existsInExam.Exams)}] !");
+            }
         }
     }
 }

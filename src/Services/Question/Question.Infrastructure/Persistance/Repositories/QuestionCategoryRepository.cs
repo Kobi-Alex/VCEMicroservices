@@ -49,5 +49,9 @@ namespace Question.Infrastructure.Persistance.Repositories
             return _dbContext.Categories.Any(e => e.Id == id);
         }
 
+        public void Remove(QuestionCategory category)
+        {
+            _dbContext.Categories.Remove(category);
+        }
     }
 }
