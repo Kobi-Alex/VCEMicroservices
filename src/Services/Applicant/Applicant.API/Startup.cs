@@ -22,8 +22,9 @@ using Applicant.API.Application.Services;
 using Applicant.API.Application.Configurations;
 using Applicant.API.Application.Services.Interfaces;
 using Applicant.Infrasructure.Persistance.Repositories;
-
-
+using Applicant.API.Middleware;
+using GrpcReport;
+using Applicant.API.Grpc;
 
 namespace Applicant.API
 {
@@ -42,6 +43,7 @@ namespace Applicant.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             if (_env.IsStaging())
             {
                 Console.WriteLine("\n---> Staging");
@@ -93,6 +95,11 @@ namespace Applicant.API
             //add service RepositoryManager
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
+            // gRPC configuration (ReportGrpcService)
+            services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
+                        (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
+            services.AddScoped<ReportGrpcService>();
+
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -101,6 +108,8 @@ namespace Applicant.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Applicant.API", Version = "v1" });
             });
+
+            services.AddTransient<ExceptionHandlingMiddleware>();
         }
 
 
@@ -114,6 +123,8 @@ namespace Applicant.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Applicant.API v1"));
             }
 
+            //add ExceptionHandlingMiddleware
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseRouting();
             app.UseCors("AllowOrigin");
             app.UseAuthentication();

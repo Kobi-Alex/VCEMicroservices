@@ -9,5 +9,10 @@ namespace Applicant.API.Application.Exceptions
         {
         }
 
+        public UserNotFoundException(string Id, string message)
+            :base($"Error delete user id = {Id}. {message}")
+        {
+        }
+
     }
 }

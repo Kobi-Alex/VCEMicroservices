@@ -1,0 +1,17 @@
+syntax ="proto3";
+
+option csharp_namespace = "GrpcReport";
+
+service ReportGrpc{
+
+	rpc RemoveUserDataFromReport(RemoveUserData) returns (UserDataResponse);
+}
+
+message RemoveUserData{
+	string userId = 1;
+}
+
+message UserDataResponse{
+	bool success = 1;
+	string error = 2;
+}

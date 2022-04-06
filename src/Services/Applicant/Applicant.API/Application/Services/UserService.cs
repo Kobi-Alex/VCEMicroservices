@@ -16,7 +16,7 @@ using Applicant.API.Application.Contracts.Dtos.UserDtos;
 
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-
+using Applicant.API.Grpc;
 
 namespace Applicant.API.Application.Services
 {
@@ -29,13 +29,16 @@ namespace Applicant.API.Application.Services
         private PasswordHasher<User> _hasher;
         private readonly EmailConfiguration _emailConfig;
         private readonly IRepositoryManager _repositoryManager;
+        private readonly ReportGrpcService _reportGrpcService;
 
-        public UserService(IRepositoryManager repositoryManager, IMapper mapper, EmailConfiguration emailConfig)
+        public UserService(IRepositoryManager repositoryManager, IMapper mapper, EmailConfiguration emailConfig, 
+            ReportGrpcService reportGrpcService)
         {
             _mapper = mapper;
             _emailConfig = emailConfig;
             _hasher = new PasswordHasher<User>();
             _repositoryManager = repositoryManager;
+            _reportGrpcService = reportGrpcService;
         }
 
         public async Task<IEnumerable<UserReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -275,18 +278,33 @@ namespace Applicant.API.Application.Services
             }
 
             var adminRole = await _repositoryManager.RoleRepository.GetByName("Admin");
-            var users = await _repositoryManager.UserRepository.GetAllAsync(cancellationToken);
 
-            foreach (var item in users)
+            if (user.Roles.Contains(adminRole))
             {
-                if(item.Roles.FirstOrDefault(x => x.Id == adminRole.Id) != null)
+                var admins = (await _repositoryManager.UserRepository.FindAllAsync(x => x.Roles.Where(x => x.Id == 1).Any())).ToList();
+
+                if (admins.Count() <= 1)
                 {
                     throw new UserDeleteException();
                 }
             }
 
-            _repositoryManager.UserRepository.Delete(user);
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            // gRPC service delete report by userId
+            var reportResult = await _reportGrpcService.RemoveUserDataFromRepor(user.Id);
+
+            Console.WriteLine(reportResult.Error);
+            Console.WriteLine(reportResult.Success);
+
+            if (reportResult.Success)
+            {
+                _repositoryManager.UserRepository.Delete(user);
+                await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            }
+            else
+            {
+                throw new UserNotFoundException(user.Id, reportResult.Error);
+            }
+
         }
 
 

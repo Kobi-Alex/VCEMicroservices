@@ -201,7 +201,7 @@ namespace Applicant.API.Controllers
 
 
         [HttpGet]
-        [Route("Exams/{id}")]
+        [Route("{id}/Exams")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager, Student")]
         public async Task<IActionResult> GetUserExams(string id, int page, int limit)
         {
