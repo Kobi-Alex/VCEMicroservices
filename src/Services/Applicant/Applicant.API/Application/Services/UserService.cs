@@ -417,14 +417,15 @@ namespace Applicant.API.Application.Services
 
             if (!reportResult.Success)
             {
-                var newUserExam = new UserExams() 
+                var newUserExam = new UserExams()
                 {
-                    ExamId = userExamDto.ExamId, 
-                    UserId = userExamDto.UserId 
+                    ExamId = userExamDto.ExamId,
+                    UserId = userExamDto.UserId
                 };
 
-            _repositoryManager.UserExamsRepository.Insert(newUserExam);
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+                _repositoryManager.UserExamsRepository.Insert(newUserExam);
+                await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            }
         }
 
         public async Task RemoveExamFromUser(UserExamDto userExamDto, CancellationToken cancellationToken = default)

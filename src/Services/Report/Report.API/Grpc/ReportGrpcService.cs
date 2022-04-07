@@ -1,57 +1,60 @@
 ﻿using Grpc.Core;
 using GrpcReport;
+using MediatR;
 using Microsoft.Extensions.Logging;
+using Report.API.Application.Features.Commands.RemoveReview;
+using Report.API.Application.Features.Queries;
 using Report.API.Application.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-
-using MediatR;
-using Grpc.Core;
-using GrpcReport;
-
-using Report.API.Application.Features.Queries;
-using Report.API.Application.Features.Commands.RemoveReview;
-
 
 namespace Report.API.Grpc
 {
+
     public class ReportGrpcService : ReportGrpc.ReportGrpcBase
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<QuestionGrpcService> _logger;
-        private readonly IReviewQueries _reviewQueries;
         private readonly IServiceManager _serviceManager;
-        private readonly ILogger<ReportGrpcService> _logger;
+        private readonly ILogger<ReportGrpcService> _loggerReport;
+        private readonly ILogger<QuestionGrpcService> _loggerQuestion;
+        private readonly IMediator _mediator;
+        private readonly IReviewQueries _reviewQueries;
 
-        public ReportGrpcService(IMediator mediator, ILogger<QuestionGrpcService> logger, IReviewQueries reviewQueries)
-        public ReportGrpcService(IServiceManager serviceManager, ILogger<ReportGrpcService> logger)
+        public ReportGrpcService(IMediator mediator, IReviewQueries reviewQueries, IServiceManager serviceManager, ILogger<ReportGrpcService> loggerReport, ILogger<QuestionGrpcService> loggerQuestion)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _serviceManager = serviceManager ?? throw new ArgumentNullException(nameof(serviceManager));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _loggerReport = loggerReport ?? throw new ArgumentNullException(nameof(loggerReport));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _loggerQuestion = loggerQuestion ?? throw new ArgumentNullException(nameof(loggerQuestion));
             _reviewQueries = reviewQueries ?? throw new ArgumentNullException(nameof(reviewQueries));
         }
 
-        public override async Task<UserDataResponse> RemoveUserDataFromReport(RemoveUserData request, ServerCallContext context)
         public override async Task<ReportResponse> CheckIfExistsExamInReports(ReportRequest request, ServerCallContext context)
+        {
+            var res = await _serviceManager.ReportService.GetAllReviewByExamId(request.ExamId);
+
+            if (res != null && res.Count() > 0)
+            {
+                return await Task.FromResult(new ReportResponse { Exists = true });
+            }
+
+            return await Task.FromResult(new ReportResponse { Exists = false });
+        }
+
+        public override async Task<UserDataResponse> RemoveUserDataFromReport(RemoveUserData request, ServerCallContext context)
         {
             try
             {
                 var reviews = await _reviewQueries.GetReportByUserIdAsync(request.UserId);
-            var res = await _serviceManager.ReportService.GetAllReviewByExamId(request.ExamId);
 
                 if (reviews is null)
-            if (res != null && res.Count() > 0)
                 {
                     return new UserDataResponse
                     {
                         Success = false,
                         Error = "User not found!!"
                     };
-              return  await Task.FromResult(new ReportResponse { Exists = true });
                 }
 
                 foreach (var item in reviews)
@@ -98,7 +101,6 @@ namespace Report.API.Grpc
                 };
             }
 
-            return await Task.FromResult(new ReportResponse { Exists = false });
         }
     }
 }

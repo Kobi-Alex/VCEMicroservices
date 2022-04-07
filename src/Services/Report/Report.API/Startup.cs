@@ -110,6 +110,9 @@ namespace Report.API
             }
 
 
+
+            
+
             services.AddScoped<IServiceManager, ServiceManager>();
 
             // Review queries configuration
@@ -194,6 +197,12 @@ namespace Report.API
                 endpoints.MapGrpcService<ReportGrpcService>();
                 endpoints.MapGrpcService<ExamGrpcService>();
             });
+
+
+            //Create Db if not exist
+            app.ApplicationServices.CreateScope().ServiceProvider.GetService<ReportDbContext>();
+
+            // ReportDbContextSeed.PrepPopulation(app);
         }
 
     }
