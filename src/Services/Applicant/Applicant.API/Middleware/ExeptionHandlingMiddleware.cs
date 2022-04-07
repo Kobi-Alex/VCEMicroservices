@@ -10,6 +10,9 @@ using Applicant.API.Application.Exceptions;
 
 namespace Applicant.API.Middleware
 {
+
+    // _ Empty variable - https://docs.microsoft.com/ru-ru/dotnet/csharp/fundamentals/functional/discards
+
     internal sealed class ExceptionHandlingMiddleware : IMiddleware
     {
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;

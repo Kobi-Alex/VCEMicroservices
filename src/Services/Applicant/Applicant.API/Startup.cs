@@ -102,6 +102,8 @@ namespace Applicant.API
                         (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
             services.AddScoped<ReportGrpcService>();
 
+            // gRPC configuration
+            services.AddGrpc();
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -135,6 +137,7 @@ namespace Applicant.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<ApplicantGrpcService>();
             });
 
             PrepDb.PrepPopulation(app, env.IsProduction());

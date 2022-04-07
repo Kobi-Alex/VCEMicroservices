@@ -22,16 +22,18 @@ namespace Report.API.Application.Features.Commands.CloseReview
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly ExamGrpcService _examGrpcService;
+        private readonly ApplicantGrpcService _applicantGrpcService;
         private readonly IEmailService _emailService;
         private readonly ILogger<CloseReviewCommandHandler> _logger;
 
         public CloseReviewCommandHandler(IReviewRepository reviewRepository, ExamGrpcService examGrpcService,
-            IEmailService emailService, ILogger<CloseReviewCommandHandler> logger)
+            IEmailService emailService, ILogger<CloseReviewCommandHandler> logger, ApplicantGrpcService applicantGrpcService)
         {
             _reviewRepository = reviewRepository;
             _examGrpcService = examGrpcService;
             _emailService = emailService;
             _logger = logger;
+            _applicantGrpcService = applicantGrpcService;
 
         }
 
@@ -71,6 +73,9 @@ namespace Report.API.Application.Features.Commands.CloseReview
 
                 // Calculate review scores
                 reviewToUpdate.CalculateScores(examItem.CountQuestions);
+
+                // gRPC Service Remove exam in applicant service database
+                await _applicantGrpcService.RemoveExamFromApplicantData(reviewToUpdate._applicantId, reviewToUpdate._examId);
 
                 // TODO add E-mail content
                 // Sending exam result to applicant email..

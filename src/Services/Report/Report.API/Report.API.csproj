@@ -36,6 +36,7 @@
 	<ItemGroup>
 		<Protobuf Include="Proto\question.proto" GrpcServices="Client" />
 		<Protobuf Include="Proto\exam.proto" GrpcServices="Client" />
+		<Protobuf Include="Proto\applicant.proto" GrpcServices="Client" />
 		<Protobuf Include="Proto\report.proto" GrpcServices="Server" />
 		<!--<None Remove="Proto\question.proto" />-->
 	</ItemGroup>
