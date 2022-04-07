@@ -210,7 +210,7 @@ namespace Applicant.Infrasructure
                     FirstName = "Mike",
                     LastName = "White",
                     Email = "white@google.com",
-                    Password = hasher.HashPassword(null, "McKey1!"),
+                    Password = hasher.HashPassword(null, "Mike1!"),
                     CreatedAt = new DateTimeOffset(DateTime.Now),
                     UpdatedAt = new DateTimeOffset(DateTime.Now),
                     //Roles = new List<Role>() { userRole }

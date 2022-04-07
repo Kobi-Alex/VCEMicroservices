@@ -109,12 +109,16 @@ namespace Exam.API.Application.Services
 
             exam.Title = examUpdateDto.Title;
             exam.Description = examUpdateDto.Description;
+            exam.DurationTime = examUpdateDto.DurationTime;
 
-            if (exam.DurationTime != examUpdateDto.DurationTime || exam.PassingScore != examUpdateDto.PassingScore)
+            if ( exam.PassingScore != examUpdateDto.PassingScore)
             {
-                await CheckExam(examId);
-                
-                exam.DurationTime = examUpdateDto.DurationTime;
+
+                if (await CheckExam(examId))
+                {
+                    throw new BadRequestMessage($"Could not update PassingScore in exam! This exam with id: {examId} already used in Report!");
+                }
+
                 exam.PassingScore = examUpdateDto.PassingScore;
             }
 
@@ -131,7 +135,10 @@ namespace Exam.API.Application.Services
             }
 
 
-            await CheckExam(examId);
+            if (await CheckExam(examId))
+            {
+                throw new BadRequestMessage($"Could not delete exam! This exam with id: {examId} already used in Report!");
+            }
             _repositoryManager.ExamItemRepository.Remove(exam);
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -150,14 +157,11 @@ namespace Exam.API.Application.Services
         /// </summary>
         /// <param name="id">Id Exam</param>
         /// <returns></returns>
-        private async Task CheckExam(int id)
+        private async Task<bool> CheckExam(int id)
         {
             var res = await _reportGrpcService.CheckIfExistsExamInReports(id);
 
-            if (res.Exists)
-            {
-                throw new BadRequestMessage($"Could not change exam! This exam with id: {id} already used!");
-            }
+            return res.Exists;
         }
     }
 }

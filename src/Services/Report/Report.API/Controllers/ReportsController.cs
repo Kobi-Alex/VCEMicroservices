@@ -223,7 +223,7 @@ namespace Report.API.Controllers
         }
 
         [HttpDelete]
-        [Route ("exams/{id}")]
+        [Route ("e/{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
         public async Task<IActionResult> DeleteReviewsByExamIdAsync(int id, CancellationToken cancellationToken)
         {

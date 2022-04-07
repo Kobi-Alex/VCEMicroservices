@@ -77,7 +77,10 @@ namespace Exam.API.Application.Services
             var question = _mapper.Map<ExamQuestion>(examQuestionCreateDto);
             question.ExamItemId = exam.Id;
 
-            await CheckExam(examId);
+            if (await CheckExam(examId))
+            {
+                throw new BadRequestMessage($"Could not add new question to exam! This exam with id: {examId} already used in Report!");
+            }
 
             _repositoryManager.ExamQuestionRepository.Insert(question);
 
@@ -108,7 +111,11 @@ namespace Exam.API.Application.Services
                 throw new QuestionDoesNotBelongToExamException(exam.Id, question.Id);
             }
 
-            await CheckExam(examId);
+            if (await CheckExam(examId))
+            {
+                throw new BadRequestMessage($"Could not delete question from exam! This exam with id: {examId} already used!");
+            }
+            
             _repositoryManager.ExamQuestionRepository.Remove(question);
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -119,14 +126,11 @@ namespace Exam.API.Application.Services
         /// </summary>
         /// <param name="id">Id Exam</param>
         /// <returns></returns>
-        private async Task CheckExam(int id)
+        private async Task<bool> CheckExam(int id)
         {
             var res = await _reportGrpcService.CheckIfExistsExamInReports(id);
 
-            if (res.Exists)
-            {
-                throw new BadRequestMessage($"Could not change exam! This exam with id: {id} already used!");
-            }
+            return res.Exists;
         }
 
     }

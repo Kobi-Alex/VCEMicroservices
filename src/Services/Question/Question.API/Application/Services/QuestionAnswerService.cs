@@ -12,6 +12,7 @@ using Question.API.Application.Contracts.Dtos.QuestionAnswerDtos;
 
 using AutoMapper;
 using Question.API.Grpc;
+using GrpcExam;
 
 namespace Question.API.Application.Services
 {
@@ -34,8 +35,6 @@ namespace Question.API.Application.Services
             _reportGrpcService = reportGrpcService;
         }
 
-
-
         // Get all answers from DB 
         public async Task<IEnumerable<QuestionAnswerReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
@@ -46,7 +45,6 @@ namespace Question.API.Application.Services
 
             return answersDto;
         }
-
 
         // Get all answers by QuestionItem ID from DB
         public async Task<IEnumerable<QuestionAnswerReadDto>> GetAllByQuestionItemIdAsync(int questionId, CancellationToken cancellationToken = default)
@@ -64,7 +62,6 @@ namespace Question.API.Application.Services
             return answersDto;
         }
 
-
         // Get question by ID from DB
         public async Task<QuestionAnswerReadDto> GetByIdAsync(int answerId, CancellationToken cancellationToken = default)
         {
@@ -81,7 +78,6 @@ namespace Question.API.Application.Services
             return answerDto;
 
         }
-
 
         // Create new answer
         public async Task<QuestionAnswerReadDto> CreateAsync(QuestionAnswerCreateDto answerCreateDto, CancellationToken cancellationToken = default)
@@ -110,7 +106,21 @@ namespace Question.API.Application.Services
             var answer = _mapper.Map<QuestionAnswer>(answerCreateDto);
             answer.QuestionItemId = question.Id;
 
-            await CheckQuestion(question.Id);
+
+            var res = await CheckQuestion(question.Id);
+
+            if (res.Exists)
+            {
+                foreach (var item in res.Exams)
+                {
+                    var existsExamInReport = await _reportGrpcService.CheckIfExistsExamInReports(item);
+
+                    if (existsExamInReport.Exists)
+                    {
+                        throw new BadRequestMessage($"Could not add a new answer to question.The question with id: {question.Id} already used in Report !");
+                    }
+                }
+            }
 
             _repositoryManager.QuestionAnswerRepository.Insert(answer);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -119,12 +129,9 @@ namespace Question.API.Application.Services
 
         }
 
-   
-
         // Update current answer
         public async Task UpdateAsync(int answerId, QuestionAnswerUpdateDto answerUpdateDto, CancellationToken cancellationToken = default)
         {
-
             if (answerUpdateDto is null)
             {
                 throw new QuestionAnswerArgumentException(nameof(answerUpdateDto));
@@ -138,7 +145,20 @@ namespace Question.API.Application.Services
                 throw new QuestionAnswerDoesNotBelongToQuestionItemException(answerUpdateDto.QuestionItemId);
             }
 
-            await CheckQuestion(question.Id);
+           var res = await CheckQuestion(question.Id);
+
+            if(res.Exists)
+            {
+                foreach (var item in res.Exams)
+                {
+                    var existsExamInReport = await _reportGrpcService.CheckIfExistsExamInReports(item);
+
+                    if (existsExamInReport.Exists)
+                    {
+                        throw new BadRequestMessage($"Could not update answer in question.The question with id: {question.Id} already used in Report !");
+                    }
+                }
+            }
 
             var answers = (List<QuestionAnswer>)await _repositoryManager.QuestionAnswerRepository
                 .GetAllByQuestionItemIdAsync(question.Id);
@@ -166,7 +186,28 @@ namespace Question.API.Application.Services
                 throw new QuestionAnswerNotFoundException(answerId);
             }
 
-            await CheckQuestion(answer.QuestionItemId);
+            var question = await _repositoryManager.QuestionItemRepository
+                .GetByIdAsync(answer.QuestionItemId);
+
+            if (question != null)
+            {
+                var res = await CheckQuestion(question.Id);
+
+                if (res.Exists)
+                {
+                    foreach (var item in res.Exams)
+                    {
+                        var existsExamInReport = await _reportGrpcService.CheckIfExistsExamInReports(item);
+
+                        if (existsExamInReport.Exists)
+                        {
+                            throw new BadRequestMessage($"Could delete answer in question.The question with id: {question.Id} already used in Report !");
+                        }
+                    }
+                }
+            }
+
+            
 
             _repositoryManager.QuestionAnswerRepository.Remove(answer);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -280,17 +321,12 @@ namespace Question.API.Application.Services
         /// </summary>
         /// <param name="id">Id Question</param>
         /// <returns></returns>
-        private async Task CheckQuestion(int id)
+        private async Task<ExamResponse> CheckQuestion(int id)
         {
             var existsInExam = await _examGrpcService.CheckIfQuestionExistsInExam(id);
 
-            if (existsInExam.Exists)
-            {
-                throw new BadRequestMessage($"Could not change question.The question with id: {id} already used in exams: [ {String.Join("," , existsInExam.Exams)} ] !");
-            }
+            return existsInExam;
         }
-
-
 
         /// <summary>
         /// Checking correct answer type
@@ -337,9 +373,7 @@ namespace Question.API.Application.Services
                         }
                     }
                 }
-
             }
         }
-
     }
 }

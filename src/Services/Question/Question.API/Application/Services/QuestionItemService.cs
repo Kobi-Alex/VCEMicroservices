@@ -14,6 +14,7 @@ using MassTransit;
 
 using Exam.API.Application.IntegrationEvents.Events;
 using Question.API.Grpc;
+using GrpcExam;
 
 namespace Question.API.Application.Services
 {
@@ -133,7 +134,19 @@ namespace Question.API.Application.Services
                 throw new QuestionItemNotFoundException(questionId);
             }
 
-            await CheckQuestion(questionId);
+            var res = await CheckQuestion(questionId);
+            if(res.Exists)
+            {
+                foreach (var item in res.Exams)
+                {
+                    var existsExamInReport = await   _reportGrpcService.CheckIfExistsExamInReports(item);
+
+                    if(existsExamInReport.Exists)
+                    {
+                        throw new BadRequestMessage($"Could not update question.The question with id: {questionId} already used in Report !");
+                    }
+                }
+            }
 
             // TODO normal change answers
             if (question.AnswerType != questionUpdateDto.AnswerType)
@@ -159,7 +172,19 @@ namespace Question.API.Application.Services
                 throw new QuestionItemNotFoundException(questionId);
             }
 
-            await CheckQuestion(questionId);
+            var res = await CheckQuestion(questionId);
+            if (res.Exists)
+            {
+                foreach (var item in res.Exams)
+                {
+                    var existsExamInReport = await _reportGrpcService.CheckIfExistsExamInReports(item);
+
+                    if (existsExamInReport.Exists)
+                    {
+                        throw new BadRequestMessage($"Could not delete question.The question with id: {questionId} already used in Report !");
+                    }
+                }
+            }
             // Event (send messaga to RubbitMQ server)
             var eventMessage = _mapper.Map<QuestionItemDeleteEvent>(question);
             await _publishEndpoint.Publish(eventMessage);
@@ -175,14 +200,12 @@ namespace Question.API.Application.Services
         /// </summary>
         /// <param name="id">Id Question</param>
         /// <returns></returns>
-        private async Task CheckQuestion(int id)
+        private async Task<ExamResponse> CheckQuestion(int id)
         {
             var existsInExam = await _examGrpcService.CheckIfQuestionExistsInExam(id);
 
-            if (existsInExam.Exists)
-            {
-                throw new BadRequestMessage($"Could not change question.The question with id: {id} already used in exams: [{String.Join("," , existsInExam.Exams)}] !");
-            }
+            return existsInExam;
+            
         }
     }
 }
