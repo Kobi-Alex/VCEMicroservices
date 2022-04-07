@@ -1,4 +1,4 @@
-﻿syntax = "proto3";
+syntax ="proto3";
 
 option csharp_namespace = "GrpcReport";
 
@@ -6,7 +6,6 @@ service ReportGrpc{
 
 	rpc RemoveUserDataFromReport(RemoveUserData) returns (UserDataResponse);
 	rpc IsExistExamFromReport(IsExistExamRequest) returns (IsExistExamResponse);
-	rpc CheckIfExistsExamInReports(ReportRequest) returns (ReportResponse) {};
 }
 
 message RemoveUserData{
@@ -18,15 +17,11 @@ message UserDataResponse{
 	string error = 2;
 }
 
-message ReportRequest {
-	int32 examId = 1;
 message IsExistExamRequest{
 	string userId = 1;
 	int32 examId = 2;
 }
 
-message ReportResponse {
-	bool exists = 1;
 message IsExistExamResponse{
 	bool success = 1;
 	string error = 2;

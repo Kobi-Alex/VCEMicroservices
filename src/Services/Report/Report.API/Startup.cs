@@ -138,6 +138,8 @@ namespace Report.API
             services.AddScoped<ExamGrpcService>();
 
 
+
+
             // CQRS configuration
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
@@ -149,6 +151,8 @@ namespace Report.API
             services.Configure<EmailSettings>(c => Configuration.GetSection("EmailSettings").Bind(c));
             services.AddTransient<IEmailService, EmailService>();
 
+            // gRPC configuration
+            services.AddGrpc();
 
             // Controller configuration
             services.AddControllers();

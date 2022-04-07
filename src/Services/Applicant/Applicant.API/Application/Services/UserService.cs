@@ -16,6 +16,7 @@ using Applicant.API.Application.Contracts.Dtos.UserDtos;
 
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Applicant.API.Grpc;
 using System.Linq.Expressions;
 
 namespace Applicant.API.Application.Services
@@ -29,13 +30,16 @@ namespace Applicant.API.Application.Services
         private PasswordHasher<User> _hasher;
         private readonly EmailConfiguration _emailConfig;
         private readonly IRepositoryManager _repositoryManager;
+        private readonly ReportGrpcService _reportGrpcService;
 
-        public UserService(IRepositoryManager repositoryManager, IMapper mapper, EmailConfiguration emailConfig)
+        public UserService(IRepositoryManager repositoryManager, IMapper mapper, EmailConfiguration emailConfig, 
+            ReportGrpcService reportGrpcService)
         {
             _mapper = mapper;
             _emailConfig = emailConfig;
             _hasher = new PasswordHasher<User>();
             _repositoryManager = repositoryManager;
+            _reportGrpcService = reportGrpcService;
         }
 
         public async Task<IEnumerable<UserReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -286,8 +290,19 @@ namespace Applicant.API.Application.Services
                 }
             }
 
-            _repositoryManager.UserRepository.Delete(user);
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            // gRPC service delete report by userId
+            var reportResult = await _reportGrpcService.RemoveUserDataFromRepor(id);
+
+            if (reportResult.Success)
+            {
+                _repositoryManager.UserRepository.Delete(user);
+                await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            }
+            else
+            {
+                throw new UserNotFoundException(user.Id, reportResult.Error);
+            }
+
         }
 
 
@@ -396,11 +411,17 @@ namespace Applicant.API.Application.Services
                 throw new ExamIsAlreadyExistException(userExamDto.ExamId);
             }
 
-            var newUserExam = new UserExams() 
+
+            // gRPC service check exam data in the report service
+            var reportResult = await _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);
+
+            if (!reportResult.Success)
             {
-                ExamId = userExamDto.ExamId, 
-                UserId = userExamDto.UserId 
-            };
+                var newUserExam = new UserExams() 
+                {
+                    ExamId = userExamDto.ExamId, 
+                    UserId = userExamDto.UserId 
+                };
 
             _repositoryManager.UserExamsRepository.Insert(newUserExam);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
