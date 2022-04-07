@@ -43,7 +43,7 @@ namespace Report.API.Grpc
                 foreach (var item in reviews)
                 {
                     var command = new RemoveReviewCommand(item.Id);
-                    //await _mediator.Send(command);
+                    await _mediator.Send(command);
                 }
 
                 return new UserDataResponse
@@ -59,6 +59,28 @@ namespace Report.API.Grpc
                 {
                     Success = false,
                     Error = $"{ ex.Message }"
+                };
+            }
+
+        }
+
+        public override async Task<IsExistExamResponse> IsExistExamFromReport(IsExistExamRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var review = await _reviewQueries.GetReportByExamIdAndUserIdAsync(request.ExamId, request.UserId);
+
+                return new IsExistExamResponse
+                {
+                    Success = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new IsExistExamResponse
+                {
+                    Success = false,
+                    Error = ex.Message
                 };
             }
 

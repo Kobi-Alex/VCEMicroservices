@@ -5,6 +5,7 @@ option csharp_namespace = "GrpcReport";
 service ReportGrpc{
 
 	rpc RemoveUserDataFromReport(RemoveUserData) returns (UserDataResponse);
+	rpc IsExistExamFromReport(IsExistExamRequest) returns (IsExistExamResponse);
 }
 
 message RemoveUserData{
@@ -12,6 +13,16 @@ message RemoveUserData{
 }
 
 message UserDataResponse{
+	bool success = 1;
+	string error = 2;
+}
+
+message IsExistExamRequest{
+	string userId = 1;
+	int32 examId = 2;
+}
+
+message IsExistExamResponse{
 	bool success = 1;
 	string error = 2;
 }

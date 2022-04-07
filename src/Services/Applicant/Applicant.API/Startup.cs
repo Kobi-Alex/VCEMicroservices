@@ -16,15 +16,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
+using Applicant.API.Grpc;
 using Applicant.Infrasructure;
+using Applicant.API.Middleware;
 using Applicant.Domain.Repositories;
 using Applicant.API.Application.Services;
 using Applicant.API.Application.Configurations;
 using Applicant.API.Application.Services.Interfaces;
 using Applicant.Infrasructure.Persistance.Repositories;
-using Applicant.API.Middleware;
+
 using GrpcReport;
-using Applicant.API.Grpc;
+
 
 namespace Applicant.API
 {

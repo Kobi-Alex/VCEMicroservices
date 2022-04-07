@@ -24,5 +24,12 @@ namespace Applicant.API.Grpc
 
             return await _reportGrpcService.RemoveUserDataFromReportAsync(request);
         }
+
+        public async Task<IsExistExamResponse> IsExistExamRequest (string userId, int examId)
+        {
+            var request = new IsExistExamRequest { UserId = userId, ExamId = examId };
+
+            return await _reportGrpcService.IsExistExamFromReportAsync(request);
+        }
     }
 }

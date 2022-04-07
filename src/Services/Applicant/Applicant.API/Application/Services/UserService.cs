@@ -290,10 +290,7 @@ namespace Applicant.API.Application.Services
             }
 
             // gRPC service delete report by userId
-            var reportResult = await _reportGrpcService.RemoveUserDataFromRepor(user.Id);
-
-            Console.WriteLine(reportResult.Error);
-            Console.WriteLine(reportResult.Success);
+            var reportResult = await _reportGrpcService.RemoveUserDataFromRepor(id);
 
             if (reportResult.Success)
             {
@@ -414,14 +411,25 @@ namespace Applicant.API.Application.Services
                 throw new ExamIsAlreadyExistException(userExamDto.ExamId);
             }
 
-            var newUserExam = new UserExams() 
-            {
-                ExamId = userExamDto.ExamId, 
-                UserId = userExamDto.UserId 
-            };
 
-            _repositoryManager.UserExamsRepository.Insert(newUserExam);
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            // gRPC service check exam data in the report service
+            var reportResult = await _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);
+
+            if (!reportResult.Success)
+            {
+                var newUserExam = new UserExams() 
+                {
+                    ExamId = userExamDto.ExamId, 
+                    UserId = userExamDto.UserId 
+                };
+
+                _repositoryManager.UserExamsRepository.Insert(newUserExam);
+                await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            }
+            else
+            {
+                throw new ExamIsAlreadyExistException("in database service report!!");
+            }
 
         }
 

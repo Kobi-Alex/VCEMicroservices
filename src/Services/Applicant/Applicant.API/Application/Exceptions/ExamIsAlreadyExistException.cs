@@ -9,5 +9,10 @@ namespace Applicant.API.Application.Exceptions
             :base ($"Exam with identity {id} is already exist")
         {
         }
+
+        public ExamIsAlreadyExistException(string message)
+            : base($"Exam is already exist in {message}")
+        {
+        }
     }
 }
