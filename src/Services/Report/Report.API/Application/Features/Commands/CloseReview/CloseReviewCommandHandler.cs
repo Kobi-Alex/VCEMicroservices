@@ -59,7 +59,7 @@ namespace Report.API.Application.Features.Commands.CloseReview
             }
 
 
-            if (reviewToUpdate.QuestionUnits.Count != 0 )
+            if (reviewToUpdate.QuestionUnits.Count != 0)
             {
 
                 // gRPC request to Exam service
@@ -97,18 +97,30 @@ namespace Report.API.Application.Features.Commands.CloseReview
         /// <returns></returns>
         private async Task SendMail(Review review)
         {
+            var user = await _applicantGrpcService.GetUserDataAsync(review._applicantId);
+            var exam = await _examGrpcService.GetExamItemFromExamData(review._examId);
+
+            string status = (review.GetGradeByPersentScore() != "F" && review.GetGradeByPersentScore() != null) ? "Test passed!" : "Test failed!";
+
+            string body = $"<h1>Hi, {user.FirstName } {user.LastName}</h1>" +
+                $"<h2>Your result by exam: {exam.Title} </h2>" +
+                $"<h3>Grade: {review.GetGradeByPersentScore()}</h3>" +
+                $"<h3>Date: {review.GetDateReview().ToLongDateString()}</h3>" +
+                $"<h2>Staus: {status}</h2>";
+
+
             var email = new Email()
             {
                 //To = "steelalex.gk@gmail.com",
-                To = "foodd536@gmail.com",
-                Body = "<strong> Exam result: </strong>",
+                To = user.Email,
+                Body = body,
                 Subject = "VCE result"
             };
 
             try
             {
                 await _emailService.SendEmail(email);
-                Console.WriteLine("--> Message sended");
+                Console.WriteLine($"\n---> Message sended to: {email.To}");
             }
             catch (Exception ex)
             {

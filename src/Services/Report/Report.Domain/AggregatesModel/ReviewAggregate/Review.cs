@@ -61,6 +61,8 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
             _persentScore = persentScore;
         }
 
+        public DateTime GetDateReview() => _reportDate;
+
 
         /// <summary>
         /// Adding new or update current answer 

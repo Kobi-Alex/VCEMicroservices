@@ -6,6 +6,7 @@ option csharp_namespace = "GrpcApplicant";
 service ApplicantGrpc{
 
 	rpc RemoveExamFromApplicantData(RemoveExamRequest) returns (RemoveExamResponce);
+	rpc GetUseData(GetUserDataRequest) returns (GetUserDataResponse);
 }
 
 message RemoveExamRequest{
@@ -17,3 +18,15 @@ message RemoveExamResponce{
 	bool success = 1;
 	string error = 2;
 }
+
+message GetUserDataRequest {
+	string userId = 1;
+}
+
+message GetUserDataResponse {
+	string id = 1;
+	string firstName = 2;
+	string lastName = 3;
+	string email = 4;
+}
+

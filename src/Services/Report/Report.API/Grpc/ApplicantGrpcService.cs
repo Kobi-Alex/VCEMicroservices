@@ -22,5 +22,12 @@ namespace Report.API.Grpc
 
             return await _applicantGrpcService.RemoveExamFromApplicantDataAsync(request);
         }
+
+        public async Task<GetUserDataResponse> GetUserDataAsync(string userId)
+        {
+            var request = new GetUserDataRequest() {UserId = userId };
+
+            return await _applicantGrpcService.GetUseDataAsync(request);
+        }
     }
 }

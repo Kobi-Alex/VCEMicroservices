@@ -24,7 +24,6 @@ using Applicant.API.Application.Services;
 using Applicant.API.Application.Configurations;
 using Applicant.API.Application.Services.Interfaces;
 using Applicant.Infrasructure.Persistance.Repositories;
-using Applicant.API.Middleware;
 
 using GrpcReport;
 

@@ -184,7 +184,13 @@ namespace Applicant.API.Application.Services
         }
 
 
-        public async Task<bool> SendMessageAsync(UserEmailDto userEmailDto, CancellationToken cancellationToken = default)
+        /// <summary>
+        /// Sends access code after registration new user.
+        /// </summary>
+        /// <param name="userEmailDto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<bool> AccessCodeAsync(UserEmailDto userEmailDto, CancellationToken cancellationToken = default)
         {
 
             var user = await _repositoryManager.UserRepository.GetByIdAsync(userEmailDto.Id, cancellationToken);
@@ -302,7 +308,6 @@ namespace Applicant.API.Application.Services
             {
                 throw new UserNotFoundException(user.Id, reportResult.Error);
             }
-
         }
 
 
@@ -386,7 +391,6 @@ namespace Applicant.API.Application.Services
             var userExamsDto = _mapper.Map<IEnumerable<UserExamDto>>(userExams);
 
             return userExamsDto;
-
         }
 
         public async Task AddExamToUserAsync(UserExamDto userExamDto, CancellationToken cancellationToken = default)
@@ -415,17 +419,19 @@ namespace Applicant.API.Application.Services
             // gRPC service check exam data in the report service
             var reportResult = await _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);
 
-            if (!reportResult.Success)
+            if (reportResult.Success)
             {
-                var newUserExam = new UserExams()
-                {
-                    ExamId = userExamDto.ExamId,
-                    UserId = userExamDto.UserId
-                };
-
-                _repositoryManager.UserExamsRepository.Insert(newUserExam);
-                await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+                throw new BadRequestMessage($"Could not add exam to user. The exam with id: {userExamDto.ExamId} already exists in Report");
             }
+
+            var newUserExam = new UserExams()
+            {
+                ExamId = userExamDto.ExamId,
+                UserId = userExamDto.UserId
+            };
+
+            _repositoryManager.UserExamsRepository.Insert(newUserExam);
+            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         public async Task RemoveExamFromUser(UserExamDto userExamDto, CancellationToken cancellationToken = default)

@@ -21,14 +21,17 @@ message UserDataResponse{
 message ReportRequest {
 	int32 examId = 1;
 }
+
+message ReportResponse {
+	bool exists = 1;
+}
+
 message IsExistExamRequest{
 	string userId = 1;
 	int32 examId = 2;
 }
 
-message ReportResponse {
-	bool exists = 1;
-}
+
 message IsExistExamResponse{
 	bool success = 1;
 	string error = 2;

@@ -73,22 +73,5 @@ namespace Applicant.API.Controllers
             
             return BadRequest(new { Error = "Invalid payload" });
         }
-
-
-        //[HttpPost]
-        //[Route("SendMessage")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //public async Task<IActionResult> SendMessage([FromBody] AuthRegisterDto emailRequest)
-        //{
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        await _serviceManager.AccessCodeService.AccessCodeAsync(emailRequest);
-        //        return NoContent();
-        //    }
-
-        //    return BadRequest(new { Error = "Invalid data" });
-
-        //}
     }
 }

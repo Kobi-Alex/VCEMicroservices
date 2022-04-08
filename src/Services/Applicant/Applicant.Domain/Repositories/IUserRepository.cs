@@ -20,15 +20,5 @@ namespace Applicant.Domain.Repositories
         void Insert(User user);
         //void Update(User user);
         void Delete(User user);
-
-
-        //void AddRole(User user, Role role);
-        //void DeleteRole(User user, Role role);
-        //void ChangeEmail(User user, string email);
-        //Task<IEnumerable<User>> GetAdmins();
-        //bool CheckPassword(User user, string password);
-        //void ChangePassword(User user, string newPassword);
-
     }
-
 }

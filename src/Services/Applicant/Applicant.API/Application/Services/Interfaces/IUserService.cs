@@ -14,7 +14,7 @@ namespace Applicant.API.Application.Services.Interfaces
         Task<UserReadDto> CreateAsync(UserCreateDto userCreateDto, CancellationToken cancellationToken = default);
         Task UpdateAsync(string id, UserUpdateDto userUpdateDto, CancellationToken cancellationToken = default);
         Task UpdateEmailAsync(UserChangeEmailDto userChangeEmailDto, CancellationToken cancellationToken = default);
-        Task<bool> SendMessageAsync(UserEmailDto userEmailDto, CancellationToken cancellationToken = default);
+        Task<bool> AccessCodeAsync(UserEmailDto userEmailDto, CancellationToken cancellationToken = default);
         Task ChangePassword(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default);
         Task DeleteAsync(string id, CancellationToken cancellationToken = default);
         Task AddRoleAsync(UserRoleDto userRoleDto, CancellationToken cancellationToken = default);

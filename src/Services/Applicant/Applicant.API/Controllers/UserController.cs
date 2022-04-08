@@ -116,32 +116,6 @@ namespace Applicant.API.Controllers
             return Ok();
         }
 
-
-        //[HttpPost]
-        //[Route("SendMessage")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //public async Task<IActionResult> SendMessage([FromBody] UserEmailDto userChangeEmail)
-        //{
-        //    //Send message on the email
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        var existingUser = await _serviceManager.UserService.SendMessageAsync(userChangeEmail);
-
-        //        if (!existingUser)
-        //        {
-        //            return NoContent();
-        //        }
-        //        else
-        //        {
-        //            return Ok();
-        //        }
-        //    }
-
-        //    return BadRequest(new { Error = "Invalid data" });
-        //}
-
-
         [HttpPost]
         [Route("ChangePassword")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

@@ -21,6 +21,7 @@ namespace Applicant.API.Application.Contracts.Profiles
             CreateMap<UserExamDto, RemoveExamRequest>();
             CreateMap<UserUpdateDto, User>();
             CreateMap<UserExams, UserExamDto>();
+            CreateMap<UserReadDto, GetUserDataResponse>();
         }
 
     }

@@ -158,11 +158,8 @@ namespace Applicant.API.Application.Services
                 mail.From = new MailAddress(_emailConfig.From, "It step Administration"); ;
                 mail.To.Add(authRegisterDto.Email);
                 mail.Subject = "Access code";
+                mail.Body = $"<h1>Your access code: {accessCode}</h1>";
                 mail.IsBodyHtml = true;
-                mail.Body = $"</h1>Your access code: {accessCode}</h1>";
-                //mail.Attachments.Add(new Attachment("D:\\Aloha.7z"));//--Uncomment this to send any attachment  
-
-                // SmtpClient клас з за до якого можна відправити лист
 
                 using (SmtpClient smtp = new SmtpClient(_emailConfig.SmtpServer, _emailConfig.Port))
                 {

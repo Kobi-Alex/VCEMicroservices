@@ -47,5 +47,21 @@ namespace Applicant.API.Grpc
             }
 
         }
+
+        public override async Task<GetUserDataResponse> GetUseData(GetUserDataRequest request, ServerCallContext context)
+        {
+            GetUserDataResponse response = null;
+
+            var user = await _serviceManager.UserService.GetByIdAsync(request.UserId);
+
+            if(user!=null)
+            {
+                response =  _mapper.Map(user,response );
+
+                return response;
+            }
+
+            return response;
+        }
     }
 }
