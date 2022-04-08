@@ -19,18 +19,7 @@ namespace Report.API.Grpc
 
         public async Task<QuestionUnitModel> GetQuestionUnitFromQuestionData(int questionId)
         {
-            //var questionUnitRequest = new GetQuestionUnit { QuestionId = questionId };
-            //return await _questionProtoService.GetQuestionUnitFromQuestionDataAsync(questionUnitRequest);
-
-            //Console.WriteLine($"--> Calling GRPC Service {_configuration["GrpcSettings:QuestionUrl"]}");
-            //var channel = GrpcChannel.ForAddress("https://localhost:5001");
-
-            //var client = new QuestionGrpc.QuestionGrpcClient(channel);
-
-            //return await client.GetQuestionUnitFromQuestionDataAsync(request);
-
-
-           var request = new GetQuestionUnit { QuestionId = questionId };
+            var request = new GetQuestionUnit { QuestionId = questionId };
 
             return await _questionGrpcService.GetQuestionUnitFromQuestionDataAsync(request);
 

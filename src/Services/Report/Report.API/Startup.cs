@@ -4,6 +4,7 @@ using System.Reflection;
 using MediatR;
 using GrpcExam;
 using GrpcQuestion;
+using GrpcApplicant;
 using FluentValidation;
 
 using Microsoft.OpenApi.Models;
@@ -141,6 +142,10 @@ namespace Report.API
             services.AddScoped<ExamGrpcService>();
 
 
+            // gRPC configuration (Applaicant Service)
+            services.AddGrpcClient<ApplicantGrpc.ApplicantGrpcClient>
+                        (o => o.Address = new Uri(Configuration["GrpcApplicantSettings:ApplicantUrl"]));
+            services.AddScoped<ApplicantGrpcService>();
 
 
             // CQRS configuration
