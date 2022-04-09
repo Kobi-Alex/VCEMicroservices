@@ -23,6 +23,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using GrpcReport;
+using GrpcApplicant;
 
 namespace Exam.API
 {
@@ -116,6 +117,12 @@ namespace Exam.API
             services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
                         (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
             services.AddScoped<ReportGrpcService>();
+
+            // gRPC configuration (Applicant Service)
+            services.AddGrpcClient<ApplicantGrpc.ApplicantGrpcClient>
+                        (o => o.Address = new Uri(Configuration["GrpcApplicantSettings:ApplicantUrl"]));
+            services.AddScoped<ApplicantGprcService>();
+
 
             // MassTransit-RabbitMQ Configuration
             //services.AddMassTransit(config =>

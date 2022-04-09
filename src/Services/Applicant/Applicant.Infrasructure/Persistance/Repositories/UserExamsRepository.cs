@@ -26,6 +26,11 @@ namespace Applicant.Infrasructure.Persistance.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<UserExams>> GetAllUsersByExamId(int examId)
+        {
+            return await _dbContext.UserExams.Include(u=>u.User).Where(x => x.ExamId == examId).ToListAsync();
+        }
+
         public async Task<UserExams> GetByUserIdAndExamId(string userId, int examId)
         {
             return await _dbContext.UserExams

@@ -8,7 +8,7 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Applicant.API.Application.Services.Interfaces;
 using Applicant.API.Application.Contracts.Dtos.UserDtos;
-
+using System.Linq;
 
 namespace Applicant.API.Grpc
 {
@@ -58,6 +58,21 @@ namespace Applicant.API.Grpc
             {
                 response =  _mapper.Map(user,response );
 
+                return response;
+            }
+
+            return response;
+        }
+
+        public override async Task<UserExamResponse> CheckIfExamExistsInUsers(UserExamRequest request, ServerCallContext context)
+        {
+            var userExams = await _serviceManager.UserService.GetExamUsersAsync(request.ExamId);
+
+            UserExamResponse response = new UserExamResponse() { Exists = false };
+
+            if(userExams != null && userExams.Count()>0)
+            {
+                response.Exists = true;
                 return response;
             }
 

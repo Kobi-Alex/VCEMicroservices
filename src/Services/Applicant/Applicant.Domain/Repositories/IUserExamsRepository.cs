@@ -12,6 +12,9 @@ namespace Applicant.Domain.Repositories
     {
         Task<IEnumerable<UserExams>> GetAllAsync(string id);
         Task<UserExams> GetByUserIdAndExamId(string userId, int examId);
+
+        Task<IEnumerable<UserExams>> GetAllUsersByExamId(int examId);
+
         void Insert(UserExams userExam);
         void Remove(UserExams userExam);
     }

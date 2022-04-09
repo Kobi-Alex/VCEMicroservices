@@ -212,7 +212,20 @@ namespace Applicant.API.Controllers
             return BadRequest(GetModelStateErrors(ModelState.Values));
         }
 
+        [HttpGet]
+        [Route("e/{idExam}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Manager")]
 
+        public async Task<IActionResult> GetExamUsers(int idExam, int page,  int middleVal = 10,
+            int cntBetween = 5, int limit = 15, CancellationToken cancellationToken = default)
+        {
+            var users = await _serviceManager.UserService.GetExamUsersAsync(idExam, cancellationToken);
+
+
+            return Ok(Paggination<UserExamReadDto>.GetData(currentPage: page, limit: limit, itemsData: users,
+                middleVal: middleVal, cntBetween: cntBetween));
+            //return Ok(users);
+        }
 
         /// <summary>
         /// Gets all modelstate errors
@@ -230,7 +243,5 @@ namespace Applicant.API.Controllers
 
             return modelErrors;
         }
-
     }
-
 }

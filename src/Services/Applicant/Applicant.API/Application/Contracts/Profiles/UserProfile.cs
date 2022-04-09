@@ -20,6 +20,7 @@ namespace Applicant.API.Application.Contracts.Profiles
             CreateMap<RemoveExamRequest, UserExamDto>();
             CreateMap<UserExamDto, RemoveExamRequest>();
             CreateMap<UserUpdateDto, User>();
+            CreateMap<UserExams, UserReadDto>();
             CreateMap<UserExams, UserExamDto>();
             CreateMap<UserReadDto, GetUserDataResponse>();
         }

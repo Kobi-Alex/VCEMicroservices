@@ -470,5 +470,27 @@ namespace Applicant.API.Application.Services
 
             return new string(Enumerable.Repeat(chars, length).Select(x => x[randomPassword.Next(x.Length)]).ToArray());
         }
+
+        public async Task<IEnumerable<UserExamReadDto>> GetExamUsersAsync(int examId, CancellationToken cancellationToken = default)
+        {
+            var examUsers = await _repositoryManager.UserExamsRepository.GetAllUsersByExamId(examId);
+
+            var list = new List<UserExamReadDto>();
+
+            foreach (var item in examUsers)
+            {
+                UserExamReadDto ue = new UserExamReadDto();
+                
+                ue.ExamId = examId;
+                ue.User = _mapper.Map<UserReadDto>(item.User);
+                ue.User.Roles = "";
+
+
+                list.Add(ue);
+            }
+
+
+            return list;
+        }
     }
 }

@@ -20,12 +20,14 @@ namespace Exam.API.Application.Services
         private readonly IMapper _mapper;
         private readonly IRepositoryManager _repositoryManager;
         private readonly ReportGrpcService _reportGrpcService;
+        private readonly ApplicantGprcService _applicantGprcService;
 
-        public ExamItemService(IRepositoryManager repositoryManager, IMapper mapper, ReportGrpcService reportGrpcService)
+        public ExamItemService(IRepositoryManager repositoryManager, IMapper mapper, ReportGrpcService reportGrpcService, ApplicantGprcService applicantGprcService)
         {
             _mapper = mapper;
             _repositoryManager = repositoryManager;
             _reportGrpcService = reportGrpcService;
+            _applicantGprcService = applicantGprcService;
         }
 
 
@@ -134,11 +136,19 @@ namespace Exam.API.Application.Services
                 throw new ExamNotFoundException(examId);
             }
 
-
             if (await CheckExam(examId))
             {
                 throw new BadRequestMessage($"Could not delete exam! This exam with id: {examId} already used in Report!");
             }
+
+            var existsExamInUsers = await _applicantGprcService.CheckIfExamExistsInUsers(examId);
+
+            if(existsExamInUsers.Exists)
+            {
+                throw new BadRequestMessage($"Could not delete exam! This exam with id: {examId} already used in Users");
+            }
+
+
             _repositoryManager.ExamItemRepository.Remove(exam);
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);

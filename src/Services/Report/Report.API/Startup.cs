@@ -110,10 +110,6 @@ namespace Report.API
                    opt.UseInMemoryDatabase("InMem"));
             }
 
-
-
-            
-
             services.AddScoped<IServiceManager, ServiceManager>();
 
             // Review queries configuration
@@ -206,9 +202,6 @@ namespace Report.API
 
             //Create Db if not exist
             app.ApplicationServices.CreateScope().ServiceProvider.GetService<ReportDbContext>();
-
-            // ReportDbContextSeed.PrepPopulation(app);
         }
-
     }
 }

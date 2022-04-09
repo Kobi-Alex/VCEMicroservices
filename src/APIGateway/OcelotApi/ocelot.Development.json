@@ -146,6 +146,18 @@
       "UpstreamPathTemplate": "/api/users/removeExam",
       "UpstreamHttpMethod": [ "POST" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/Users/e/:idExam",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/e/:idExam",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
     //Categories
     {
       "DownstreamPathTemplate": "/api/Categories",
