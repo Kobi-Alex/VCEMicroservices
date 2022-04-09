@@ -33,7 +33,7 @@ namespace Applicant.API.Application.Services
         private readonly IRepositoryManager _repositoryManager;
 
         private PasswordHasher<User> _hasher;
-        private Random randomNumbers = new Random();
+        private Random _randomNumbers = new Random();
 
         public AccessCodeService(IRepositoryManager repositoryManager, IMapper mapper, IOptionsMonitor<JwtConfig> optionsMonitor, EmailConfiguration emailConfig)
         {
@@ -151,7 +151,7 @@ namespace Applicant.API.Application.Services
 
             Console.WriteLine("\n---> Send Access code"); ;
 
-            var accessCode = randomNumbers.Next(100000, 999999);
+            var accessCode = _randomNumbers.Next(100000, 999999);
 
             using (MailMessage mail = new MailMessage())
             {
@@ -182,7 +182,6 @@ namespace Applicant.API.Application.Services
             //_context.AccessCodes.Add(new AccessCode() { Code = accessCode, Email = emailRequest.Email, ExpiryDate = new DateTimeOffset(DateTime.Now).AddMinutes(30) });
             //_context.SaveChanges();
         }
-
 
         private bool CheckPassword(User user, string password)
         {

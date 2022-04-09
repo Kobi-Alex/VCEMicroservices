@@ -23,8 +23,8 @@ namespace Applicant.API.Application.Services
 {
     internal sealed class UserService : IUserService
     {
-        private Random randomPassword = new Random();
-        private Random randomNumbers = new Random(); // for secret code 
+        private Random _randomPassword = new Random();
+        private Random _randomNumbers = new Random(); // for secret code 
 
         private readonly IMapper _mapper;
         private PasswordHasher<User> _hasher;
@@ -59,7 +59,6 @@ namespace Applicant.API.Application.Services
 
             return usersDto;
         }
-
 
         public async Task<UserReadDto> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
@@ -214,7 +213,7 @@ namespace Applicant.API.Application.Services
 
             Console.WriteLine("\n---> Send Access code"); ;
 
-            var accessCode = randomNumbers.Next(100000, 999999);
+            var accessCode = _randomNumbers.Next(100000, 999999);
 
             using (MailMessage mail = new MailMessage())
             {
@@ -245,12 +244,9 @@ namespace Applicant.API.Application.Services
                 });
 
              await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
-            //_context.AccessCodes.Add(new AccessCode() { Code = accessCode, Email = emailRequest.Email, ExpiryDate = new DateTimeOffset(DateTime.Now).AddMinutes(30) });
-            //_context.SaveChanges();
 
             return true;
         }
-
 
         public async Task ChangePassword(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default)
         {
@@ -468,7 +464,7 @@ namespace Applicant.API.Application.Services
         {
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnpqrstuvwxy#$^+=!*()@%&0123456789";
 
-            return new string(Enumerable.Repeat(chars, length).Select(x => x[randomPassword.Next(x.Length)]).ToArray());
+            return new string(Enumerable.Repeat(chars, length).Select(x => x[_randomPassword.Next(x.Length)]).ToArray());
         }
 
         public async Task<IEnumerable<UserExamReadDto>> GetExamUsersAsync(int examId, CancellationToken cancellationToken = default)
