@@ -18,7 +18,7 @@ using Question.Infrastructure.Persistance.Repositories;
 using MassTransit;
 using RabbitMQ.Client;
 using Question.API.Grpc;
-
+using GrpcReport;
 
 namespace Question.API
 {
@@ -61,7 +61,13 @@ namespace Question.API
 
             // RepositoryManager configuration
             services.AddScoped<IRepositoryManager, RepositoryManager>();
-            
+
+            // gRPC configuration (ReportGrpcService)
+            services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
+                        (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
+            services.AddScoped<ReportGrpcService>();
+
+
             // gRPC configuration
             services.AddGrpc();
 

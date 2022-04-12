@@ -6,6 +6,7 @@ service ReportGrpc{
 
 	rpc RemoveUserDataFromReport(RemoveUserData) returns (UserDataResponse);
 	rpc IsExistExamFromReport(IsExistExamRequest) returns (IsExistExamResponse);
+	rpc GetPermissionToDeleteQuestion(PermissionRequest) returns (PermissionResponse);
 }
 
 message RemoveUserData{
@@ -23,6 +24,15 @@ message IsExistExamRequest{
 }
 
 message IsExistExamResponse{
+	bool success = 1;
+	string error = 2;
+}
+
+message PermissionRequest{
+
+}
+
+message PermissionResponse{
 	bool success = 1;
 	string error = 2;
 }

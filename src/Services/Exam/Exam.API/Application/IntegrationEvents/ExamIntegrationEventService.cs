@@ -2,10 +2,10 @@ using System;
 using AutoMapper;
 using MassTransit;
 using System.Linq;
-using Exam.Domain.Entities;
 using System.Threading.Tasks;
 using Exam.Domain.Repositories;
 using Exam.API.Application.IntegrationEvents.Events;
+
 
 namespace Exam.API.Application.IntegrationEvents
 {
@@ -31,8 +31,12 @@ namespace Exam.API.Application.IntegrationEvents
 
             var exams = await _repositoryManager.ExamItemRepository.GetAllAsync();
 
+            //var questions = exams.SelectMany(ex => ex.ExamQuestions, (ex, qu) => new { exam = ex, question = qu })
+            //    .Where(ex => ex.exam.Status == ExamStatus.NotAvailable && ex.question.QuestionItemId == context.Message.Id)
+            //    .Select(ex => ex.question);
+
             var questions = exams.SelectMany(ex => ex.ExamQuestions, (ex, qu) => new { exam = ex, question = qu })
-                .Where(ex => ex.exam.Status == ExamStatus.NotAvailable && ex.question.QuestionItemId == context.Message.Id)
+                .Where(ex => ex.question.QuestionItemId == context.Message.Id)
                 .Select(ex => ex.question);
 
 

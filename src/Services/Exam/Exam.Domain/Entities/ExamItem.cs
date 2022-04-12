@@ -11,7 +11,6 @@ namespace Exam.Domain.Entities
         public string Description { get; set; }
         public int DurationTime { get; set; }       //Exam time in seconds
         public decimal PassingScore { get; set; }   //Exam passing score in (%)
-        public ExamStatus Status { get; set; } 
 
         public virtual ICollection<ExamQuestion> ExamQuestions { get; set; }
 

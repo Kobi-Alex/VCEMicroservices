@@ -12,6 +12,7 @@ using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
 using AutoMapper;
 using MassTransit;
 
+using Question.API.Grpc;
 using Exam.API.Application.IntegrationEvents.Events;
 
 
@@ -24,12 +25,15 @@ namespace Question.API.Application.Services
         private readonly IMapper _mapper;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IRepositoryManager _repositoryManager;
+        private readonly ReportGrpcService _reportGrpcService;
 
-        public QuestionItemService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint)
+        public QuestionItemService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint,
+            ReportGrpcService reportGrpcService)
         {
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
             _repositoryManager = repositoryManager;
+            _reportGrpcService = reportGrpcService;
         }
 
 
@@ -152,6 +156,14 @@ namespace Question.API.Application.Services
             if (question is null)
             {
                 throw new QuestionItemNotFoundException(questionId);
+            }
+
+            // gRPC Service. Check question;
+            var permissionResult = await _reportGrpcService.GetPermissionToDeleteQuestion();
+
+            if(!permissionResult.Success)
+            {
+                throw new QuestionItemDeleteException(permissionResult.Error);
             }
 
             // Event (send messaga to RubbitMQ server)

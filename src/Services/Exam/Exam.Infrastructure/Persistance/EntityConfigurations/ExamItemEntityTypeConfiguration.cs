@@ -31,9 +31,6 @@ namespace Exam.Infrastructure.Persistance.EntityConfigurations
                 .IsRequired(true)
                 .HasPrecision(5, 2);
 
-            builder.Property(exam => exam.Status)
-                .IsRequired(true);
-
 
             // --> We can use this property instead code in ExamQuestionEntityTypeConfiguration
 

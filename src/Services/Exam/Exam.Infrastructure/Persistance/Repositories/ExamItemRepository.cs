@@ -40,13 +40,6 @@ namespace Exam.Infrastructure.Persistance.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
-        public async Task<IEnumerable<ExamItem>> GetAllByStatusAsync(ExamStatus status, CancellationToken cancellationToken = default)
-        {
-            return await _dbContext.Exams
-                .Where(ei => ei.Status == status)
-                .ToListAsync(cancellationToken);
-        }
-
         public void Insert(ExamItem item)
         {
             _dbContext.Exams.Add(item);

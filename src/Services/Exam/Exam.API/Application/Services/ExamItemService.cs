@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -26,7 +25,6 @@ namespace Exam.API.Application.Services
             _repositoryManager = repositoryManager;
         }
 
-
         public async Task<IEnumerable<ExamItemReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var exams = await _repositoryManager.ExamItemRepository.GetAllAsync(cancellationToken);
@@ -35,24 +33,25 @@ namespace Exam.API.Application.Services
             return examsDto;
         }
 
-        public async Task<IEnumerable<ExamItemReadDto>> GetAllByStatusAsync(ExamStatus status, CancellationToken cancellationToken = default)
-        {
-            if (!Enum.IsDefined(typeof(ExamStatus), status))
-            {
-                throw new ArgumentNullException(nameof(status));
-            }
 
-            var exams = await _repositoryManager.ExamItemRepository.GetAllByStatusAsync(status, cancellationToken);
+        //public async Task<IEnumerable<ExamItemReadDto>> GetAllByStatusAsync(ExamStatus status, CancellationToken cancellationToken = default)
+        //{
+        //    if (!Enum.IsDefined(typeof(ExamStatus), status))
+        //    {
+        //        throw new ArgumentNullException(nameof(status));
+        //    }
 
-            if (!exams.Any())
-            {
-                throw new ExamNotFoundException(status.ToString());
-            }
+        //    var exams = await _repositoryManager.ExamItemRepository.GetAllByStatusAsync(status, cancellationToken);
 
-            var examsDto = _mapper.Map<IEnumerable<ExamItemReadDto>>(exams);
+        //    if (!exams.Any())
+        //    {
+        //        throw new ExamNotFoundException(status.ToString());
+        //    }
 
-            return examsDto;
-        }
+        //    var examsDto = _mapper.Map<IEnumerable<ExamItemReadDto>>(exams);
+
+        //    return examsDto;
+        //}
 
         public async Task<ExamItemReadDto> GetByIdAsync(int examId, CancellationToken cancellationToken = default)
         {
@@ -88,7 +87,7 @@ namespace Exam.API.Application.Services
             var exam = _mapper.Map<ExamItem>(examCreateDto);
 
             // When creating exam, exam status equal not available
-            exam.Status = ExamStatus.NotAvailable;
+            //exam.Status = ExamStatus.NotAvailable;
 
             _repositoryManager.ExamItemRepository.Insert(exam);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -126,5 +125,6 @@ namespace Exam.API.Application.Services
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
+
     }
 }

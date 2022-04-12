@@ -7,6 +7,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Report.API.Application.Exceptions;
 
+
 namespace Report.API.Application.Features.Queries
 {
 
@@ -45,6 +46,24 @@ namespace Report.API.Application.Features.Queries
                 var reviews = await connection.QueryAsync<Review>(query);
 
                 return reviews.ToList();
+            }
+        }
+
+        // Dapper comment
+        // Get a count for unclosed reviews
+        public async Task<int> GetCountForUnclosedReviews()
+        {
+            var query = "SELECT " +
+                        "(SELECT COUNT(rv.Id) FROM report.reviews rv) - " +
+                        "(SELECT COUNT(rq.Id) FROM report.requests rq) AS Difference";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var review = await connection.QueryFirstAsync<int>(query);
+
+                return review;
             }
         }
 
