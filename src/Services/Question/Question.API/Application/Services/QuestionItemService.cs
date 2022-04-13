@@ -23,17 +23,14 @@ namespace Question.API.Application.Services
     internal sealed class QuestionItemService : IQuestionItemService
     {
         private readonly IMapper _mapper;
-        private readonly IPublishEndpoint _publishEndpoint;
         private readonly IRepositoryManager _repositoryManager;
-        private readonly ReportGrpcService _reportGrpcService;
+        //private readonly IPublishEndpoint _publishEndpoint;
+        //private readonly ReportGrpcService _reportGrpcService;
 
-        public QuestionItemService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint,
-            ReportGrpcService reportGrpcService)
+        public QuestionItemService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _mapper = mapper;
-            _publishEndpoint = publishEndpoint;
             _repositoryManager = repositoryManager;
-            _reportGrpcService = reportGrpcService;
         }
 
 
@@ -159,16 +156,16 @@ namespace Question.API.Application.Services
             }
 
             // gRPC Service. Check question;
-            var permissionResult = await _reportGrpcService.GetPermissionToDeleteQuestion();
+            //var permissionResult = await _reportGrpcService.GetPermissionToDeleteQuestion();
 
-            if(!permissionResult.Success)
-            {
-                throw new QuestionItemDeleteException(permissionResult.Error);
-            }
+            //if(!permissionResult.Success)
+            //{
+            //    throw new QuestionItemDeleteException(permissionResult.Error);
+            //}
 
             // Event (send messaga to RubbitMQ server)
-            var eventMessage = _mapper.Map<QuestionItemDeleteEvent>(question);
-            await _publishEndpoint.Publish(eventMessage);
+            //var eventMessage = _mapper.Map<QuestionItemDeleteEvent>(question);
+            //await _publishEndpoint.Publish(eventMessage);
 
             _repositoryManager.QuestionItemRepository.Remove(question);
 

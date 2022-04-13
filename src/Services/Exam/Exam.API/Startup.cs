@@ -64,20 +64,20 @@ namespace Exam.API
             // gRPC configuration
             services.AddGrpc();
 
-            // MassTransit-RabbitMQ Configuration
-            services.AddMassTransit(config => {
+            //// MassTransit-RabbitMQ Configuration
+            //services.AddMassTransit(config => {
 
-                config.AddConsumer<ExamIntegrationEventService>();
+            //    config.AddConsumer<ExamIntegrationEventService>();
 
-                config.UsingRabbitMq((ctx, cfg) => {
-                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
-                    cfg.ReceiveEndpoint(EventBusConstants.QuestionItemDeleteQueue, c =>
-                    {
-                        c.ConfigureConsumer<ExamIntegrationEventService>(ctx);
-                    });
-                });
-            });
-            services.AddMassTransitHostedService();
+            //    config.UsingRabbitMq((ctx, cfg) => {
+            //        cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+            //        cfg.ReceiveEndpoint(EventBusConstants.QuestionItemDeleteQueue, c =>
+            //        {
+            //            c.ConfigureConsumer<ExamIntegrationEventService>(ctx);
+            //        });
+            //    });
+            //});
+            //services.AddMassTransitHostedService();
 
 
             services.AddControllers();

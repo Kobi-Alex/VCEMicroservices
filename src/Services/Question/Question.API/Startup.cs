@@ -71,13 +71,15 @@ namespace Question.API
             // gRPC configuration
             services.AddGrpc();
 
-            // MassTransit-RabbitMQ ñonfiguration
-            services.AddMassTransit(config => {
-                config.UsingRabbitMq((ctx, cfg) => {
-                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
-                });
-            });
-            services.AddMassTransitHostedService();
+            //// MassTransit-RabbitMQ ñonfiguration
+            //services.AddMassTransit(config =>
+            //{
+            //    config.UsingRabbitMq((ctx, cfg) =>
+            //    {
+            //        cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+            //    });
+            //});
+            //services.AddMassTransitHostedService();
 
 
             services.AddControllers();
