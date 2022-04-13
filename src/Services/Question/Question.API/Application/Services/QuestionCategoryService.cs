@@ -133,8 +133,6 @@ namespace Question.API.Application.Services
             {
                 var exams = new List<int>();
 
-
-
                 foreach (var item in questions)
                 {
                     var res = await _examGrpcService.CheckIfQuestionExistsInExam(item.Id);

@@ -2,11 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+	<UserSecretsId>S03E05-e7e667b0-3f37-4891-807a-d62b5b2fffb9</UserSecretsId>
     <NoWin32Manifest>true</NoWin32Manifest>
-    <UserSecretsId>64e5dd74-a4d0-4bff-aa19-03bb14386123</UserSecretsId>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Proto\exam.proto" />
+  </ItemGroup>
 
   <ItemGroup>
 	  <PackageReference Include="Grpc.AspNetCore" Version="2.38.0" />
@@ -36,6 +40,7 @@
   </ItemGroup>
 
 	<ItemGroup>
+		<Protobuf Include="Proto\exam.proto" GrpcServices="Client" />
 		<Protobuf Include="Proto\report.proto" GrpcServices="Client" />
 		<Protobuf Include="Proto\applicant.proto" GrpcServices="Server" />
 	</ItemGroup>

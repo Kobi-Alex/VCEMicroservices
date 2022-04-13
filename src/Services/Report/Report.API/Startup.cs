@@ -90,6 +90,9 @@ namespace Report.API
 
             if (_env.IsDevelopment())
             {
+                //Console.WriteLine("\n---> Using InMem Db Development\n");
+                //services.AddDbContext<ReportDbContext>(opt =>
+                //  opt.UseInMemoryDatabase("InMem"));
                 Console.WriteLine("\n---> Using SqlServer Db Development\n");
                 services.AddDbContext<ReportDbContext>(opt =>
                     opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
@@ -100,6 +103,10 @@ namespace Report.API
                 Console.WriteLine("\n---> Using SqlServer Db Staging\n");
                 services.AddDbContext<ReportDbContext>(opt =>
                     opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
+
+                //Console.WriteLine("\n---> Using InMem Db Staging\n");
+                //services.AddDbContext<ReportDbContext>(opt =>
+                //  opt.UseInMemoryDatabase("InMem"));
             }
 
             if (_env.IsProduction())
@@ -125,6 +132,10 @@ namespace Report.API
             services.AddScoped<IRequestManager, RequestManager>();
 
             services.AddGrpc();
+
+            Console.WriteLine($"---> GRPCQuestions: {Configuration["GrpcQuestionSettings:QuestionUrl"]}");
+            Console.WriteLine($"---> GRPCExam: {Configuration["GrpcExamSettings:ExamUrl"]}");
+            Console.WriteLine($"---> GRPCApplicant: {Configuration["GrpcApplicantSettings:ApplicantUrl"]}");
 
             // gRPC configuration (Question Service)
             services.AddGrpcClient<QuestionGrpc.QuestionGrpcClient>
@@ -185,10 +196,14 @@ namespace Report.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Report.API v1"));
             }
 
+
+
             //add ExceptionHandlingMiddleware
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-            app.UseRouting();
+            //webBuilder.ConfigureKestrel(options =>
+
+                app.UseRouting();
             app.UseCors("AllowOrigin");
             app.UseAuthorization();
 
@@ -202,6 +217,8 @@ namespace Report.API
 
             //Create Db if not exist
             app.ApplicationServices.CreateScope().ServiceProvider.GetService<ReportDbContext>();
+
+            ReportDbContextSeed.PrepPopulation(app);
         }
     }
 }

@@ -89,13 +89,21 @@ namespace Exam.API
             }
             if (_env.IsDevelopment())
             {
+                //Console.WriteLine("\n---> Using InMem Db Development\n");
+                //services.AddDbContext<ExamDbContext>(opt =>
+                //    opt.UseInMemoryDatabase("InMem"));
+
                 Console.WriteLine("\n---> Using SqlServer Db Development\n");
                 services.AddDbContext<ExamDbContext>(opt =>
                    opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
             }
 
-            if(_env.IsStaging())
+            if (_env.IsStaging())
             {
+                //Console.WriteLine("\n---> Using InMem Db Staging\n");
+                //services.AddDbContext<ExamDbContext>(opt =>
+                //    opt.UseInMemoryDatabase("InMem"));
+
                 Console.WriteLine("\n---> Using SQL Server Db Staging\n");
 
                 services.AddDbContext<ExamDbContext>(opt =>
@@ -112,6 +120,10 @@ namespace Exam.API
 
             // gRPC configuration
             services.AddGrpc();
+
+
+            Console.WriteLine($"---> GRPCReport: {Configuration["GrpcReportSettings:ReportUrl"]}");
+            Console.WriteLine($"---> GRPCApplicant: {Configuration["GrpcApplicantSettings:ApplicantUrl"]}");
 
             // gRPC configuration (Report Service)
             services.AddGrpcClient<ReportGrpc.ReportGrpcClient>

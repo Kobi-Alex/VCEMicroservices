@@ -45,9 +45,6 @@ namespace Question.API
             {
                 Console.WriteLine("--> Using InMem DB Production");
 
-                // SQL DB configuration
-                //services.AddDbContext<QuestionDbContext>(opt =>
-                //    opt.UseSqlServer(Configuration.GetConnectionString("QuestionsConnection")));
 
                 services.AddDbContext<QuestionDbContext>(opt =>
                    opt.UseInMemoryDatabase("InMem"));
@@ -69,6 +66,11 @@ namespace Question.API
 
             if(_env.IsStaging())
             {
+                //Console.WriteLine("--> Using InMem DB Production");
+
+                //services.AddDbContext<QuestionDbContext>(opt =>
+                //   opt.UseInMemoryDatabase("InMem"));
+
                 Console.WriteLine("\n---> Using SQL Server Db Staging\n");
 
                 services.AddDbContext<QuestionDbContext>(opt =>
@@ -129,6 +131,9 @@ namespace Question.API
                 });
             });
             services.AddMassTransitHostedService();
+
+            Console.WriteLine($"---> GRPCExam: {Configuration["GrpcExamSettings:ExamUrl"]}");
+            Console.WriteLine($"---> GRPCReport: {Configuration["GrpcReportSettings:ReportUrl"]}");
 
             services.AddGrpcClient<ExamGrpc.ExamGrpcClient>
                       (o => o.Address = new Uri(Configuration["GrpcExamSettings:ExamUrl"]));

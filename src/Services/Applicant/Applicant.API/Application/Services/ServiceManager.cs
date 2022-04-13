@@ -16,10 +16,10 @@ namespace Applicant.API.Application.Services
         private readonly Lazy<IUserService> _lazyUserService;
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, EmailConfiguration emailConfig, 
-            IOptionsMonitor<JwtConfig> optionsMonitor, ReportGrpcService reportGrpcService)
+            IOptionsMonitor<JwtConfig> optionsMonitor, ReportGrpcService reportGrpcService, ExamGrpcService examGrpcService)
         {
             _lazyAccessCodeService = new Lazy<IAccessCodeService>(() => new AccessCodeService(repositoryManager, mapper, optionsMonitor, emailConfig));
-            _lazyUserService = new Lazy<IUserService>(() => new UserService(repositoryManager, mapper, emailConfig, reportGrpcService));
+            _lazyUserService = new Lazy<IUserService>(() => new UserService(repositoryManager, mapper, emailConfig, reportGrpcService, examGrpcService));
         }
 
         public IAccessCodeService AccessCodeService => _lazyAccessCodeService.Value;

@@ -26,7 +26,7 @@ using Applicant.API.Application.Services.Interfaces;
 using Applicant.Infrasructure.Persistance.Repositories;
 
 using GrpcReport;
-
+using GrpcExam;
 
 namespace Applicant.API
 {
@@ -53,6 +53,11 @@ namespace Applicant.API
 
                 services.AddDbContext<AppDbContext>(opt =>
                      opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+
+                //Console.WriteLine("\n---> Using InMem Db Staging\n");
+
+                //services.AddDbContext<AppDbContext>(opt =>
+                //   opt.UseInMemoryDatabase("InMem"));
             }
 
             if (_env.IsProduction())
@@ -70,7 +75,7 @@ namespace Applicant.API
             if (_env.IsDevelopment())
             {
                 Console.WriteLine("\n---> Development");
-                Console.WriteLine("\n---> Using SqlServer Db Development\n");
+                Console.WriteLine("\n---> Using Sql Db Development\n");
                 Console.WriteLine();
 
                 services.AddDbContext<AppDbContext>(opt =>
@@ -97,10 +102,20 @@ namespace Applicant.API
             //add service RepositoryManager
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
+
+            Console.WriteLine($"---> GRPCReport: {Configuration["GrpcReportSettings:ReportUrl"]}");
+            Console.WriteLine($"---> GRPCExam: {Configuration["GrpcExamSettings:ExamUrl"]}");
+
             // gRPC configuration (ReportGrpcService)
             services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
                         (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
             services.AddScoped<ReportGrpcService>();
+
+            // gROC configuration (ExamGrpcService)
+            services.AddGrpcClient<ExamGrpc.ExamGrpcClient>
+                     (o => o.Address = new Uri(Configuration["GrpcExamSettings:ExamUrl"]));
+            services.AddScoped<ExamGrpcService>();
+
 
             // gRPC configuration
             services.AddGrpc();
@@ -126,6 +141,8 @@ namespace Applicant.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Applicant.API v1"));
             }
+
+           
 
             //add ExceptionHandlingMiddleware
             app.UseMiddleware<ExceptionHandlingMiddleware>();

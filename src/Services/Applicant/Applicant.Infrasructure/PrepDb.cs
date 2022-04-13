@@ -258,7 +258,12 @@ namespace Applicant.Infrasructure
                 user10.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
                 user11.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
                 
-                context.Users.Add(user1);
+               context.Users.Add(user1);
+
+
+                //Console.WriteLine($"--->> User1: {user1.Password} ") ;
+
+                //context.UserExams.Add(new UserExams() { User = user1, ExamId = 1 });
                 context.Users.Add(user2);
                 context.Users.Add(user3);
                 context.Users.Add(user4);

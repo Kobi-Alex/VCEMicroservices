@@ -18,7 +18,7 @@ namespace Report.Infrastructure
             {
                 serviceScope.ServiceProvider.GetService<ReportDbContext>();
 
-                //SeedData(serviceScope.ServiceProvider.GetService<ReportDbContext>());
+                SeedData(serviceScope.ServiceProvider.GetService<ReportDbContext>());
             }
         }
 

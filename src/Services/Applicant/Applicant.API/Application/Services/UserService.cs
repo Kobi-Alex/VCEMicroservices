@@ -31,15 +31,17 @@ namespace Applicant.API.Application.Services
         private readonly EmailConfiguration _emailConfig;
         private readonly IRepositoryManager _repositoryManager;
         private readonly ReportGrpcService _reportGrpcService;
+        private readonly ExamGrpcService _examGrpcService;
 
         public UserService(IRepositoryManager repositoryManager, IMapper mapper, EmailConfiguration emailConfig, 
-            ReportGrpcService reportGrpcService)
+            ReportGrpcService reportGrpcService, ExamGrpcService examGrpcService)
         {
             _mapper = mapper;
             _emailConfig = emailConfig;
             _hasher = new PasswordHasher<User>();
             _repositoryManager = repositoryManager;
             _reportGrpcService = reportGrpcService;
+            _examGrpcService = examGrpcService;
         }
 
         public async Task<IEnumerable<UserReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -411,14 +413,20 @@ namespace Applicant.API.Application.Services
                 throw new ExamIsAlreadyExistException(userExamDto.ExamId);
             }
 
+            var examData = await _examGrpcService.GetExamItemAsync(userExamDto.ExamId);
+
+            if (examData != null)
+            {
+                Console.WriteLine($"----> Exam: {examData.Title}");
+            }
 
             // gRPC service check exam data in the report service
-            var reportResult = await _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);
+            //var reportResult = await _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);
 
-            if (reportResult.Success)
-            {
-                throw new BadRequestMessage($"Could not add exam to user. The exam with id: {userExamDto.ExamId} already exists in Report");
-            }
+            //if (reportResult.Success)
+            //{
+            //    throw new BadRequestMessage($"Could not add exam to user. The exam with id: {userExamDto.ExamId} already exists in Report");
+            //}
 
             var newUserExam = new UserExams()
             {

@@ -9,40 +9,63 @@ services:
   user.api:
     container_name: userservice
     environment:
-      - ASPNETCORE_ENVIRONMENT=Staging
-      - ASPNETCORE_URLS=http://0.0.0.0:80
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_HTTPS_PORT: "7001"
+      ASPNETCORE_URLS: "https://+;http://+"
+    volumes:
+      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
     ports:
-      - "7010:80"
+      - "7001:443"
+      - "7000:80"
   
   question.api:
     container_name: questionservice
     environment:
-      - ASPNETCORE_ENVIRONMENT=Staging
-      - ASPNETCORE_URLS=http://0.0.0.0:80
+       ASPNETCORE_ENVIRONMENT: Development
+       ASPNETCORE_HTTPS_PORT: "6001"
+       ASPNETCORE_URLS: "https://+;http://+"
+    volumes:
+      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
     ports:
-      - "7020:80"
+      - "6001:443"
+      - "6002:80"
   exam.api:
     container_name: examservice
     environment:
-      - ASPNETCORE_ENVIRONMENT=Staging
-      - ASPNETCORE_URLS=http://0.0.0.0:80
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_HTTPS_PORT: "6012"
+      ASPNETCORE_URLS: "https://+;http://+"
+    volumes:
+      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
     ports:
-      - "7030:80"
+      - "6012:80"
+      - "6011:443"
+
   report.api:
     container_name: reportservice
     environment:
-      - ASPNETCORE_ENVIRONMENT=Staging
-      - ASPNETCORE_URLS=http://0.0.0.0:80
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_HTTPS_PORT: "6003"
+      ASPNETCORE_URLS: "https://+;http://+"
+      # - ASPNETCORE_URLS=https://+:443;http://+:80
+    volumes:
+      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
     ports:
-      - "7040:80"
+      - "6003:443"
+      - "6004:80"
 
   ocelotapigw:
     container_name: ocelotapigw
     environment:
-      - ASPNETCORE_ENVIRONMENT=Staging
+      - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
         - user.api
         - question.api
         - exam.api
+        - report.api
     ports:
     - "9000:80"

@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcExam";
+
+
+service ExamGrpc{
+
+	rpc GetExamItemFromExamData(GetExamItem) returns (ExamItemModel) {}
+	rpc CheckIfQuestionExistsInExam(ExamRequest) returns (ExamResponse) {}
+}
+
+
+message GetExamItem {
+	int32 examId = 1;
+}
+
+message ExamItemModel {
+	string title = 1;
+	string description = 2;
+	double passingScore = 3;
+	int32 countQuestions = 4;
+}
+
+message ExamRequest {
+	int32 questionId = 1;
+}
+
+message ExamResponse {
+	bool exists = 1;
+	repeated int32 exams = 2;
+}
