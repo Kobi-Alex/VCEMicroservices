@@ -25,9 +25,9 @@ namespace Exam.API
                     //webBuilder.ConfigureKestrel(options =>
                     //{
                     //    // gRPC
-                    //    options.ListenAnyIP(6011, o => o.Protocols = HttpProtocols.Http2);
+                    //    options.ListenAnyIP(443, o => o.Protocols = HttpProtocols.Http2);
                     //    // HTTP
-                    //    options.ListenAnyIP(6012, o => o.Protocols = HttpProtocols.Http1);
+                    //    options.ListenAnyIP(80, o => o.Protocols = HttpProtocols.Http1);
                     //});
                 });
     }

@@ -89,13 +89,13 @@ namespace Exam.API
             }
             if (_env.IsDevelopment())
             {
-                //Console.WriteLine("\n---> Using InMem Db Development\n");
-                //services.AddDbContext<ExamDbContext>(opt =>
-                //    opt.UseInMemoryDatabase("InMem"));
-
-                Console.WriteLine("\n---> Using SqlServer Db Development\n");
+                Console.WriteLine("\n---> Using InMem Db Development\n");
                 services.AddDbContext<ExamDbContext>(opt =>
-                   opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
+                    opt.UseInMemoryDatabase("InMem"));
+
+                //Console.WriteLine("\n---> Using SqlServer Db Development\n");
+                //services.AddDbContext<ExamDbContext>(opt =>
+                //   opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
             }
 
             if (_env.IsStaging())

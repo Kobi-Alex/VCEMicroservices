@@ -25,7 +25,7 @@ namespace Applicant.API
                     //webBuilder.ConfigureKestrel(options =>
                     //{
                     //    // gRPC
-                    //    options.ListenAnyIP(7001, o => o.Protocols = HttpProtocols.Http2);
+                    //    options.ListenAnyIP(443, o => o.Protocols = HttpProtocols.Http2);
                     //    // HTTP
                     //    options.ListenAnyIP(80, o => o.Protocols = HttpProtocols.Http1);
                     //});

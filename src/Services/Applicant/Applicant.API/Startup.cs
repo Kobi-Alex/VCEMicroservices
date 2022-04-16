@@ -75,14 +75,14 @@ namespace Applicant.API
             if (_env.IsDevelopment())
             {
                 Console.WriteLine("\n---> Development");
-                Console.WriteLine("\n---> Using Sql Db Development\n");
+                Console.WriteLine("\n---> Using SQL Db Development\n");
                 Console.WriteLine();
 
-                services.AddDbContext<AppDbContext>(opt =>
-                    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+               // services.AddDbContext<AppDbContext>(opt =>
+               //     opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
 
-                //services.AddDbContext<AppDbContext>(opt =>
-                //   opt.UseInMemoryDatabase("InMem"));
+                services.AddDbContext<AppDbContext>(opt =>
+                   opt.UseInMemoryDatabase("InMem"));
             }
 
             //add service CustomAuthentication

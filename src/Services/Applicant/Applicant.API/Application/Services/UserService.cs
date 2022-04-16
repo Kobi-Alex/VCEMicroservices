@@ -18,6 +18,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Applicant.API.Grpc;
 using System.Linq.Expressions;
+using Grpc.Net.Client;
+using GrpcExam;
 
 namespace Applicant.API.Application.Services
 {
@@ -413,6 +415,8 @@ namespace Applicant.API.Application.Services
                 throw new ExamIsAlreadyExistException(userExamDto.ExamId);
             }
 
+
+
             var examData = await _examGrpcService.GetExamItemAsync(userExamDto.ExamId);
 
             if (examData != null)
@@ -421,12 +425,12 @@ namespace Applicant.API.Application.Services
             }
 
             // gRPC service check exam data in the report service
-            //var reportResult = await _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);
+            var reportResult = await _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);
 
-            //if (reportResult.Success)
-            //{
-            //    throw new BadRequestMessage($"Could not add exam to user. The exam with id: {userExamDto.ExamId} already exists in Report");
-            //}
+            if (reportResult.Success)
+            {
+                throw new BadRequestMessage($"Could not add exam to user. The exam with id: {userExamDto.ExamId} already exists in Report");
+            }
 
             var newUserExam = new UserExams()
             {
