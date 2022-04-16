@@ -38,10 +38,6 @@
     <ProjectReference Include="..\Question.Infrastructure\Question.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Application\Models\" />
-  </ItemGroup>
-
 	<ItemGroup>
 		<Protobuf Include="Proto\exam.proto" GrpcServices="Client" />
 		<Protobuf Include="Proto\question.proto" GrpcServices="Server" />

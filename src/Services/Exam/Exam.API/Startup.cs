@@ -140,6 +140,8 @@ namespace Exam.API
             //services.AddMassTransit(config =>
             //{
             //    config.AddConsumer<ExamIntegrationEventService>();
+            //// MassTransit-RabbitMQ Configuration
+            //services.AddMassTransit(config => {
 
             //    config.UsingRabbitMq((ctx, cfg) =>
             //    {
@@ -151,7 +153,17 @@ namespace Exam.API
             //    });
             //});
             //services.AddMassTransitHostedService();
+            //    config.AddConsumer<ExamIntegrationEventService>();
 
+            //    config.UsingRabbitMq((ctx, cfg) => {
+            //        cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+            //        cfg.ReceiveEndpoint(EventBusConstants.QuestionItemDeleteQueue, c =>
+            //        {
+            //            c.ConfigureConsumer<ExamIntegrationEventService>(ctx);
+            //        });
+            //    });
+            //});
+            //services.AddMassTransitHostedService();
 
             services.AddControllers();
 

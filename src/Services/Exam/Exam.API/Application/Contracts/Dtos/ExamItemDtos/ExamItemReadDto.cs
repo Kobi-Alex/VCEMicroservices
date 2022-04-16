@@ -14,7 +14,6 @@ namespace Exam.API.Application.Contracts.ExamItemDtos
         public string Description { get; set; }
         public int DurationTime { get; set; }
         public decimal PassingScore { get; set; }
-        public ExamStatus Status { get; set; }
 
         public ICollection<ExamQuestion> ExamQuestions { get; set; }
     }

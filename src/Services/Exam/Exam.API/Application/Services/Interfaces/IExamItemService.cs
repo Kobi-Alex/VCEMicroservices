@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
-using Exam.Domain.Entities;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Exam.API.Application.Contracts.ExamItemDtos;
+
 
 namespace Exam.API.Application.Services.Interfaces
 {

@@ -118,19 +118,25 @@ namespace Question.API
 
             // RepositoryManager configuration
             services.AddScoped<IRepositoryManager, RepositoryManager>();
-            
+
+            // gRPC configuration (ReportGrpcService)
+            services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
+                        (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
+            services.AddScoped<ReportGrpcService>();
+
+
             // gRPC configuration
             services.AddGrpc();
 
-            // MassTransit-RabbitMQ ñonfiguration
-            services.AddMassTransit(config =>
-            {
-                config.UsingRabbitMq((ctx, cfg) =>
-                {
-                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
-                });
-            });
-            services.AddMassTransitHostedService();
+            //// MassTransit-RabbitMQ ñonfiguration
+            //services.AddMassTransit(config =>
+            //{
+            //    config.UsingRabbitMq((ctx, cfg) =>
+            //    {
+            //        cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+            //    });
+            //});
+            //services.AddMassTransitHostedService();
 
             Console.WriteLine($"---> GRPCExam: {Configuration["GrpcExamSettings:ExamUrl"]}");
             Console.WriteLine($"---> GRPCReport: {Configuration["GrpcReportSettings:ReportUrl"]}");

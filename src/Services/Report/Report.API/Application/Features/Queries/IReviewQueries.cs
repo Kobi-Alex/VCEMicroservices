@@ -9,6 +9,7 @@ namespace Report.API.Application.Features.Queries
     public interface IReviewQueries
     {
         Task<IEnumerable<Review>> GetAll();
+        Task<int> GetCountForUnclosedReviews();
         Task<Review> GetReportsById(int Id);
         Task<IEnumerable<Review>> GetReportsByExamIdAsync(int examId);
         Task<IEnumerable<Review>> GetReportByUserIdAsync(string userId);

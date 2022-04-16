@@ -102,5 +102,36 @@ namespace Report.API.Grpc
             }
 
         }
+
+        public override async Task<PermissionResponse> GetPermissionToDeleteQuestion(PermissionRequest reuqest, ServerCallContext context)
+        {
+            try
+            {
+                var count = await _reviewQueries.GetCountForUnclosedReviews();
+
+                if(count == 0)
+                {
+                    return new PermissionResponse
+                    {
+                        Success = true
+                    };
+                }
+                else
+                {
+                    return new PermissionResponse
+                    {
+                        Success = false
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new PermissionResponse
+                {
+                    Success = false,
+                    Error = ex.Message
+                };
+            }
+        }
     }
 }

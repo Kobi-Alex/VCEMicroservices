@@ -12,6 +12,7 @@ using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
 using AutoMapper;
 using MassTransit;
 
+using Question.API.Grpc;
 using Exam.API.Application.IntegrationEvents.Events;
 using Question.API.Grpc;
 using GrpcExam;
@@ -23,14 +24,12 @@ namespace Question.API.Application.Services
     internal sealed class QuestionItemService : IQuestionItemService
     {
         private readonly IMapper _mapper;
-        private readonly IPublishEndpoint _publishEndpoint;
         private readonly IRepositoryManager _repositoryManager;
         private readonly ExamGrpcService _examGrpcService;
         private readonly ReportGrpcService _reportGrpcService;
         public QuestionItemService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint, ExamGrpcService examGrpcService, ReportGrpcService reportGrpcService)
         {
             _mapper = mapper;
-            _publishEndpoint = publishEndpoint;
             _repositoryManager = repositoryManager;
             _examGrpcService = examGrpcService;
             _reportGrpcService = reportGrpcService;
@@ -186,8 +185,8 @@ namespace Question.API.Application.Services
                 }
             }
             // Event (send messaga to RubbitMQ server)
-            var eventMessage = _mapper.Map<QuestionItemDeleteEvent>(question);
-            await _publishEndpoint.Publish(eventMessage);
+            //var eventMessage = _mapper.Map<QuestionItemDeleteEvent>(question);
+            //await _publishEndpoint.Publish(eventMessage);
 
             _repositoryManager.QuestionItemRepository.Remove(question);
 

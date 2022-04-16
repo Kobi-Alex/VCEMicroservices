@@ -45,24 +45,21 @@ namespace Exam.Infrastructure
                         Title = "Entity Framework Core",
                         Description = "Microsoft EF Core, migrations, seedings data.",
                         DurationTime = 60,
-                        PassingScore = 70,
-                        Status = ExamStatus.NotAvailable,
+                        PassingScore = 70
                     },
                     new ExamItem()
                     {
                         Title = "Begin in Docker",
                         Description = "Docker and containerization.",
                         DurationTime = 120,
-                        PassingScore = 68,
-                        Status = ExamStatus.Finished
+                        PassingScore = 68
                     },
                     new ExamItem()
                     {
                          Title = "Docker and Kibernetis",
                          Description = "Docker with kibernatis.",
                          DurationTime = 100,
-                         PassingScore = 80,
-                         Status = ExamStatus.NotAvailable,
+                         PassingScore = 80
                     }
                 );
 
