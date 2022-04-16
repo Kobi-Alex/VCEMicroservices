@@ -11,6 +11,7 @@ using Exam.API.Application.Contracts.ExamItemDtos;
 
 using AutoMapper;
 using Exam.API.Grpc;
+using System.Linq;
 
 namespace Exam.API.Application.Services
 {

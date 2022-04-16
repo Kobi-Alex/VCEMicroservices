@@ -6,9 +6,6 @@ service ReportGrpc{
 	rpc CheckIfExistsExamInReports(ReportRequest) returns (ReportResponse) {};
 }
 
-
-message PermissionRequest{
-
 message ReportRequest {
 	int32 examId = 1;
 }

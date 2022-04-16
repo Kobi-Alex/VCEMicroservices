@@ -37,11 +37,4 @@ message IsExistExamResponse{
 	string error = 2;
 }
 
-message PermissionRequest{
 
-}
-
-message PermissionResponse{
-	bool success = 1;
-	string error = 2;
-}

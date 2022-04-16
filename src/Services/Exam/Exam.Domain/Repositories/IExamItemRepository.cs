@@ -12,7 +12,7 @@ namespace Exam.Domain.Repositories
         Task<IEnumerable<ExamItem>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<ExamItem> GetByIdAsync(int id, CancellationToken cancellationToken = default);
         Task<ExamItem> GetByIdIncludeExamQustionsAsync(int id, CancellationToken cancellationToken = default);
-        Task<IEnumerable<ExamItem>> GetAllByStatusAsync(ExamStatus status, CancellationToken cancellationToken = default);
+        //Task<IEnumerable<ExamItem>> GetAllByStatusAsync(ExamStatus status, CancellationToken cancellationToken = default);
         Task<IEnumerable<ExamItem>> FindAll(Expression<Func<ExamItem, bool>> predicate, CancellationToken cancellationToken = default);
 
 

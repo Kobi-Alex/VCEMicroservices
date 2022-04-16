@@ -31,7 +31,7 @@ namespace Exam.API.Controllers
         // GET api/exam/items
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Manager, Student")]
-        public async Task<IActionResult> Exams(int page, string title, string status, int limit, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken=default)
+        public async Task<IActionResult> Exams(int page, string title, int limit, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken=default)
         {
             Console.WriteLine("--> Getting exams...");
             var exams = await _serviceManager.ExamItemService.GetAllAsync(cancellationToken);
@@ -41,10 +41,6 @@ namespace Exam.API.Controllers
                 exams = exams.Where(x => x.Title.ToLower().Contains(title.ToLower()));
             }
 
-            if(status != null)
-            {
-                exams = exams.Where(x => x.Status.ToString().ToLower() == status.ToLower());
-            }
 
             if (middleVal <= cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
             return Ok(Pagination<ExamItemReadDto>.GetData(currentPage: page,limit: limit,itemsData: exams, middleVal:middleVal, cntBetween:cntBetween));
