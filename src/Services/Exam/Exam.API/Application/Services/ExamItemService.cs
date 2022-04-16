@@ -112,17 +112,14 @@ namespace Exam.API.Application.Services
             exam.Title = examUpdateDto.Title;
             exam.Description = examUpdateDto.Description;
             exam.DurationTime = examUpdateDto.DurationTime;
+            exam.PassingScore = examUpdateDto.PassingScore;
 
-            if ( exam.PassingScore != examUpdateDto.PassingScore)
+
+            if (await CheckExam(examId))
             {
-
-                if (await CheckExam(examId))
-                {
-                    throw new BadRequestMessage($"Could not update PassingScore in exam! This exam with id: {examId} already used in Report!");
-                }
-
-                exam.PassingScore = examUpdateDto.PassingScore;
+                throw new BadRequestMessage($"Could not update exam! This exam with id: {examId} already used in Report!");
             }
+
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
@@ -143,7 +140,7 @@ namespace Exam.API.Application.Services
 
             var existsExamInUsers = await _applicantGprcService.CheckIfExamExistsInUsers(examId);
 
-            if(existsExamInUsers.Exists)
+            if (existsExamInUsers.Exists)
             {
                 throw new BadRequestMessage($"Could not delete exam! This exam with id: {examId} already used in Users");
             }
