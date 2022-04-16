@@ -18,9 +18,9 @@ namespace Question.API.Application.Services
         private readonly Lazy<IQuestionCategoryService> _lazyQuestionCategoryService;
         private readonly Lazy<IQuestionAnswerService> _lazyQuestionAnswerService;
     
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint, ExamGrpcService examGrpcService, ReportGrpcService reportGrpcService)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper,  ExamGrpcService examGrpcService, ReportGrpcService reportGrpcService)
         {
-            _lazyQuestionItemService = new Lazy<IQuestionItemService>(()          => new QuestionItemService(repositoryManager, mapper, publishEndpoint, examGrpcService, reportGrpcService));
+            _lazyQuestionItemService = new Lazy<IQuestionItemService>(()          => new QuestionItemService(repositoryManager, mapper, examGrpcService, reportGrpcService));
             _lazyQuestionCategoryService = new Lazy<IQuestionCategoryService>(()  => new QuestionCategoryService(repositoryManager, mapper, examGrpcService, reportGrpcService));
             _lazyQuestionAnswerService = new Lazy<IQuestionAnswerService>(()      => new QuestionAnswerService(repositoryManager, mapper, examGrpcService, reportGrpcService));
         }

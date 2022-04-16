@@ -6,6 +6,8 @@ service ReportGrpc{
 	rpc CheckIfExistsExamInReports(ReportRequest) returns (ReportResponse) {};
 }
 
+
+
 message ReportRequest {
 	int32 examId = 1;
 }
