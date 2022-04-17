@@ -19,23 +19,23 @@ services:
       - "7001:443"
       - "7000:80"
   
-  # question.api:
-  #   container_name: questionservice
-  #   environment:
-  #      ASPNETCORE_ENVIRONMENT: Development
-  #      ASPNETCORE_HTTPS_PORT: "6001"
-  #      ASPNETCORE_URLS: "https://+;http://+"
-  #   volumes:
-  #     - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
-  #     - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
-  #   ports:
-  #     - "6001:443"
-  #     - "6002:80"
+  question.api:
+    container_name: questionservice
+    environment:
+       ASPNETCORE_ENVIRONMENT: Development
+       ASPNETCORE_HTTPS_PORT: "6001"
+       ASPNETCORE_URLS: "https://+;http://+"
+    volumes:
+      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
+    ports:
+      - "6001:443"
+      - "6002:80"
   exam.api:
     container_name: examservice
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
-      ASPNETCORE_HTTPS_PORT: "6012"
+      ASPNETCORE_HTTPS_PORT: "6011"
       ASPNETCORE_URLS: "https://+;http://+"
     volumes:
       - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
@@ -66,7 +66,7 @@ services:
       ASPNETCORE_URLS: "https://+;http://+"
     depends_on:
         - user.api
-        # - question.api
+        - question.api
         - exam.api
         # - report.api
     volumes:

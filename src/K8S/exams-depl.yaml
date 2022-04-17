@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: exams-depl
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   app: examservice
+ template:
+  metadata:
+   labels: 
+    app: examservice
+  spec: 
+   containers:
+    - name: examservice
+      image: ghostdockerhunter/examservice:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: exams-clusterip-srv
+spec:
+ type: ClusterIP
+ selector:
+  app: examservice
+ ports:
+  - name: examservice
+    protocol: TCP
+    port: 80
+    targetPort: 80
