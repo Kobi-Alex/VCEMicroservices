@@ -227,6 +227,27 @@ namespace Applicant.API.Controllers
             //return Ok(users);
         }
 
+        [HttpPost]
+        [Route("SendMessage")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> SendMessage([FromBody] UserEmailDto userChangeEmail)
+        {
+            //Send message on the email
+
+            if (ModelState.IsValid)
+            {
+                Console.WriteLine($"\n---> Send Access code ...");
+                await _serviceManager.UserService.AccessCodeAsync(userChangeEmail);
+
+                return Ok();
+            }
+
+            return BadRequest(new
+            {
+                Error = "Invalid data"
+            });
+
+        }
         /// <summary>
         /// Gets all modelstate errors
         /// </summary>

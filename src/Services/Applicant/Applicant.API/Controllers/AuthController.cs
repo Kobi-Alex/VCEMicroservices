@@ -73,5 +73,26 @@ namespace Applicant.API.Controllers
             
             return BadRequest(new { Error = "Invalid payload" });
         }
+
+        [HttpPost]
+        [Route("SendMessage")]
+        public async Task<IActionResult> SendMessage([FromBody] AuthRegisterDto emailRequest)
+        {
+            //Send message on the email
+
+            if (ModelState.IsValid)
+            {
+                Console.WriteLine($"\n---> Send Access code ...");
+                await _serviceManager.AccessCodeService.AccessCodeAsync(emailRequest);
+
+                return Ok();
+            }
+
+            return BadRequest(new
+            {
+                Error = "Invalid data"
+            });
+
+        }
     }
 }

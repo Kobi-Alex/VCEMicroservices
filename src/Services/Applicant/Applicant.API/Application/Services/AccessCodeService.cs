@@ -59,7 +59,7 @@ namespace Applicant.API.Application.Services
 
             if (userCodes.ToList().Count == 0)
             {
-                 await AccessCodeAsync(authRegisterDto);
+                await AccessCodeAsync(authRegisterDto);
                 return null;
                 //throw new AccessCodeNotFoundException();
             }
@@ -135,7 +135,7 @@ namespace Applicant.API.Application.Services
             }
 
             return result;
-            
+
         }
 
 

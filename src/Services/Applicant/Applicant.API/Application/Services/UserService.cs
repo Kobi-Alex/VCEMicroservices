@@ -225,7 +225,7 @@ namespace Applicant.API.Application.Services
                 mail.To.Add(userEmailDto.Email);
                 mail.Subject = "Access code";
                 mail.IsBodyHtml = true;
-                mail.Body = $"</h1>Your access code: {accessCode}</h1>";
+                mail.Body = $"<h1>Your access code: {accessCode}</h1>";
                 //mail.Attachments.Add(new Attachment("D:\\Aloha.7z"));//--Uncomment this to send any attachment  
 
                 // SmtpClient клас з за до якого можна відправити лист
@@ -450,7 +450,8 @@ namespace Applicant.API.Application.Services
             {
                 throw new ExamNotFoundInUserException(userExamDto.ExamId);
             }
-                _repositoryManager.UserExamsRepository.Remove(userExam);
+
+            _repositoryManager.UserExamsRepository.Remove(userExam);
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }

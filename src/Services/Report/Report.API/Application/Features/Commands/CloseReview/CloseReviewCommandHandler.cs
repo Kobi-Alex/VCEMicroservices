@@ -59,33 +59,28 @@ namespace Report.API.Application.Features.Commands.CloseReview
             }
 
 
-            if (reviewToUpdate.QuestionUnits.Count != 0)
+            // gRPC request to Exam service
+            // Getting examItem object from exam service.
+            var examItem = await _examGrpcService.GetExamItemFromExamData(reviewToUpdate._examId);
+
+            if (examItem is null)
             {
-
-                // gRPC request to Exam service
-                // Getting examItem object from exam service.
-                var examItem = await _examGrpcService.GetExamItemFromExamData(reviewToUpdate._examId);
-
-                if (examItem is null)
-                {
-                    throw new ExamItemNotFoundException(reviewToUpdate._examId);
-                }
-
-                // Calculate review scores
-                reviewToUpdate.CalculateScores(examItem.CountQuestions);
-
-                // gRPC Service Remove exam in applicant service database
-                await _applicantGrpcService.RemoveExamFromApplicantData(reviewToUpdate._applicantId, reviewToUpdate._examId);
-
-                // TODO add E-mail content
-                // Sending exam result to applicant email..
-                await SendMail(reviewToUpdate);
-
-                // Save data
-                return await _reviewRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+                throw new ExamItemNotFoundException(reviewToUpdate._examId);
             }
 
-            return true;
+            // Calculate review scores
+            reviewToUpdate.CalculateScores(examItem.CountQuestions);
+
+            // gRPC Service Remove exam in applicant service database
+            await _applicantGrpcService.RemoveExamFromApplicantData(reviewToUpdate._applicantId, reviewToUpdate._examId);
+
+            // TODO add E-mail content
+            // Sending exam result to applicant email..
+            await SendMail(reviewToUpdate);
+
+            // Save data
+            return await _reviewRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+
 
         }
 
@@ -106,7 +101,7 @@ namespace Report.API.Application.Features.Commands.CloseReview
                 $"<h2>Your result by exam: {exam.Title} </h2>" +
                 $"<h3>Grade: {review.GetGradeByPersentScore()}</h3>" +
                 $"<h3>Date: {review.GetDateReview().ToLongDateString()}</h3>" +
-                $"<h2>Staus: {status}</h2>";
+                $"<h2>Status: {status}</h2>";
 
 
             var email = new Email()
