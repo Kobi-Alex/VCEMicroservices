@@ -41,42 +41,6 @@ namespace Question.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            if (_env.IsProduction())
-            {
-                Console.WriteLine("--> Using InMem DB Production");
-
-
-                services.AddDbContext<QuestionDbContext>(opt =>
-                   opt.UseInMemoryDatabase("InMem"));
-
-            }
-            if (_env.IsDevelopment())
-            {
-                Console.WriteLine("\n---> Using SqlServer Db Development\n");
-                services.AddDbContext<QuestionDbContext>(opt =>
-                   opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
-                //add service InMemory DB
-                //services.AddDbContext<QuestionDbContext>(opt =>
-                //    opt.UseInMemoryDatabase("InMem"));
-
-                //add service InMemory DB
-                //services.AddDbContext<QuestionDbContext>(opt =>
-                //    opt.UseInMemoryDatabase("InMem"));
-            }
-
-            if(_env.IsStaging())
-            {
-                //Console.WriteLine("--> Using InMem DB Production");
-
-                //services.AddDbContext<QuestionDbContext>(opt =>
-                //   opt.UseInMemoryDatabase("InMem"));
-
-                Console.WriteLine("\n---> Using SQL Server Db Staging\n");
-
-                services.AddDbContext<QuestionDbContext>(opt =>
-                    opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
-            }
-
             //Auth <------------------------------------------------------------------------------------------------>
 
             var key = Encoding.ASCII.GetBytes(Configuration["JwtConfig:Secret"]);
@@ -107,11 +71,68 @@ namespace Question.API
             });
 
             //Auth <------------------------------------------------------------------------------------------------>
-            
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
+
+            if (_env.IsProduction())
+            {
+                try
+                {
+                    //Console.WriteLine("--> Using InMem DB Production");
+                    //services.AddDbContext<QuestionDbContext>(opt =>
+                    //   opt.UseInMemoryDatabase("InMem"));
+
+                    Console.WriteLine("\n---> Using SqlServer Db Production\n");
+                    services.AddDbContext<QuestionDbContext>(opt =>
+                       opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
+
+            }
+            if (_env.IsDevelopment())
+            {
+                try
+                {
+                    //Console.WriteLine("--> Using InMem DB Production");
+                    //services.AddDbContext<QuestionDbContext>(opt =>
+                    //   opt.UseInMemoryDatabase("InMem"));
+
+                    Console.WriteLine("\n---> Using SqlServer Db Development\n");
+                    services.AddDbContext<QuestionDbContext>(opt =>
+                       opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
+            }
+
+            if(_env.IsStaging())
+            {
+                try
+                {
+                    Console.WriteLine("--> Using InMem DB Production");
+                    services.AddDbContext<QuestionDbContext>(opt =>
+                       opt.UseInMemoryDatabase("InMem"));
+
+                    //Console.WriteLine("\n---> Using SqlServer Db Staging\n");
+                    //services.AddDbContext<QuestionDbContext>(opt =>
+                    //   opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
+            }
+
+           
+            
+           
 
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();

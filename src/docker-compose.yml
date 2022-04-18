@@ -21,12 +21,12 @@ services:
     # depends_on:
     #  - db
   
-  question.api:
-    image: ${DOCKER_REGISTRY-}ghostdockerhunter/questionservice
-    container_name: questionservice
-    build:
-      context: .
-      dockerfile: Services/Question/Question.API/Dockerfile
+  # question.api:
+  #   image: ${DOCKER_REGISTRY-}ghostdockerhunter/questionservice
+  #   container_name: questionservice
+  #   build:
+  #     context: .
+  #     dockerfile: Services/Question/Question.API/Dockerfile
   #   depends_on:
   #    - db
   exam.api:

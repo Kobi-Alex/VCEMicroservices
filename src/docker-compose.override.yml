@@ -9,69 +9,43 @@ services:
   user.api:
     container_name: userservice
     environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
-      ASPNETCORE_HTTPS_PORT: "7001"
-      ASPNETCORE_URLS: "https://+;http://+"
-    volumes:
-      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
-      - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
+      ASPNETCORE_ENVIRONMENT: "Staging"
+      ASPNETCORE_URLS: "http://+"
     ports:
-      - "7001:443"
       - "7000:80"
   
-  question.api:
-    container_name: questionservice
-    environment:
-       ASPNETCORE_ENVIRONMENT: Development
-       ASPNETCORE_HTTPS_PORT: "6001"
-       ASPNETCORE_URLS: "https://+;http://+"
-    volumes:
-      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
-      - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
-    ports:
-      - "6001:443"
-      - "6002:80"
+  # question.api:
+  #   container_name: questionservice
+  #   environment:
+  #      ASPNETCORE_ENVIRONMENT: Staging
+  #      ASPNETCORE_URLS: "http://+"
+  #   ports:
+  #     - "6002:80"
   exam.api:
     container_name: examservice
     environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
-      ASPNETCORE_HTTPS_PORT: "6011"
-      ASPNETCORE_URLS: "https://+;http://+"
-    volumes:
-      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
-      - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
+      ASPNETCORE_ENVIRONMENT: "Staging"
+      ASPNETCORE_URLS: "http://+"
     ports:
-      - "6011:443"
       - "6012:80"
 
   # report.api:
   #   container_name: reportservice
   #   environment:
-  #     ASPNETCORE_ENVIRONMENT: "Development"
-  #     ASPNETCORE_HTTPS_PORT: "6003"
-  #     ASPNETCORE_URLS: "https://+;http://+"
-  #     # - ASPNETCORE_URLS=https://+:443;http://+:80
-  #   volumes:
-  #     - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
-  #     - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
+  #     ASPNETCORE_ENVIRONMENT: "Staging"
+  #     ASPNETCORE_URLS: "http://+"
   #   ports:
-  #     - "6003:443"
   #     - "6004:80"
 
   ocelotapigw:
     container_name: ocelotapigw
     environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
-      ASPNETCORE_HTTPS_PORT: "9001"
-      ASPNETCORE_URLS: "https://+;http://+"
+      ASPNETCORE_ENVIRONMENT: "Staging"
+      ASPNETCORE_URLS: "http://+"
     depends_on:
         - user.api
-        - question.api
         - exam.api
+        # - question.api
         # - report.api
-    volumes:
-      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
-      - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
     ports:
-    - "9001:443"
     - "9000:80"

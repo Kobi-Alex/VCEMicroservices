@@ -27,6 +27,7 @@ using Applicant.Infrasructure.Persistance.Repositories;
 
 using GrpcReport;
 using GrpcExam;
+using Applicant.API.SyncDataServices.Grpc;
 
 namespace Applicant.API
 {
@@ -45,45 +46,76 @@ namespace Applicant.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
+
 
             if (_env.IsStaging())
             {
-                Console.WriteLine("\n---> Staging");
-                Console.WriteLine("\n---> Using SQL Server Staging\n");
+                try
+                {
+                    Console.WriteLine("\n---> Staging");
+                    //Console.WriteLine("\n---> Using SQL Server Staging\n");
 
-                services.AddDbContext<AppDbContext>(opt =>
-                     opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+                    //services.AddDbContext<AppDbContext>(opt =>
+                    //     opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
 
-                //Console.WriteLine("\n---> Using InMem Db Staging\n");
+                    Console.WriteLine("\n---> Using InMem Db Staging\n");
 
-                //services.AddDbContext<AppDbContext>(opt =>
-                //   opt.UseInMemoryDatabase("InMem"));
+                    services.AddDbContext<AppDbContext>(opt =>
+                       opt.UseInMemoryDatabase("InMem"));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
+                
             }
 
             if (_env.IsProduction())
             {
-                Console.WriteLine("\n---> Production");
-                Console.WriteLine("\n---> Using InMem Db Production\n");
+                try
+                {
+                    Console.WriteLine("\n---> Production");
+                    Console.WriteLine("\n---> Using InMem Db Production\n");
+                    services.AddDbContext<AppDbContext>(opt =>
+                       opt.UseInMemoryDatabase("InMem"));
 
-                services.AddDbContext<AppDbContext>(opt =>
-                   opt.UseInMemoryDatabase("InMem"));
-
-                //services.AddDbContext<AppDbContext>(opt =>
-                //    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+                    //Console.WriteLine("\n---> Using SQL Db Production\n");
+                    //services.AddDbContext<AppDbContext>(opt =>
+                    //    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
             }
 
             if (_env.IsDevelopment())
             {
-                Console.WriteLine("\n---> Development");
-                Console.WriteLine("\n---> Using SQL Db Development\n");
-                Console.WriteLine();
+                try
+                {
+                    Console.WriteLine("\n---> Development");
+                    Console.WriteLine("\n---> Using SQL Db Development\n");
+                    Console.WriteLine();
 
-               // services.AddDbContext<AppDbContext>(opt =>
-               //     opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+                     services.AddDbContext<AppDbContext>(opt =>
+                        opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
 
-                services.AddDbContext<AppDbContext>(opt =>
-                   opt.UseInMemoryDatabase("InMem"));
+                    //services.AddDbContext<AppDbContext>(opt =>
+                    //   opt.UseInMemoryDatabase("InMem"));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
+
+               
             }
+
+            services.AddScoped<IPlatformDataClient, PlatformDataClient>();
 
             //add service CustomAuthentication
             services.AddCustomAuthentication(Configuration);
@@ -91,10 +123,6 @@ namespace Applicant.API
             //add service EmailConfiguration
             services.AddSingleton(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
 
-            services.AddCors(c => 
-            { 
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            });
 
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();

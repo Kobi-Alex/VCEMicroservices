@@ -7,6 +7,7 @@ service ExamGrpc{
 
 	rpc GetExamItemFromExamData(GetExamItem) returns (ExamItemModel) {}
 	rpc CheckIfQuestionExistsInExam(ExamRequest) returns (ExamResponse) {}
+	rpc CheckTest(TestRequests) returns (TestResponse) {}
 }
 
 
@@ -28,4 +29,12 @@ message ExamRequest {
 message ExamResponse {
 	bool exists = 1;
 	repeated int32 exams = 2;
+}
+
+message TestResponse {
+	bool flag = 1;
+}
+
+message TestRequests {
+	int32 id = 1;		
 }

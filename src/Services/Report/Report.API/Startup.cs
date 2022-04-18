@@ -90,31 +90,53 @@ namespace Report.API
 
             if (_env.IsDevelopment())
             {
-                //Console.WriteLine("\n---> Using InMem Db Development\n");
-                //services.AddDbContext<ReportDbContext>(opt =>
-                //  opt.UseInMemoryDatabase("InMem"));
-                Console.WriteLine("\n---> Using SqlServer Db Development\n");
-                services.AddDbContext<ReportDbContext>(opt =>
-                    opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
+                try
+                {
+                    //Console.WriteLine("\n---> Using InMem Db Development\n");
+                    //services.AddDbContext<ReportDbContext>(opt =>
+                    //  opt.UseInMemoryDatabase("InMem"));
+                    Console.WriteLine("\n---> Using SqlServer Db Development\n");
+                    services.AddDbContext<ReportDbContext>(opt =>
+                        opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
             }
 
             if(_env.IsStaging())
             {
-                Console.WriteLine("\n---> Using SqlServer Db Staging\n");
-                services.AddDbContext<ReportDbContext>(opt =>
-                    opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
-
-                //Console.WriteLine("\n---> Using InMem Db Staging\n");
-                //services.AddDbContext<ReportDbContext>(opt =>
-                //  opt.UseInMemoryDatabase("InMem"));
+                try
+                {
+                    //Console.WriteLine("\n---> Using InMem Db Development\n");
+                    //services.AddDbContext<ReportDbContext>(opt =>
+                    //  opt.UseInMemoryDatabase("InMem"));
+                    Console.WriteLine("\n---> Using SqlServer Db Staging\n");
+                    services.AddDbContext<ReportDbContext>(opt =>
+                        opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
             }
 
             if (_env.IsProduction())
             {
-                Console.WriteLine("\n---> Using InMem Db Production\n");
-
-                services.AddDbContext<ReportDbContext>(opt =>
-                   opt.UseInMemoryDatabase("InMem"));
+                try
+                {
+                    //Console.WriteLine("\n---> Using InMem Db Development\n");
+                    //services.AddDbContext<ReportDbContext>(opt =>
+                    //  opt.UseInMemoryDatabase("InMem"));
+                    Console.WriteLine("\n---> Using SqlServer Db Production\n");
+                    services.AddDbContext<ReportDbContext>(opt =>
+                        opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
             }
 
             services.AddScoped<IServiceManager, ServiceManager>();

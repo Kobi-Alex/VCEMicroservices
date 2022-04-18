@@ -24,6 +24,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using GrpcReport;
 using GrpcApplicant;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Exam.API.SyncDataServices.Grpc;
 
 namespace Exam.API
 {
@@ -42,8 +45,12 @@ namespace Exam.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var key = Encoding.ASCII.GetBytes(Configuration["JwtConfig:Secret"]);
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
 
+            var key = Encoding.ASCII.GetBytes(Configuration["JwtConfig:Secret"]);
 
             var tokenValidationParams = new TokenValidationParameters
             {
@@ -71,10 +78,7 @@ namespace Exam.API
 
             //Auth <------------------------------------------------------------------------------------------------>
 
-            services.AddCors(c =>
-            {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            });
+           
             //Console.WriteLine("--> Using InMem DB");
             //services.AddDbContext<ExamDbContext>(opt =>
             //    opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
@@ -82,32 +86,62 @@ namespace Exam.API
 
             if (_env.IsProduction())
             {
-                //add service InMemory DB
-                Console.WriteLine("\n---> Using InMem Db Production\n");
-                services.AddDbContext<ExamDbContext>(opt =>
-                    opt.UseInMemoryDatabase("InMem"));
+                try
+                {
+                    //add service InMemory DB
+                    //Console.WriteLine("\n---> Using InMem Db Production\n");
+                    //services.AddDbContext<ExamDbContext>(opt =>
+                    //    opt.UseInMemoryDatabase("InMem"));
+
+                    Console.WriteLine("\n---> Using SqlServer Db Production\n");
+                    services.AddDbContext<ExamDbContext>(opt =>
+                       opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
+
+
             }
             if (_env.IsDevelopment())
             {
-                Console.WriteLine("\n---> Using InMem Db Development\n");
-                services.AddDbContext<ExamDbContext>(opt =>
-                    opt.UseInMemoryDatabase("InMem"));
+                try
+                {
+                    //add service InMemory DB
+                    //Console.WriteLine("\n---> Using InMem Db Production\n");
+                    //services.AddDbContext<ExamDbContext>(opt =>
+                    //    opt.UseInMemoryDatabase("InMem"));
 
-                //Console.WriteLine("\n---> Using SqlServer Db Development\n");
-                //services.AddDbContext<ExamDbContext>(opt =>
-                //   opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
+                    Console.WriteLine("\n---> Using SqlServer Db Development\n");
+                    services.AddDbContext<ExamDbContext>(opt =>
+                       opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
+
             }
 
             if (_env.IsStaging())
             {
-                //Console.WriteLine("\n---> Using InMem Db Staging\n");
-                //services.AddDbContext<ExamDbContext>(opt =>
-                //    opt.UseInMemoryDatabase("InMem"));
+                try
+                {
+                    //add service InMemory DB
+                    Console.WriteLine("\n---> Using InMem Db Production\n");
+                    services.AddDbContext<ExamDbContext>(opt =>
+                        opt.UseInMemoryDatabase("InMem"));
 
-                Console.WriteLine("\n---> Using SQL Server Db Staging\n");
+                    //Console.WriteLine("\n---> Using SqlServer Db Staging\n");
+                    //services.AddDbContext<ExamDbContext>(opt =>
+                    //   opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
+                }
 
-                services.AddDbContext<ExamDbContext>(opt =>
-                   opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
             }
             services.AddHealthChecks();
             //add service ServiceManager
@@ -204,6 +238,15 @@ namespace Exam.API
             {
                 endpoints.MapControllers();
                 endpoints.MapGrpcService<ExamGrpcService>();
+                endpoints.MapGrpcService<GrpcPlatformService>();
+
+                endpoints.MapGet("/proto/exam.proto", async context => {
+                    await context.Response.WriteAsync(File.ReadAllText("Proto/exam.proto"));
+                });
+                endpoints.MapGet("/proto/platforms.proto", async context => {
+                    await context.Response.WriteAsync(File.ReadAllText("Proto/platforms.proto"));
+                });
+
             });
 
             //Seeding data

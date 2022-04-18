@@ -19,7 +19,9 @@ using Microsoft.AspNetCore.Identity;
 using Applicant.API.Grpc;
 using System.Linq.Expressions;
 using Grpc.Net.Client;
-using GrpcExam;
+//using GrpcExam;
+using Microsoft.Extensions.Configuration;
+using Applicant.API.SyncDataServices.Grpc;
 
 namespace Applicant.API.Application.Services
 {
@@ -34,9 +36,10 @@ namespace Applicant.API.Application.Services
         private readonly IRepositoryManager _repositoryManager;
         private readonly ReportGrpcService _reportGrpcService;
         private readonly ExamGrpcService _examGrpcService;
+        private readonly IPlatformDataClient _platformDataClient;
 
         public UserService(IRepositoryManager repositoryManager, IMapper mapper, EmailConfiguration emailConfig, 
-            ReportGrpcService reportGrpcService, ExamGrpcService examGrpcService)
+            ReportGrpcService reportGrpcService, ExamGrpcService examGrpcService, IPlatformDataClient platformDataClient)
         {
             _mapper = mapper;
             _emailConfig = emailConfig;
@@ -44,6 +47,7 @@ namespace Applicant.API.Application.Services
             _repositoryManager = repositoryManager;
             _reportGrpcService = reportGrpcService;
             _examGrpcService = examGrpcService;
+            _platformDataClient = platformDataClient;
         }
 
         public async Task<IEnumerable<UserReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -416,21 +420,26 @@ namespace Applicant.API.Application.Services
             }
 
 
+            var res = _platformDataClient.ReturnAllPlatforms();
 
-            var examData = await _examGrpcService.GetExamItemAsync(userExamDto.ExamId);
+            //var examData = await _examGrpcService.CheckTest(userExamDto.ExamId);
 
-            if (examData != null)
-            {
-                Console.WriteLine($"----> Exam: {examData.Title}");
-            }
+            //Console.WriteLine($"---> Flag: {examData}");
+
+            //var examData = _examGrpcService.GetExamItem(userExamDto.ExamId);
+
+            //if (examData != null)
+            //{
+            //    Console.WriteLine($"----> Exam: {examData.Title}");
+            //}
 
             // gRPC service check exam data in the report service
-            var reportResult = await _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);
+            //var reportResult = await _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);
 
-            if (reportResult.Success)
-            {
-                throw new BadRequestMessage($"Could not add exam to user. The exam with id: {userExamDto.ExamId} already exists in Report");
-            }
+            //if (reportResult.Success)
+            //{
+            //    throw new BadRequestMessage($"Could not add exam to user. The exam with id: {userExamDto.ExamId} already exists in Report");
+            //}
 
             var newUserExam = new UserExams()
             {

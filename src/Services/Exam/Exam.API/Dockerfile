@@ -4,8 +4,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 6012
 
-ENV ASPNETCORE_URLS=https://+:443
-
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["Services/Exam/Exam.API/Exam.API.csproj", "Services/Exam/Exam.API/"]

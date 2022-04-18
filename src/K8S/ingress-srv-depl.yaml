@@ -31,14 +31,28 @@ spec:
           name: questions-clusterip-srv
           port:
            number: 80
-      - path: /api/exam
+      - path: /api/categories
+        pathType: Prefix
+        backend:
+         service:
+          name: questions-clusterip-srv
+          port:
+           number: 80
+      - path: /api/answers
+        pathType: Prefix
+        backend:
+         service:
+          name: questions-clusterip-srv
+          port:
+           number: 80
+      - path: /api/exams
         pathType: Prefix
         backend:
          service:
           name: exams-clusterip-srv
           port:
            number: 80
-      - path: /api/report
+      - path: /api/reports
         pathType: Prefix
         backend:
          service:

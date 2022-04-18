@@ -9,11 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Proto\applicant.proto" />
-    <None Remove="Proto\report.proto" />
-  </ItemGroup>
-
-  <ItemGroup>
 	  <PackageReference Include="Grpc.AspNetCore" Version="2.38.0" />
 	  <PackageReference Include="MassTransit" Version="7.3.0" />
 	  <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
@@ -43,6 +38,7 @@
 		<Protobuf Include="Proto\applicant.proto" GrpcServices="Client" />
 		<Protobuf Include="Proto\exam.proto" GrpcServices="Server" />
 		<Protobuf Include="Proto\report.proto" GrpcServices="Client" />
+		<Protobuf Include="Proto\platforms.proto" GrpcServices="Server" />
 	</ItemGroup>
 
 </Project>

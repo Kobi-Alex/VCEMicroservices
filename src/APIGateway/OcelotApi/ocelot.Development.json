@@ -6,8 +6,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/auth/login",
@@ -18,8 +18,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/auth/register",
@@ -30,11 +30,23 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/auth/refreshToken",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/SendMessage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/sendMessage",
       "UpstreamHttpMethod": [ "POST" ]
     },
     //Users
@@ -43,8 +55,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/users",
@@ -55,20 +67,32 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/users/{id}",
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
     },
     {
+      "DownstreamPathTemplate": "/api/Users/SendMessage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/sendMessage",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/Users/UpdateEmail",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/users/updateEmail",
@@ -79,8 +103,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/users/changePassword",
@@ -91,8 +115,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/users/addRole",
@@ -103,8 +127,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/users/removeRole",
@@ -115,8 +139,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/users/:id/exams",
@@ -127,8 +151,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/users/addExam",
@@ -139,12 +163,24 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "user.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "7000"
         }
       ],
       "UpstreamPathTemplate": "/api/users/removeExam",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Users/e/:idExam",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7000"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/e/:idExam",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     //Categories
     {
@@ -152,8 +188,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "question.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/categories",
@@ -164,8 +200,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "question.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/categories/{id}",
@@ -177,8 +213,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "question.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/questions",
@@ -189,8 +225,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "question.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/questions/{id}",
@@ -202,8 +238,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "question.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/answers",
@@ -214,8 +250,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "question.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/answers/{answerId}",
@@ -226,8 +262,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "question.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6002"
         }
       ],
       "UpstreamPathTemplate": "/api/answers/q/{questionId}",
@@ -239,8 +275,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "exam.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6012"
         }
       ],
       "UpstreamPathTemplate": "/api/exams",
@@ -251,8 +287,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "exam.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6012"
         }
       ],
       "UpstreamPathTemplate": "/api/exams/{id}",
@@ -263,8 +299,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "exam.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6012"
         }
       ],
       "UpstreamPathTemplate": "/api/exams/{examId}/questions",
@@ -275,8 +311,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "exam.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6012"
         }
       ],
       "UpstreamPathTemplate": "/api/exams/{examId}/questions/{questionId}",
@@ -288,8 +324,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "report.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6004"
         }
       ],
       "UpstreamPathTemplate": "/api/reports/e/{examId}",
@@ -300,8 +336,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "report.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6004"
         }
       ],
       "UpstreamPathTemplate": "/api/report/a/{userId}",
@@ -312,8 +348,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "report.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6004"
         }
       ],
       "UpstreamPathTemplate": "/api/report/e/{examId:int}/a/{userId}",
@@ -324,8 +360,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "report.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6004"
         }
       ],
       "UpstreamPathTemplate": "/api/reports",
@@ -336,8 +372,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "report.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6004"
         }
       ],
       "UpstreamPathTemplate": "/api/reports/{reportId}",
@@ -348,8 +384,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "report.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6004"
         }
       ],
       "UpstreamPathTemplate": "/api/reports/openreport",
@@ -360,8 +396,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "report.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6004"
         }
       ],
       "UpstreamPathTemplate": "/api/reports/closereport",
@@ -372,17 +408,12 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "report.api",
-          "Port": "80"
+          "Host": "localhost",
+          "Port": "6004"
         }
       ],
       "UpstreamPathTemplate": "/api/reports/currentanswer",
       "UpstreamHttpMethod": [ "POST" ]
     }
-  ],
-  "GlobalConfiguration": {
-    "RequestIdKey": "OcRequestId",
-    "AdministrationPath": "/administration"
-  }
-
+  ]
 }

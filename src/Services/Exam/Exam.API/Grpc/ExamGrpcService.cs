@@ -54,5 +54,10 @@ namespace Exam.API.Grpc
 
             return await Task.FromResult(response);
         }
+
+        public override async Task<TestResponse> CheckTest(TestRequests request, ServerCallContext context)
+        {
+            return await Task.FromResult(new TestResponse() { Flag = true});
+        }
     }
 }

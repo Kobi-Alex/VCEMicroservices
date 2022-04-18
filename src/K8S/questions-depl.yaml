@@ -15,4 +15,21 @@ spec:
    containers:
     - name: questionservice
       image: ghostdockerhunter/questionservice:latest
-   
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: questions-clusterip-srv
+spec:
+ type: ClusterIP
+ selector:
+  app: questionservice
+ ports:
+  - name: questionservice
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: questiongrpc
+    protocol: TCP
+    port: 666
+    targetPort: 666
