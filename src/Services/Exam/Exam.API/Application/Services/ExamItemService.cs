@@ -12,6 +12,7 @@ using Exam.API.Application.Contracts.ExamItemDtos;
 using AutoMapper;
 using Exam.API.Grpc;
 using System.Linq;
+using Exam.API.Grpc.Interfaces;
 
 namespace Exam.API.Application.Services
 {
@@ -19,10 +20,10 @@ namespace Exam.API.Application.Services
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryManager _repositoryManager;
-        private readonly ReportGrpcService _reportGrpcService;
-        private readonly ApplicantGprcService _applicantGprcService;
+        private readonly IReportGrpcService _reportGrpcService;
+        private readonly IApplicantGrpcService _applicantGprcService;
 
-        public ExamItemService(IRepositoryManager repositoryManager, IMapper mapper, ReportGrpcService reportGrpcService, ApplicantGprcService applicantGprcService)
+        public ExamItemService(IRepositoryManager repositoryManager, IMapper mapper, IReportGrpcService reportGrpcService, IApplicantGrpcService applicantGprcService)
         {
             _mapper = mapper;
             _repositoryManager = repositoryManager;
@@ -115,7 +116,7 @@ namespace Exam.API.Application.Services
             exam.PassingScore = examUpdateDto.PassingScore;
 
 
-            if (await CheckExam(examId))
+            if (CheckExam(examId))
             {
                 throw new BadRequestMessage($"Could not update exam! This exam with id: {examId} already used in Report!");
             }
@@ -133,12 +134,12 @@ namespace Exam.API.Application.Services
                 throw new ExamNotFoundException(examId);
             }
 
-            if (await CheckExam(examId))
+            if (CheckExam(examId))
             {
                 throw new BadRequestMessage($"Could not delete exam! This exam with id: {examId} already used in Report!");
             }
 
-            var existsExamInUsers = await _applicantGprcService.CheckIfExamExistsInUsers(examId);
+            var existsExamInUsers = _applicantGprcService.CheckIfExamExistsInUsers(examId);
 
             if (existsExamInUsers.Exists)
             {
@@ -164,9 +165,9 @@ namespace Exam.API.Application.Services
         /// </summary>
         /// <param name="id">Id Exam</param>
         /// <returns></returns>
-        private async Task<bool> CheckExam(int id)
+        private bool CheckExam(int id)
         {
-            var res = await _reportGrpcService.CheckIfExistsExamInReports(id);
+            var res = _reportGrpcService.CheckIfExistsExamInReports(id);
 
             return res.Exists;
         }

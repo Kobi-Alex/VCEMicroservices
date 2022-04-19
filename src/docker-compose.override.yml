@@ -13,14 +13,14 @@ services:
       ASPNETCORE_URLS: "http://+"
     ports:
       - "7000:80"
-  
-  # question.api:
-  #   container_name: questionservice
-  #   environment:
-  #      ASPNETCORE_ENVIRONMENT: Staging
-  #      ASPNETCORE_URLS: "http://+"
-  #   ports:
-  #     - "6002:80"
+
+  question.api:
+    container_name: questionservice
+    environment:
+      ASPNETCORE_ENVIRONMENT: Staging
+      ASPNETCORE_URLS: "http://+"
+    ports:
+      - "6002:80"
   exam.api:
     container_name: examservice
     environment:
@@ -29,13 +29,13 @@ services:
     ports:
       - "6012:80"
 
-  # report.api:
-  #   container_name: reportservice
-  #   environment:
-  #     ASPNETCORE_ENVIRONMENT: "Staging"
-  #     ASPNETCORE_URLS: "http://+"
-  #   ports:
-  #     - "6004:80"
+  report.api:
+    container_name: reportservice
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Staging"
+      ASPNETCORE_URLS: "http://+"
+    ports:
+      - "6004:80"
 
   ocelotapigw:
     container_name: ocelotapigw
@@ -43,9 +43,9 @@ services:
       ASPNETCORE_ENVIRONMENT: "Staging"
       ASPNETCORE_URLS: "http://+"
     depends_on:
-        - user.api
-        - exam.api
-        # - question.api
-        # - report.api
+      - user.api
+      - exam.api
+      - question.api
+      - report.api
     ports:
-    - "9000:80"
+      - "9000:80"

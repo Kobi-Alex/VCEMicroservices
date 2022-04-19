@@ -3,6 +3,7 @@ using AutoMapper;
 using Exam.Domain.Repositories;
 using Exam.API.Application.Services.Interfaces;
 using Exam.API.Grpc;
+using Exam.API.Grpc.Interfaces;
 
 namespace Exam.API.Application.Services
 {
@@ -12,7 +13,7 @@ namespace Exam.API.Application.Services
     {
         private readonly Lazy<IExamItemService> _lazyExamItemService;
         private readonly Lazy<IExamQuestionService> _lazyExamQuestionService;
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, ReportGrpcService reportGrpcService, ApplicantGprcService applicantGprcService)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, IReportGrpcService reportGrpcService, IApplicantGrpcService applicantGprcService)
         {
             _lazyExamItemService = new Lazy<IExamItemService>(() => new ExamItemService(repositoryManager, mapper, reportGrpcService, applicantGprcService));
             _lazyExamQuestionService = new Lazy<IExamQuestionService>(() => new ExamQuestionService(repositoryManager, mapper, reportGrpcService));

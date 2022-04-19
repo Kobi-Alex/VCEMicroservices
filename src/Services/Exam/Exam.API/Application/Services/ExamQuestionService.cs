@@ -11,6 +11,7 @@ using Exam.API.Application.Contracts.ExamQuestionDtos;
 
 using AutoMapper;
 using Exam.API.Grpc;
+using Exam.API.Grpc.Interfaces;
 
 namespace Exam.API.Application.Services
 {
@@ -18,8 +19,8 @@ namespace Exam.API.Application.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        private readonly ReportGrpcService _reportGrpcService;
-        public ExamQuestionService(IRepositoryManager repositoryManager, IMapper mapper, ReportGrpcService reportGrpcService)
+        private readonly IReportGrpcService _reportGrpcService;
+        public ExamQuestionService(IRepositoryManager repositoryManager, IMapper mapper, IReportGrpcService reportGrpcService)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
@@ -77,7 +78,7 @@ namespace Exam.API.Application.Services
             var question = _mapper.Map<ExamQuestion>(examQuestionCreateDto);
             question.ExamItemId = exam.Id;
 
-            if (await CheckExam(examId))
+            if ( CheckExam(examId))
             {
                 throw new BadRequestMessage($"Could not add new question to exam! This exam with id: {examId} already used in Report!");
             }
@@ -111,7 +112,7 @@ namespace Exam.API.Application.Services
                 throw new QuestionDoesNotBelongToExamException(exam.Id, question.Id);
             }
 
-            if (await CheckExam(examId))
+            if ( CheckExam(examId))
             {
                 throw new BadRequestMessage($"Could not delete question from exam! This exam with id: {examId} already used!");
             }
@@ -126,9 +127,9 @@ namespace Exam.API.Application.Services
         /// </summary>
         /// <param name="id">Id Exam</param>
         /// <returns></returns>
-        private async Task<bool> CheckExam(int id)
+        private bool CheckExam(int id)
         {
-            var res = await _reportGrpcService.CheckIfExistsExamInReports(id);
+            var res =  _reportGrpcService.CheckIfExistsExamInReports(id);
 
             return res.Exists;
         }

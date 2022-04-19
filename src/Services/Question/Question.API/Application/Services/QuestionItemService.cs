@@ -15,6 +15,7 @@ using MassTransit;
 using Exam.API.Application.IntegrationEvents.Events;
 using Question.API.Grpc;
 using GrpcExam;
+using Question.API.Grpc.Interfaces;
 
 namespace Question.API.Application.Services
 {
@@ -24,9 +25,9 @@ namespace Question.API.Application.Services
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryManager _repositoryManager;
-        private readonly ExamGrpcService _examGrpcService;
-        private readonly ReportGrpcService _reportGrpcService;
-        public QuestionItemService(IRepositoryManager repositoryManager, IMapper mapper,  ExamGrpcService examGrpcService, ReportGrpcService reportGrpcService)
+        private readonly IExamGrpcService _examGrpcService;
+        private readonly IReportGrpcService _reportGrpcService;
+        public QuestionItemService(IRepositoryManager repositoryManager, IMapper mapper,  IExamGrpcService examGrpcService, IReportGrpcService reportGrpcService)
         {
             _mapper = mapper;
             _repositoryManager = repositoryManager;
@@ -132,12 +133,12 @@ namespace Question.API.Application.Services
                 throw new QuestionItemNotFoundException(questionId);
             }
 
-            var res = await CheckQuestion(questionId);
+            var res =  CheckQuestion(questionId);
             if(res.Exists)
             {
                 foreach (var item in res.Exams)
                 {
-                    var existsExamInReport = await   _reportGrpcService.CheckIfExistsExamInReports(item);
+                    var existsExamInReport =    _reportGrpcService.CheckIfExistsExamInReports(item);
 
                     if(existsExamInReport.Exists)
                     {
@@ -170,12 +171,12 @@ namespace Question.API.Application.Services
                 throw new QuestionItemNotFoundException(questionId);
             }
 
-            var res = await CheckQuestion(questionId);
+            var res =  CheckQuestion(questionId);
             if (res.Exists)
             {
                 foreach (var item in res.Exams)
                 {
-                    var existsExamInReport = await _reportGrpcService.CheckIfExistsExamInReports(item);
+                    var existsExamInReport =  _reportGrpcService.CheckIfExistsExamInReports(item);
 
                     if (existsExamInReport.Exists)
                     {
@@ -195,9 +196,9 @@ namespace Question.API.Application.Services
         /// </summary>
         /// <param name="id">Id Question</param>
         /// <returns></returns>
-        private async Task<ExamResponse> CheckQuestion(int id)
+        private ExamResponse CheckQuestion(int id)
         {
-            var existsInExam = await _examGrpcService.CheckIfQuestionExistsInExam(id);
+            var existsInExam =  _examGrpcService.CheckIfQuestionExistsInExam(id);
 
             return existsInExam;
             

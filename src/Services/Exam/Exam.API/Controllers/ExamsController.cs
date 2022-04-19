@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Question.API.Application.Paggination;
 using Exam.API.Grpc;
+using Exam.API.Grpc.Interfaces;
 
 namespace Exam.API.Controllers
 {
@@ -20,8 +21,8 @@ namespace Exam.API.Controllers
     public class ExamsController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
-        private readonly ReportGrpcService _reportGrpcService;
-        public ExamsController(IServiceManager serviceManager, ReportGrpcService reportGrpcService)
+        private readonly IReportGrpcService _reportGrpcService;
+        public ExamsController(IServiceManager serviceManager, IReportGrpcService reportGrpcService)
         {
             _serviceManager = serviceManager;
             _reportGrpcService = reportGrpcService;

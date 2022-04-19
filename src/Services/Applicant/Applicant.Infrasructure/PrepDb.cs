@@ -246,6 +246,7 @@ namespace Applicant.Infrasructure
                     //Roles = new List<Role>() { userRole }
                 };
 
+               
                 user1.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
                 user2.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));
                 user3.Roles.Add(context.Roles.FirstOrDefault(x => x.Name == "Student"));

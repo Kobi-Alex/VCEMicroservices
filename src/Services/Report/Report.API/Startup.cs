@@ -32,6 +32,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Report.API.Application.Contracts.Infrastructure;
 using Report.API.Application.Services.Interfaces;
 using Report.API.Application.Services;
+using Report.API.Grpc.Interfaces;
 
 namespace Report.API
 {
@@ -143,6 +144,12 @@ namespace Report.API
 
             // Review queries configuration
             services.AddScoped<IReviewQueries, ReviewQueries>(provider => new ReviewQueries(Configuration.GetConnectionString("ReportsConnection")));
+
+            //GRPC
+            services.AddScoped<IApplicantGrpcService, ApplicantGrpcService>();
+            services.AddScoped<IExamGrpcService, ExamGrpcService>();
+            services.AddScoped<IQuestionGrpcService, QuestionGrpcService>();
+
 
 
 

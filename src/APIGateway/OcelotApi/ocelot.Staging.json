@@ -37,6 +37,18 @@
       "UpstreamPathTemplate": "/api/auth/refreshToken",
       "UpstreamHttpMethod": [ "POST" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/Auth/SendMessage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "user.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/sendMessage",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
     //Users
     {
       "DownstreamPathTemplate": "/api/Users",
@@ -61,6 +73,18 @@
       ],
       "UpstreamPathTemplate": "/api/users/{id}",
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Users/SendMessage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "user.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/sendMessage",
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/Users/UpdateEmail",
@@ -145,6 +169,18 @@
       ],
       "UpstreamPathTemplate": "/api/users/removeExam",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Users/e/:idExam",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "user.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/e/:idExam",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     //Categories
     {
@@ -379,10 +415,5 @@
       "UpstreamPathTemplate": "/api/reports/currentanswer",
       "UpstreamHttpMethod": [ "POST" ]
     }
-  ],
-  "GlobalConfiguration": {
-    "RequestIdKey": "OcRequestId",
-    "AdministrationPath": "/administration"
-  }
-
+  ]
 }

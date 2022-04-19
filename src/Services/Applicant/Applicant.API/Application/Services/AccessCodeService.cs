@@ -21,7 +21,8 @@ using AutoMapper;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-
+using Applicant.API.Application.Contracts.Infrastructure;
+using Applicant.API.Application.Models;
 
 namespace Applicant.API.Application.Services
 {
@@ -29,16 +30,16 @@ namespace Applicant.API.Application.Services
     {
         private readonly IMapper _mapper;
         private readonly JwtConfig _jwtConfig;
-        private readonly EmailConfiguration _emailConfig;
+        private readonly IEmailService _emailService;
         private readonly IRepositoryManager _repositoryManager;
 
         private PasswordHasher<User> _hasher;
         private Random _randomNumbers = new Random();
 
-        public AccessCodeService(IRepositoryManager repositoryManager, IMapper mapper, IOptionsMonitor<JwtConfig> optionsMonitor, EmailConfiguration emailConfig)
+        public AccessCodeService(IRepositoryManager repositoryManager, IMapper mapper, IOptionsMonitor<JwtConfig> optionsMonitor, IEmailService emailService)
         {
             _mapper = mapper;
-            _emailConfig = emailConfig;
+            _emailService = emailService;
             _hasher = new PasswordHasher<User>();
             _repositoryManager = repositoryManager;
             _jwtConfig = optionsMonitor.CurrentValue;
@@ -153,22 +154,29 @@ namespace Applicant.API.Application.Services
 
             var accessCode = _randomNumbers.Next(100000, 999999);
 
-            using (MailMessage mail = new MailMessage())
-            {
-                mail.From = new MailAddress(_emailConfig.From, "It step Administration"); ;
-                mail.To.Add(authRegisterDto.Email);
-                mail.Subject = "Access code";
-                mail.Body = $"<h1>Your access code: {accessCode}</h1>";
-                mail.IsBodyHtml = true;
+            Email email = new Email();
+            email.To= authRegisterDto.Email;
+            email.Subject = "Access code";
+            email.Body = $"<h1>Your access code: {accessCode}</h1>";
 
-                using (SmtpClient smtp = new SmtpClient(_emailConfig.SmtpServer, _emailConfig.Port))
-                {
-                    smtp.Credentials = new NetworkCredential(_emailConfig.From, _emailConfig.Password);//Real email and password
+            await _emailService.SendEmail(email);
 
-                    smtp.EnableSsl = true;
-                    smtp.Send(mail);
-                }
-            }
+            //using (MailMessage mail = new MailMessage())
+            //{
+            //    mail.From = new MailAddress(_emailConfig.From, "It step Administration"); ;
+            //    mail.To.Add(authRegisterDto.Email);
+            //    mail.Subject = "Access code";
+            //    mail.Body = $"<h1>Your access code: {accessCode}</h1>";
+            //    mail.IsBodyHtml = true;
+
+            //    using (SmtpClient smtp = new SmtpClient(_emailConfig.SmtpServer, _emailConfig.Port))
+            //    {
+            //        smtp.Credentials = new NetworkCredential(_emailConfig.From, _emailConfig.Password);//Real email and password
+
+            //        smtp.EnableSsl = true;
+            //        smtp.Send(mail);
+            //    }
+            //}
 
             var newAC = new AccessCode()
             {

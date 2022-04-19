@@ -7,7 +7,8 @@ using Applicant.Domain.Repositories;
 using Applicant.API.Application.Services.Interfaces;
 using Applicant.API.Application.Configurations;
 using Microsoft.Extensions.Configuration;
-using Applicant.API.SyncDataServices.Grpc;
+using Applicant.API.Grpc.Interfaces;
+using Applicant.API.Application.Contracts.Infrastructure;
 
 namespace Applicant.API.Application.Services
 {
@@ -16,11 +17,11 @@ namespace Applicant.API.Application.Services
         private readonly Lazy<IAccessCodeService> _lazyAccessCodeService;
         private readonly Lazy<IUserService> _lazyUserService;
 
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, EmailConfiguration emailConfig, 
-            IOptionsMonitor<JwtConfig> optionsMonitor, ReportGrpcService reportGrpcService, ExamGrpcService examGrpcService, IPlatformDataClient platformDataClient)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, 
+            IOptionsMonitor<JwtConfig> optionsMonitor, IReportGrpcService reportGrpcService, IExamGrpcService examGrpcService, IEmailService emailService)
         {
-            _lazyAccessCodeService = new Lazy<IAccessCodeService>(() => new AccessCodeService(repositoryManager, mapper, optionsMonitor, emailConfig));
-            _lazyUserService = new Lazy<IUserService>(() => new UserService(repositoryManager, mapper, emailConfig, reportGrpcService, examGrpcService, platformDataClient));
+            _lazyAccessCodeService = new Lazy<IAccessCodeService>(() => new AccessCodeService(repositoryManager, mapper, optionsMonitor,emailService));
+            _lazyUserService = new Lazy<IUserService>(() => new UserService(repositoryManager, mapper, reportGrpcService, examGrpcService, emailService));
         }
 
         public IAccessCodeService AccessCodeService => _lazyAccessCodeService.Value;

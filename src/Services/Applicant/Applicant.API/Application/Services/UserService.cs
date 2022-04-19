@@ -21,7 +21,9 @@ using System.Linq.Expressions;
 using Grpc.Net.Client;
 //using GrpcExam;
 using Microsoft.Extensions.Configuration;
-using Applicant.API.SyncDataServices.Grpc;
+using Applicant.API.Grpc.Interfaces;
+using Applicant.API.Application.Contracts.Infrastructure;
+using Applicant.API.Application.Models;
 
 namespace Applicant.API.Application.Services
 {
@@ -32,22 +34,20 @@ namespace Applicant.API.Application.Services
 
         private readonly IMapper _mapper;
         private PasswordHasher<User> _hasher;
-        private readonly EmailConfiguration _emailConfig;
+        private readonly IEmailService _emailService;
         private readonly IRepositoryManager _repositoryManager;
-        private readonly ReportGrpcService _reportGrpcService;
-        private readonly ExamGrpcService _examGrpcService;
-        private readonly IPlatformDataClient _platformDataClient;
+        private readonly IExamGrpcService _examGrpcService;
+        private readonly IReportGrpcService _reportGrpcService;
 
-        public UserService(IRepositoryManager repositoryManager, IMapper mapper, EmailConfiguration emailConfig, 
-            ReportGrpcService reportGrpcService, ExamGrpcService examGrpcService, IPlatformDataClient platformDataClient)
+        public UserService(IRepositoryManager repositoryManager, IMapper mapper,
+            IReportGrpcService reportGrpcService, IExamGrpcService examGrpcService, IEmailService emailService)
         {
             _mapper = mapper;
-            _emailConfig = emailConfig;
+            _emailService = emailService;
             _hasher = new PasswordHasher<User>();
             _repositoryManager = repositoryManager;
             _reportGrpcService = reportGrpcService;
             _examGrpcService = examGrpcService;
-            _platformDataClient = platformDataClient;
         }
 
         public async Task<IEnumerable<UserReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -117,26 +117,33 @@ namespace Applicant.API.Application.Services
             _repositoryManager.UserRepository.Insert(user);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
 
+            Email email = new Email();
 
-            using (MailMessage mail = new MailMessage())
-            {
-                mail.From = new MailAddress(_emailConfig.From, "It step Administration"); ;
-                mail.To.Add(userCreateDto.Email);
-                mail.Subject = "Data";
-                mail.IsBodyHtml = true;
-                mail.Body = $"</h1>Your email: {userCreateDto.Email} | Password: {password}</h1>";
-                //mail.Attachments.Add(new Attachment("D:\\Aloha.7z"));//--Uncomment this to send any attachment  
+            email.Body = $"</h1>Your email: {userCreateDto.Email} | Password: {password}</h1>";
+            email.Subject ="Registration";
+            email.To =userCreateDto.Email;
 
-                // SmtpClient клас з за до якого можна відправити лист
+            await _emailService.SendEmail(email);
 
-                using (SmtpClient smtp = new SmtpClient(_emailConfig.SmtpServer, _emailConfig.Port))
-                {
-                    smtp.Credentials = new NetworkCredential(_emailConfig.From, _emailConfig.Password); //Real email and password
+            //using (MailMessage mail = new MailMessage())
+            //{
+            //    mail.From = new MailAddress(_emailService, "It step Administration"); ;
+            //    mail.To.Add(userCreateDto.Email);
+            //    mail.Subject = "Data";
+            //    mail.IsBodyHtml = true;
+            //    mail.Body = $"</h1>Your email: {userCreateDto.Email} | Password: {password}</h1>";
+            //    //mail.Attachments.Add(new Attachment("D:\\Aloha.7z"));//--Uncomment this to send any attachment  
 
-                    smtp.EnableSsl = true;
-                    smtp.Send(mail);
-                }
-            }
+            //    // SmtpClient клас з за до якого можна відправити лист
+
+            //    using (SmtpClient smtp = new SmtpClient(_emailConfig.SmtpServer, _emailConfig.Port))
+            //    {
+            //        smtp.Credentials = new NetworkCredential(_emailConfig.From, _emailConfig.Password); //Real email and password
+
+            //        smtp.EnableSsl = true;
+            //        smtp.Send(mail);
+            //    }
+            //}
 
             return _mapper.Map<UserReadDto>(user);
         }
@@ -223,25 +230,33 @@ namespace Applicant.API.Application.Services
 
             var accessCode = _randomNumbers.Next(100000, 999999);
 
-            using (MailMessage mail = new MailMessage())
-            {
-                mail.From = new MailAddress(_emailConfig.From, "It step Administration"); ;
-                mail.To.Add(userEmailDto.Email);
-                mail.Subject = "Access code";
-                mail.IsBodyHtml = true;
-                mail.Body = $"<h1>Your access code: {accessCode}</h1>";
-                //mail.Attachments.Add(new Attachment("D:\\Aloha.7z"));//--Uncomment this to send any attachment  
+            Email email = new Email();
 
-                // SmtpClient клас з за до якого можна відправити лист
+            email.Body = $"<h1>Your access code: {accessCode}</h1>";
+            email.Subject = "Confirm email";
+            email.To = userEmailDto.Email;
 
-                using (SmtpClient smtp = new SmtpClient(_emailConfig.SmtpServer, _emailConfig.Port))
-                {
-                    smtp.Credentials = new NetworkCredential(_emailConfig.From, _emailConfig.Password);//Real email and password
+            await _emailService.SendEmail(email);
 
-                    smtp.EnableSsl = true;
-                    smtp.Send(mail);
-                }
-            }
+            //using (MailMessage mail = new MailMessage())
+            //{
+            //    mail.From = new MailAddress(_emailConfig.From, "It step Administration"); ;
+            //    mail.To.Add(userEmailDto.Email);
+            //    mail.Subject = "Access code";
+            //    mail.IsBodyHtml = true;
+            //    mail.Body = $"<h1>Your access code: {accessCode}</h1>";
+            //    //mail.Attachments.Add(new Attachment("D:\\Aloha.7z"));//--Uncomment this to send any attachment  
+
+            //    // SmtpClient клас з за до якого можна відправити лист
+
+            //    using (SmtpClient smtp = new SmtpClient(_emailConfig.SmtpServer, _emailConfig.Port))
+            //    {
+            //        smtp.Credentials = new NetworkCredential(_emailConfig.From, _emailConfig.Password);//Real email and password
+
+            //        smtp.EnableSsl = true;
+            //        smtp.Send(mail);
+            //    }
+            //}
 
             _repositoryManager.AccessCodeRepository.Create(
                 new AccessCode()
@@ -301,7 +316,7 @@ namespace Applicant.API.Application.Services
             }
 
             // gRPC service delete report by userId
-            var reportResult = await _reportGrpcService.RemoveUserDataFromRepor(id);
+            var reportResult =  _reportGrpcService.RemoveUserDataFromReport(id);
 
             if (reportResult.Success)
             {
@@ -420,7 +435,7 @@ namespace Applicant.API.Application.Services
             }
 
 
-            var res = _platformDataClient.ReturnAllPlatforms();
+            //var res = _platformDataClient.ReturnAllPlatforms();
 
             //var examData = await _examGrpcService.CheckTest(userExamDto.ExamId);
 
@@ -434,12 +449,12 @@ namespace Applicant.API.Application.Services
             //}
 
             // gRPC service check exam data in the report service
-            //var reportResult = await _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);
+            var reportResult =  _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);
 
-            //if (reportResult.Success)
-            //{
-            //    throw new BadRequestMessage($"Could not add exam to user. The exam with id: {userExamDto.ExamId} already exists in Report");
-            //}
+            if (reportResult.Success)
+            {
+                throw new BadRequestMessage($"Could not add exam to user. The exam with id: {userExamDto.ExamId} already exists in Report");
+            }
 
             var newUserExam = new UserExams()
             {

@@ -12,6 +12,7 @@ using Question.API.Application.Contracts.Dtos.QuestionCategoryDtos;
 using AutoMapper;
 using System.Linq;
 using Question.API.Grpc;
+using Question.API.Grpc.Interfaces;
 
 namespace Question.API.Application.Services
 {
@@ -21,10 +22,10 @@ namespace Question.API.Application.Services
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryManager _repositoryManager;
-        private readonly ExamGrpcService _examGrpcService;
-        private readonly ReportGrpcService _reportGrpcService;
+        private readonly IExamGrpcService _examGrpcService;
+        private readonly IReportGrpcService _reportGrpcService;
 
-        public QuestionCategoryService(IRepositoryManager repositoryManager, IMapper mapper, ExamGrpcService examGrpcService, ReportGrpcService reportGrpcService)
+        public QuestionCategoryService(IRepositoryManager repositoryManager, IMapper mapper, IExamGrpcService examGrpcService, IReportGrpcService reportGrpcService)
         {
             _mapper = mapper;
             _repositoryManager = repositoryManager;
@@ -135,7 +136,7 @@ namespace Question.API.Application.Services
 
                 foreach (var item in questions)
                 {
-                    var res = await _examGrpcService.CheckIfQuestionExistsInExam(item.Id);
+                    var res =  _examGrpcService.CheckIfQuestionExistsInExam(item.Id);
 
                     if(res.Exists)
                     {

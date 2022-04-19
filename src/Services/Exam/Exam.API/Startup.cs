@@ -26,7 +26,7 @@ using GrpcReport;
 using GrpcApplicant;
 using Microsoft.AspNetCore.Http;
 using System.IO;
-using Exam.API.SyncDataServices.Grpc;
+using Exam.API.Grpc.Interfaces;
 
 namespace Exam.API
 {
@@ -129,13 +129,13 @@ namespace Exam.API
                 try
                 {
                     //add service InMemory DB
-                    Console.WriteLine("\n---> Using InMem Db Production\n");
-                    services.AddDbContext<ExamDbContext>(opt =>
-                        opt.UseInMemoryDatabase("InMem"));
-
-                    //Console.WriteLine("\n---> Using SqlServer Db Staging\n");
+                    //Console.WriteLine("\n---> Using InMem Db Production\n");
                     //services.AddDbContext<ExamDbContext>(opt =>
-                    //   opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
+                    //    opt.UseInMemoryDatabase("InMem"));
+
+                    Console.WriteLine("\n---> Using SqlServer Db Staging\n");
+                    services.AddDbContext<ExamDbContext>(opt =>
+                       opt.UseSqlServer(Configuration.GetConnectionString("ExamsConnection")));
                 }
                 catch (Exception ex)
                 {
@@ -146,6 +146,8 @@ namespace Exam.API
             services.AddHealthChecks();
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();
+            services.AddScoped<IApplicantGrpcService, ApplicantGrpcService>();
+            services.AddScoped<IReportGrpcService, ReportGrpcService>();
 
             //add service RepositoryManager
             services.AddScoped<IRepositoryManager, RepositoryManager>();
@@ -159,15 +161,15 @@ namespace Exam.API
             Console.WriteLine($"---> GRPCReport: {Configuration["GrpcReportSettings:ReportUrl"]}");
             Console.WriteLine($"---> GRPCApplicant: {Configuration["GrpcApplicantSettings:ApplicantUrl"]}");
 
-            // gRPC configuration (Report Service)
-            services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
-                        (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
-            services.AddScoped<ReportGrpcService>();
+            //// gRPC configuration (Report Service)
+            //services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
+            //            (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
+            //services.AddScoped<ReportGrpcService>();
 
-            // gRPC configuration (Applicant Service)
-            services.AddGrpcClient<ApplicantGrpc.ApplicantGrpcClient>
-                        (o => o.Address = new Uri(Configuration["GrpcApplicantSettings:ApplicantUrl"]));
-            services.AddScoped<ApplicantGprcService>();
+            //// gRPC configuration (Applicant Service)
+            //services.AddGrpcClient<ApplicantGrpc.ApplicantGrpcClient>
+            //            (o => o.Address = new Uri(Configuration["GrpcApplicantSettings:ApplicantUrl"]));
+            //services.AddScoped<ApplicantGprcService>();
 
 
             // MassTransit-RabbitMQ Configuration
@@ -238,7 +240,6 @@ namespace Exam.API
             {
                 endpoints.MapControllers();
                 endpoints.MapGrpcService<ExamGrpcService>();
-                endpoints.MapGrpcService<GrpcPlatformService>();
 
                 endpoints.MapGet("/proto/exam.proto", async context => {
                     await context.Response.WriteAsync(File.ReadAllText("Proto/exam.proto"));

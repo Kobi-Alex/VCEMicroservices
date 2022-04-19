@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Report.API.Grpc;
 using Report.API.Application.Exceptions;
 using Report.Domain.AggregatesModel.ReviewAggregate;
-
+using Report.API.Grpc.Interfaces;
 
 namespace Report.API.Application.Features.Commands.SetQuestionUnit
 {
@@ -20,12 +20,12 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
         private readonly IMediator _mediator;
         private readonly IReviewRepository _reviewRepository;
         private readonly ILogger<SetQuestionUnitCommandHandler> _logger;
-        private readonly QuestionGrpcService _questionGrpcService;
+        private readonly IQuestionGrpcService _questionGrpcService;
 
 
         // Using Dependency Injection to inject infrastructure persistence Repositories
         public SetQuestionUnitCommandHandler(IMediator mediator, IReviewRepository reviewRepository, 
-            ILogger<SetQuestionUnitCommandHandler> logger, QuestionGrpcService questionGrpcService)
+            ILogger<SetQuestionUnitCommandHandler> logger, IQuestionGrpcService questionGrpcService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -57,7 +57,7 @@ namespace Report.API.Application.Features.Commands.SetQuestionUnit
             }
 
             // gRPC request to Question service
-            var questionUnit = await _questionGrpcService.GetQuestionUnitFromQuestionData(request.QuestionId);
+            var questionUnit =  _questionGrpcService.GetQuestionUnitFromQuestionData(request.QuestionId);
             
             if (questionUnit == null)
             {

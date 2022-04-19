@@ -27,7 +27,10 @@ using Applicant.Infrasructure.Persistance.Repositories;
 
 using GrpcReport;
 using GrpcExam;
-using Applicant.API.SyncDataServices.Grpc;
+using Applicant.API.Grpc.Interfaces;
+using Applicant.API.Application.Models;
+using Applicant.API.Application.Contracts.Infrastructure;
+using Applicant.API.Application.Services.Mail;
 
 namespace Applicant.API
 {
@@ -57,15 +60,15 @@ namespace Applicant.API
                 try
                 {
                     Console.WriteLine("\n---> Staging");
-                    //Console.WriteLine("\n---> Using SQL Server Staging\n");
-
-                    //services.AddDbContext<AppDbContext>(opt =>
-                    //     opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
-
-                    Console.WriteLine("\n---> Using InMem Db Staging\n");
+                    Console.WriteLine("\n---> Using SQL Server Staging\n");
 
                     services.AddDbContext<AppDbContext>(opt =>
-                       opt.UseInMemoryDatabase("InMem"));
+                         opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+
+                    //Console.WriteLine("\n---> Using InMem Db Staging\n");
+
+                    //services.AddDbContext<AppDbContext>(opt =>
+                    //   opt.UseInMemoryDatabase("InMem"));
                 }
                 catch (Exception ex)
                 {
@@ -115,13 +118,16 @@ namespace Applicant.API
                
             }
 
-            services.AddScoped<IPlatformDataClient, PlatformDataClient>();
+            //Grpc
+            services.AddScoped<IExamGrpcService, ExamGrpcService>();
+            services.AddScoped<IReportGrpcService, ReportGrpcService>();
+
+            // Email configuration
+            services.Configure<EmailSettings>(c => Configuration.GetSection("EmailSettings").Bind(c));
+            services.AddTransient<IEmailService, EmailService>();
 
             //add service CustomAuthentication
             services.AddCustomAuthentication(Configuration);
-
-            //add service EmailConfiguration
-            services.AddSingleton(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
 
 
             //add service ServiceManager
@@ -134,15 +140,15 @@ namespace Applicant.API
             Console.WriteLine($"---> GRPCReport: {Configuration["GrpcReportSettings:ReportUrl"]}");
             Console.WriteLine($"---> GRPCExam: {Configuration["GrpcExamSettings:ExamUrl"]}");
 
-            // gRPC configuration (ReportGrpcService)
-            services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
-                        (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
-            services.AddScoped<ReportGrpcService>();
+            //// gRPC configuration (ReportGrpcService)
+            //services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
+            //            (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
+            //services.AddScoped<ReportGrpcService>();
 
-            // gROC configuration (ExamGrpcService)
-            services.AddGrpcClient<ExamGrpc.ExamGrpcClient>
-                     (o => o.Address = new Uri(Configuration["GrpcExamSettings:ExamUrl"]));
-            services.AddScoped<ExamGrpcService>();
+            //// gROC configuration (ExamGrpcService)
+            //services.AddGrpcClient<ExamGrpc.ExamGrpcClient>
+            //         (o => o.Address = new Uri(Configuration["GrpcExamSettings:ExamUrl"]));
+            //services.AddScoped<ExamGrpcService>();
 
 
             // gRPC configuration

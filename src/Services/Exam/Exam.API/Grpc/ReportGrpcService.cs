@@ -1,4 +1,7 @@
-﻿using GrpcReport;
+﻿using Exam.API.Grpc.Interfaces;
+using Grpc.Net.Client;
+using GrpcReport;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -7,26 +10,58 @@ using System.Threading.Tasks;
 
 namespace Exam.API.Grpc
 {
-    public class ReportGrpcService
+    public class ReportGrpcService : IReportGrpcService
     {
         private readonly ILogger<ReportGrpcService> _logger;
-        private readonly ReportGrpc.ReportGrpcClient _reportGrpcService;
+        private readonly IConfiguration _configuration;
 
-        public ReportGrpcService(ReportGrpc.ReportGrpcClient reportGrpcService, ILogger<ReportGrpcService> logger)
+        public ReportGrpcService(ILogger<ReportGrpcService> logger, IConfiguration configuration)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _reportGrpcService = reportGrpcService ?? throw new ArgumentNullException(nameof(reportGrpcService));
+            _configuration = configuration;
         }
 
-        public async Task<ReportResponse> CheckIfExistsExamInReports(int examId )
+        public ReportResponse CheckIfExistsExamInReports(int examId)
         {
-            //var request = new GetExamItem { ExamId = examId };
+            Console.WriteLine($"---> Calling Report GRPC Service: {_configuration["GrpcReportSettings:ReportUrl"]}");
 
-            //return await _examGrpcService.GetExamItemFromExamDataAsync(request);
+            var channel = GrpcChannel.ForAddress(_configuration["GrpcReportSettings:ReportUrl"]);
+            var client = new ReportGrpc.ReportGrpcClient(channel);
 
-            var request = new ReportRequest() { ExamId = examId };
+            try
+            {
+                var request = new ReportRequest() { ExamId = examId };
 
-            return await _reportGrpcService.CheckIfExistsExamInReportsAsync(request);
+               return  client.CheckIfExistsExamInReports(request);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"---> Could not call Grpc Server: {ex.Message}");
+
+                return null;
+            }
+
+
         }
     }
+
+    //public class ReportGrpcService
+    //{
+    //    private readonly ILogger<ReportGrpcService> _logger;
+    //    private readonly ReportGrpc.ReportGrpcClient _reportGrpcService;
+
+    //    public ReportGrpcService(ReportGrpc.ReportGrpcClient reportGrpcService, ILogger<ReportGrpcService> logger)
+    //    {
+    //        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    //        _reportGrpcService = reportGrpcService ?? throw new ArgumentNullException(nameof(reportGrpcService));
+    //    }
+
+    //    public async Task<ReportResponse> CheckIfExistsExamInReports(int examId )
+    //    {
+
+    //        var request = new ReportRequest() { ExamId = examId };
+
+    //        return await _reportGrpcService.CheckIfExistsExamInReportsAsync(request);
+    //    }
+    //}
 }

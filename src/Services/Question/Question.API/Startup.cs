@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Question.API.Grpc;
 using GrpcExam;
 using GrpcReport;
+using Question.API.Grpc.Interfaces;
 
 namespace Question.API
 {
@@ -116,13 +117,13 @@ namespace Question.API
             {
                 try
                 {
-                    Console.WriteLine("--> Using InMem DB Production");
-                    services.AddDbContext<QuestionDbContext>(opt =>
-                       opt.UseInMemoryDatabase("InMem"));
-
-                    //Console.WriteLine("\n---> Using SqlServer Db Staging\n");
+                    //Console.WriteLine("--> Using InMem DB Production");
                     //services.AddDbContext<QuestionDbContext>(opt =>
-                    //   opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
+                    //   opt.UseInMemoryDatabase("InMem"));
+
+                    Console.WriteLine("\n---> Using SqlServer Db Staging\n");
+                    services.AddDbContext<QuestionDbContext>(opt =>
+                       opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
                 }
                 catch (Exception ex)
                 {
@@ -136,6 +137,10 @@ namespace Question.API
 
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();
+            
+            //GRPC
+            services.AddScoped<IExamGrpcService, ExamGrpcService>();
+            services.AddScoped<IReportGrpcService, ReportGrpcService>();
 
             // RepositoryManager configuration
             services.AddScoped<IRepositoryManager, RepositoryManager>();
@@ -156,13 +161,13 @@ namespace Question.API
             Console.WriteLine($"---> GRPCExam: {Configuration["GrpcExamSettings:ExamUrl"]}");
             Console.WriteLine($"---> GRPCReport: {Configuration["GrpcReportSettings:ReportUrl"]}");
 
-            services.AddGrpcClient<ExamGrpc.ExamGrpcClient>
-                      (o => o.Address = new Uri(Configuration["GrpcExamSettings:ExamUrl"]));
-            services.AddScoped<ExamGrpcService>();
+            //services.AddGrpcClient<ExamGrpc.ExamGrpcClient>
+            //          (o => o.Address = new Uri(Configuration["GrpcExamSettings:ExamUrl"]));
+            //services.AddScoped<ExamGrpcService>();
 
-            services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
-                      (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
-            services.AddScoped<ReportGrpcService>();
+            //services.AddGrpcClient<ReportGrpc.ReportGrpcClient>
+            //          (o => o.Address = new Uri(Configuration["GrpcReportSettings:ReportUrl"]));
+            //services.AddScoped<ReportGrpcService>();
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

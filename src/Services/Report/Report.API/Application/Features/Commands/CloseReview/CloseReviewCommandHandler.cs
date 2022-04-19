@@ -12,7 +12,7 @@ using Report.Domain.AggregatesModel.ReviewAggregate;
 using Report.Infrastructure.Persistance.Idempotency;
 using Report.API.Application.Contracts.Infrastructure;
 using Report.API.Application.Features.Commands.Identified;
-
+using Report.API.Grpc.Interfaces;
 
 namespace Report.API.Application.Features.Commands.CloseReview
 {
@@ -21,13 +21,13 @@ namespace Report.API.Application.Features.Commands.CloseReview
     public class CloseReviewCommandHandler : IRequestHandler<CloseReviewCommand, bool>
     {
         private readonly IReviewRepository _reviewRepository;
-        private readonly ExamGrpcService _examGrpcService;
-        private readonly ApplicantGrpcService _applicantGrpcService;
+        private readonly IExamGrpcService _examGrpcService;
+        private readonly IApplicantGrpcService _applicantGrpcService;
         private readonly IEmailService _emailService;
         private readonly ILogger<CloseReviewCommandHandler> _logger;
 
-        public CloseReviewCommandHandler(IReviewRepository reviewRepository, ExamGrpcService examGrpcService,
-            IEmailService emailService, ILogger<CloseReviewCommandHandler> logger, ApplicantGrpcService applicantGrpcService)
+        public CloseReviewCommandHandler(IReviewRepository reviewRepository, IExamGrpcService examGrpcService,
+            IEmailService emailService, ILogger<CloseReviewCommandHandler> logger, IApplicantGrpcService applicantGrpcService)
         {
             _reviewRepository = reviewRepository;
             _examGrpcService = examGrpcService;
@@ -61,7 +61,7 @@ namespace Report.API.Application.Features.Commands.CloseReview
 
             // gRPC request to Exam service
             // Getting examItem object from exam service.
-            var examItem = await _examGrpcService.GetExamItemFromExamData(reviewToUpdate._examId);
+            var examItem =  _examGrpcService.GetExamItemFromExamData(reviewToUpdate._examId);
 
             if (examItem is null)
             {
@@ -72,7 +72,7 @@ namespace Report.API.Application.Features.Commands.CloseReview
             reviewToUpdate.CalculateScores(examItem.CountQuestions);
 
             // gRPC Service Remove exam in applicant service database
-            await _applicantGrpcService.RemoveExamFromApplicantData(reviewToUpdate._applicantId, reviewToUpdate._examId);
+             _applicantGrpcService.RemoveExamFromApplicantData(reviewToUpdate._applicantId, reviewToUpdate._examId);
 
             // TODO add E-mail content
             // Sending exam result to applicant email..
@@ -92,8 +92,8 @@ namespace Report.API.Application.Features.Commands.CloseReview
         /// <returns></returns>
         private async Task SendMail(Review review)
         {
-            var user = await _applicantGrpcService.GetUserDataAsync(review._applicantId);
-            var exam = await _examGrpcService.GetExamItemFromExamData(review._examId);
+            var user =  _applicantGrpcService.GetUserData(review._applicantId);
+            var exam =  _examGrpcService.GetExamItemFromExamData(review._examId);
 
             string status = (review.GetGradeByPersentScore() != "F" && review.GetGradeByPersentScore() != null) ? "Test passed!" : "Test failed!";
 
