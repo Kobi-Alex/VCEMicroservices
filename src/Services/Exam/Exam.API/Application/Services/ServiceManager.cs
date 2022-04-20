@@ -13,10 +13,10 @@ namespace Exam.API.Application.Services
     {
         private readonly Lazy<IExamItemService> _lazyExamItemService;
         private readonly Lazy<IExamQuestionService> _lazyExamQuestionService;
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, IReportGrpcService reportGrpcService, IApplicantGrpcService applicantGprcService)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, IReportGrpcService reportGrpcService, IApplicantGrpcService applicantGprcService, IQuestionGrpcService questionGrpcService)
         {
             _lazyExamItemService = new Lazy<IExamItemService>(() => new ExamItemService(repositoryManager, mapper, reportGrpcService, applicantGprcService));
-            _lazyExamQuestionService = new Lazy<IExamQuestionService>(() => new ExamQuestionService(repositoryManager, mapper, reportGrpcService));
+            _lazyExamQuestionService = new Lazy<IExamQuestionService>(() => new ExamQuestionService(repositoryManager, mapper, reportGrpcService, questionGrpcService));
         }
 
 

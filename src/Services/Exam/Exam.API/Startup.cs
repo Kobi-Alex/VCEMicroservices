@@ -146,8 +146,11 @@ namespace Exam.API
             services.AddHealthChecks();
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();
+
+            //GRPC
             services.AddScoped<IApplicantGrpcService, ApplicantGrpcService>();
             services.AddScoped<IReportGrpcService, ReportGrpcService>();
+            services.AddScoped<IQuestionGrpcService, QuestionGrpcService>();
 
             //add service RepositoryManager
             services.AddScoped<IRepositoryManager, RepositoryManager>();

@@ -33,7 +33,7 @@ namespace Question.API.Grpc
 
             if (questionUnit is null)
             {
-                throw new QuestionItemNotFoundException(request.QuestionId);
+                return null;
             }
 
 

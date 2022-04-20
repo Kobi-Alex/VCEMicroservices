@@ -38,7 +38,7 @@
 		<Protobuf Include="Proto\applicant.proto" GrpcServices="Client" />
 		<Protobuf Include="Proto\exam.proto" GrpcServices="Server" />
 		<Protobuf Include="Proto\report.proto" GrpcServices="Client" />
-		<Protobuf Include="Proto\platforms.proto" GrpcServices="Server" />
+		<Protobuf Include="Proto\question.proto" GrpcServices="Client" />
 	</ItemGroup>
 
 </Project>

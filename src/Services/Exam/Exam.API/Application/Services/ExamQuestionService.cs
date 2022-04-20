@@ -20,11 +20,13 @@ namespace Exam.API.Application.Services
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
         private readonly IReportGrpcService _reportGrpcService;
-        public ExamQuestionService(IRepositoryManager repositoryManager, IMapper mapper, IReportGrpcService reportGrpcService)
+        private readonly IQuestionGrpcService _questionGrpcService;
+        public ExamQuestionService(IRepositoryManager repositoryManager, IMapper mapper, IReportGrpcService reportGrpcService, IQuestionGrpcService questionGrpcService)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _reportGrpcService = reportGrpcService;
+            _questionGrpcService = questionGrpcService;
         }
 
         public async Task<IEnumerable<ExamQuestionReadDto>> GetAllByExamItemIdAsync(int examId, CancellationToken cancellationToken = default)
@@ -77,6 +79,13 @@ namespace Exam.API.Application.Services
 
             var question = _mapper.Map<ExamQuestion>(examQuestionCreateDto);
             question.ExamItemId = exam.Id;
+
+            var questionData = _questionGrpcService.GetQuestionById(examQuestionCreateDto.QuestionItemId);
+
+            if(questionData == null)
+            {
+                throw new BadRequestMessage($"Could not add new question to exam! This question with id: {examQuestionCreateDto.QuestionItemId} not found!");
+            }
 
             if ( CheckExam(examId))
             {
