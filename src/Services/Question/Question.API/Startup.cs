@@ -131,9 +131,6 @@ namespace Question.API
                 }
             }
 
-           
-            
-           
 
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();

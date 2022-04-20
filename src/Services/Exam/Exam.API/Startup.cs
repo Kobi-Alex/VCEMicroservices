@@ -1,7 +1,6 @@
 using System;
 
 using MassTransit;
-using EventBus.Common;
 
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +15,6 @@ using Exam.API.Middleware;
 using Exam.Infrastructure;
 using Exam.Domain.Repositories;
 using Exam.API.Application.Services;
-using Exam.API.Application.IntegrationEvents;
 using Exam.API.Application.Services.Interfaces;
 using Exam.Infrastructure.Persistance.Repositories;
 using System.Text;
@@ -155,7 +153,7 @@ namespace Exam.API
             //add service RepositoryManager
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
-            services.AddScoped<IExamIntegrationEventService, ExamIntegrationEventService>();
+
 
             // gRPC configuration
             services.AddGrpc();

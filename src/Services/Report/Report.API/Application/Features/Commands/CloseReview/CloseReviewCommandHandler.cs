@@ -63,13 +63,15 @@ namespace Report.API.Application.Features.Commands.CloseReview
             // Getting examItem object from exam service.
             var examItem =  _examGrpcService.GetExamItemFromExamData(reviewToUpdate._examId);
 
+          
+
             if (examItem is null)
             {
                 throw new ExamItemNotFoundException(reviewToUpdate._examId);
             }
 
             // Calculate review scores
-            reviewToUpdate.CalculateScores(examItem.CountQuestions);
+            reviewToUpdate.CalculateScores(examItem.CountQuestions, (int)examItem.PassingScore);
 
             // gRPC Service Remove exam in applicant service database
              _applicantGrpcService.RemoveExamFromApplicantData(reviewToUpdate._applicantId, reviewToUpdate._examId);

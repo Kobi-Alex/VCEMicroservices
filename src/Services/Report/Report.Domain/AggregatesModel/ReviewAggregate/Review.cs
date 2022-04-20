@@ -16,6 +16,7 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
         private string _grade;                                 // Grade
         private DateTime _reportDate;                          // Date of report
         private readonly List<QuestionUnit> _questionUnits;    // Exam answer list answered by the applicant
+        private  int _passingScore;
 
         public IReadOnlyCollection<QuestionUnit> QuestionUnits => _questionUnits;
 
@@ -115,9 +116,11 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
         /// Calculating score by report
         /// </summary>
         /// <param name="examQuestionCount"></param>
-        public void CalculateScores(int examQuestionCount)
+        public void CalculateScores(int examQuestionCount, int passingScore)
         {
             int totalScore = 0;
+            _passingScore = passingScore;
+             
 
             foreach (var item in _questionUnits)
             {
@@ -190,10 +193,34 @@ namespace Report.Domain.AggregatesModel.ReviewAggregate
         /// <returns> Return value of grade </returns>
         public string GetGradeByPersentScore()
         {
-            if (_persentScore > 89) return "A";
-            if (_persentScore > 74) return "B";
-            if (_persentScore > 59) return "C";
-                                    return "F";
+            int max = 100; // max 
+            int dil = 2; // for A & B
+
+            int res = (max - _passingScore) / dil;
+            var list = new List<int>();
+
+            Console.WriteLine($"---> Percent score: {_persentScore}");
+
+            for (int i = 1; i <= dil; i++)
+            {
+                list.Add(_passingScore + res * i);
+            }
+
+            if (_persentScore >= list[1])
+            {
+                return "A";
+            }
+            if (_persentScore >= list[0])
+            {
+                return "B";
+
+            }
+            if (_persentScore >= _passingScore)
+            {
+                return "C";
+            }
+
+            return "F";
         }
 
     }

@@ -12,7 +12,6 @@ using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
 using AutoMapper;
 using MassTransit;
 
-using Exam.API.Application.IntegrationEvents.Events;
 using Question.API.Grpc;
 using GrpcExam;
 using Question.API.Grpc.Interfaces;

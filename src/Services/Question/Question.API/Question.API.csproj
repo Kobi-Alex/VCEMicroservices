@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Application\Models\**" />
+    <Content Remove="Application\Models\**" />
+    <EmbeddedResource Remove="Application\Models\**" />
+    <None Remove="Application\Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Proto\exam.proto" />
     <None Remove="Proto\report.proto" />
   </ItemGroup>
@@ -33,13 +40,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\Question.Domain\Question.Domain.csproj" />
     <ProjectReference Include="..\Question.Infrastructure\Question.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Application\Models\" />
   </ItemGroup>
 
 	<ItemGroup>

@@ -1,7 +1,6 @@
 using System;
 using AutoMapper;
 using Question.Domain.Entities;
-using Exam.API.Application.IntegrationEvents.Events;
 using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
 
 
@@ -14,7 +13,6 @@ namespace Question.API.Application.Contracts.Profiles.QuestionItemProfiles
             CreateMap<QuestionItem, QuestionItemReadDto>();
             CreateMap<QuestionItemCreateDto, QuestionItem>();
             CreateMap<QuestionItemUpdateDto, QuestionItem>();
-            CreateMap<QuestionItem, QuestionItemDeleteEvent>();
         }
     }
 }

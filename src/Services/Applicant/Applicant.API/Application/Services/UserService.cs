@@ -67,7 +67,6 @@ namespace Applicant.API.Application.Services
 
             return usersDto;
         }
-
         public async Task<UserReadDto> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
 
@@ -83,8 +82,6 @@ namespace Applicant.API.Application.Services
 
             return userDto;
         }
-
-
         public async Task<UserReadDto> CreateAsync(UserCreateDto userCreateDto, CancellationToken cancellationToken = default)
         {
 
@@ -147,8 +144,6 @@ namespace Applicant.API.Application.Services
 
             return _mapper.Map<UserReadDto>(user);
         }
-
-
         public async Task UpdateAsync(string id, UserUpdateDto userUpdateDto, CancellationToken cancellationToken = default)
         {
             var user = await _repositoryManager.UserRepository.GetByIdAsync(id, cancellationToken);
@@ -163,8 +158,6 @@ namespace Applicant.API.Application.Services
             
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
-
-
         public async Task UpdateEmailAsync(UserChangeEmailDto userChangeEmailDto, CancellationToken cancellationToken = default)
         {
 
@@ -197,9 +190,8 @@ namespace Applicant.API.Application.Services
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-
         /// <summary>
-        /// Sends access code after registration new user.
+        /// Sends access code on email.
         /// </summary>
         /// <param name="userEmailDto"></param>
         /// <param name="cancellationToken"></param>
@@ -293,7 +285,6 @@ namespace Applicant.API.Application.Services
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-
         public async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
             var user = await _repositoryManager.UserRepository.GetByIdAsync(id, cancellationToken);
@@ -328,7 +319,6 @@ namespace Applicant.API.Application.Services
                 throw new UserNotFoundException(user.Id, reportResult.Error);
             }
         }
-
 
         public async Task AddRoleAsync(UserRoleDto userRoleDto, CancellationToken cancellationToken = default)
         {
@@ -374,7 +364,6 @@ namespace Applicant.API.Application.Services
             //_userRepository.Update(existsUser);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
-
 
         public async Task RemoveRoleAsync(UserRoleDto userRoleDto, CancellationToken cancellationToken = default)
         {

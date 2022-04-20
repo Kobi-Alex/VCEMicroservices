@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <ProjectReference Include="..\..\..\EventBus\EventBus.csproj" />
       <ProjectReference Include="..\Exam.Domain\Exam.Domain.csproj" />
       <ProjectReference Include="..\Exam.Infrastructure\Exam.Infrastructure.csproj" />
   </ItemGroup>
