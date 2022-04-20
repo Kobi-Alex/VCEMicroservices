@@ -218,7 +218,7 @@ namespace Applicant.API.Application.Services
 
             if (userEmailExist != null && userEmailExist.Id != userEmailDto.Id)
             {
-                throw new EmailAlreadyInUseException(userEmailDto.Email);
+                throw new EmailAlreadyInUseException();
             }
 
             if (userEmailExist != null && userEmailExist.Id == userEmailDto.Id)
@@ -438,12 +438,12 @@ namespace Applicant.API.Application.Services
 
             if(!examQuestions.Exists)
             {
-                throw new BadRequestMessage($"Exam with id: {userExamDto.ExamId} not found!");
+                throw new BadRequestMessage($"Could not add exam to user.Exam with id: {userExamDto.ExamId} not found!");
             }
 
             if(examQuestions.Questions.Count() == 0)
             {
-                throw new BadRequestMessage($"Exam with id: {userExamDto.ExamId} is empty!");
+                throw new BadRequestMessage($"could not add exam to user. Exam with id: {userExamDto.ExamId} is empty!");
             }
 
 
