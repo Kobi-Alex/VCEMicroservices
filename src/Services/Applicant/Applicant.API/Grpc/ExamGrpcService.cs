@@ -14,33 +14,33 @@ namespace Applicant.API.Grpc
     {
         private readonly ILogger<ExamGrpcService> _logger;
         private readonly IConfiguration _configuration;
+        private GrpcChannel channel;
+        private ExamGrpc.ExamGrpcClient client;
 
         public ExamGrpcService(ILogger<ExamGrpcService> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
+            channel = GrpcChannel.ForAddress(_configuration["GrpcExamSettings:ExamUrl"]);
+            client = new ExamGrpc.ExamGrpcClient(channel);
         }
 
-        public bool CheckTest(int id)
+        public ExamQuestionsResponse GetExamQuestions(int id)
         {
             Console.WriteLine($"---> calling Exam GRPC Service: {_configuration["GrpcExamSettings:ExamUrl"]}");
 
-            var channel = GrpcChannel.ForAddress(_configuration["GrpcExamSettings:ExamUrl"]);
-            var client = new ExamGrpc.ExamGrpcClient(channel);
-
             try
             {
-                var request = new TestRequests();
+                var request = new GetExamItem() { ExamId = id };
 
-                client.CheckTest(request);
 
-                return true;
+                return client.GetExamQuestions(request);
             }
             catch (Exception ex)
             {
 
                 Console.WriteLine($"---> Could not call Grpc Server: {ex.Message}");
-                return false;
+                return null;
             }
         }
 
@@ -48,8 +48,6 @@ namespace Applicant.API.Grpc
         {
             Console.WriteLine($"---> calling Exam GRPC Service: {_configuration["GrpcExamSettings:ExamUrl"]}");
 
-            var channel = GrpcChannel.ForAddress(_configuration["GrpcExamSettings:ExamUrl"]);
-            var client = new ExamGrpc.ExamGrpcClient(channel);
             try
             {
                 var request = new GetExamItem() { ExamId = idExam };
@@ -62,59 +60,6 @@ namespace Applicant.API.Grpc
                 Console.WriteLine($"---> Could not call Grpc Server: {ex.Message}");
                 return null;
             }
-
-            // var channel = GrpcChannel.ForAddress(_configuration["GrpcPlatform:Plat"]);
-            // var client = new GrpcPlatform.GrpcPlatformClient(channel);
-
-            // var request = new GetAllRequest();
-
-            //try
-            //{
-            //    var reply = client.GetAllPlatforms(request);
-            //    return new List<User>();
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine($"---> Could not call Grpc Server: {ex.Message}");
-            //    return null;
-            //}
-
         }
     }
-
-
-
-    //public class ExamGrpcService
-    //{
-    //    private readonly ILogger<ExamGrpcService> _logger;
-    //    private readonly ExamGrpc.ExamGrpcClient _examGrpcClient;
-    //    private readonly IConfiguration _configuration;
-
-    //    public ExamGrpcService(ILogger<ExamGrpcService> logger, ExamGrpc.ExamGrpcClient examGrpcClient, IConfiguration configuration)
-    //    {
-    //        _logger = logger;
-    //        _examGrpcClient = examGrpcClient;
-    //        _configuration = configuration;
-    //    }
-
-    //    public  ExamItemModel GetExamItem(int idExam)
-    //    {
-    //        Console.WriteLine($"---> Calling GRPC Service {_configuration["GrpcExamSettings:ExamUrl"]}");
-
-
-    //        var request = new GetExamItem() { ExamId = idExam };
-
-    //        return  _examGrpcClient.GetExamItemFromExamData(request);
-    //    }
-
-    //    public async Task<bool> CheckTest(int id = 3)
-    //    {
-    //        var request = new TestRequests();
-
-    //        await _examGrpcClient.CheckTestAsync(request);
-
-    //        return true;
-    //    }
-
-    //}
 }

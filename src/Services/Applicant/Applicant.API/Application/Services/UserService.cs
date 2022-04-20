@@ -434,19 +434,18 @@ namespace Applicant.API.Application.Services
                 throw new ExamIsAlreadyExistException(userExamDto.ExamId);
             }
 
+            var examQuestions =  _examGrpcService.GetExamQuestions(userExamDto.ExamId);
 
-            //var res = _platformDataClient.ReturnAllPlatforms();
+            if(!examQuestions.Exists)
+            {
+                throw new BadRequestMessage($"Exam with id: {userExamDto.ExamId} not found!");
+            }
 
-            //var examData = await _examGrpcService.CheckTest(userExamDto.ExamId);
+            if(examQuestions.Questions.Count() == 0)
+            {
+                throw new BadRequestMessage($"Exam with id: {userExamDto.ExamId} is empty!");
+            }
 
-            //Console.WriteLine($"---> Flag: {examData}");
-
-            //var examData = _examGrpcService.GetExamItem(userExamDto.ExamId);
-
-            //if (examData != null)
-            //{
-            //    Console.WriteLine($"----> Exam: {examData.Title}");
-            //}
 
             // gRPC service check exam data in the report service
             var reportResult =  _reportGrpcService.IsExistExamRequest(userExamDto.UserId, userExamDto.ExamId);

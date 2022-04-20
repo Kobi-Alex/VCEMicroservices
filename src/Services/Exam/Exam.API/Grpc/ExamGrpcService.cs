@@ -5,18 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Exam.API.Application.Services.Interfaces;
 using System.Linq;
+using Exam.Domain.Repositories;
 
 namespace Exam.API.Grpc
 {
     //gRPC comment: regular method
     public class ExamGrpcService: ExamGrpc.ExamGrpcBase
     {
-        private readonly IServiceManager _serviceManager;
+        //private readonly IServiceManager _serviceManager;
         private readonly ILogger<ExamGrpcService> _logger;
+        private readonly IRepositoryManager _repositoryManager;
 
-        public ExamGrpcService(IServiceManager serviceManager, ILogger<ExamGrpcService> logger)
+        public ExamGrpcService(IRepositoryManager repositoryManager, ILogger<ExamGrpcService> logger)
         {
-            _serviceManager = serviceManager ?? throw new ArgumentNullException(nameof(serviceManager));
+            _repositoryManager = repositoryManager ?? throw new ArgumentNullException(nameof(repositoryManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -24,7 +26,8 @@ namespace Exam.API.Grpc
         public override async Task<ExamItemModel> GetExamItemFromExamData(GetExamItem request, ServerCallContext context)
         {
             // Get data from exam service DB by exam ID
-            var examItem = await _serviceManager.ExamItemService.GetByIdIncludeExamQuestionsAsync(request.ExamId);
+            //var examItem = await _serviceManager.ExamItemService.GetByIdIncludeExamQuestionsAsync(request.ExamId);
+            var examItem = await _repositoryManager.ExamItemRepository.GetByIdIncludeExamQustionsAsync(request.ExamId);
 
             // Create response ExamItem Model
             var response = new ExamItemModel();
@@ -41,7 +44,8 @@ namespace Exam.API.Grpc
 
         public override async Task<ExamResponse> CheckIfQuestionExistsInExam(ExamRequest request, ServerCallContext context)
         {
-            var exams = await _serviceManager.ExamItemService.GetAllByQuestionId(request.QuestionId);
+            //var exams = await _serviceManager.ExamItemService.GetAllByQuestionId(request.QuestionId);
+            var exams = await _repositoryManager.ExamItemRepository.FindAll(x => x.ExamQuestions.Where(x => x.QuestionItemId ==request.QuestionId).Any());
 
             ExamResponse response = new ExamResponse();
            
@@ -55,9 +59,24 @@ namespace Exam.API.Grpc
             return await Task.FromResult(response);
         }
 
-        public override async Task<TestResponse> CheckTest(TestRequests request, ServerCallContext context)
+        public override async Task<ExamQuestionsResponse> GetExamQuestions(GetExamItem request, ServerCallContext context)
         {
-            return await Task.FromResult(new TestResponse() { Flag = true});
+            var exam = await _repositoryManager.ExamItemRepository.GetByIdIncludeExamQustionsAsync(request.ExamId);
+
+
+            var response = new ExamQuestionsResponse();
+
+            if (exam == null)
+            {
+                response.Exists = false;
+                return await Task.FromResult(response);
+            }
+
+            response.Exists = true;
+            response.Questions.AddRange(exam.ExamQuestions.Select(x => x.QuestionItemId));
+
+
+            return await Task.FromResult(response);
         }
     }
 }

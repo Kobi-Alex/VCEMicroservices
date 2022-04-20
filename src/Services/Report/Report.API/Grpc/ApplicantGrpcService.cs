@@ -13,11 +13,16 @@ namespace Report.API.Grpc
     {
         private readonly ILogger<ApplicantGrpcService> _logger;
         private readonly IConfiguration _configuration;
+        private GrpcChannel channel;
+        private ApplicantGrpc.ApplicantGrpcClient client;
+
 
         public ApplicantGrpcService(ILogger<ApplicantGrpcService> logger, IConfiguration configuration)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration;
+             channel = GrpcChannel.ForAddress(_configuration["GrpcApplicantSettings:ApplicantUrl"]);
+             client = new ApplicantGrpc.ApplicantGrpcClient(channel);
         }
 
 
@@ -25,9 +30,6 @@ namespace Report.API.Grpc
         public GetUserDataResponse GetUserData(string userId)
         {
             Console.WriteLine($"---> Calling Applicant GRPC Service: {_configuration["GrpcApplicantSettings:ApplicantUrl"]}");
-
-            var channel = GrpcChannel.ForAddress(_configuration["GrpcApplicantSettings:ApplicantUrl"]);
-            var client = new ApplicantGrpc.ApplicantGrpcClient(channel);
 
             try
             {
@@ -48,9 +50,6 @@ namespace Report.API.Grpc
         {
             Console.WriteLine($"---> Calling Applicant GRPC Service: {_configuration["GrpcApplicantSettings:ApplicantUrl"]}");
 
-            var channel = GrpcChannel.ForAddress(_configuration["GrpcApplicantSettings:ApplicantUrl"]);
-            var client = new ApplicantGrpc.ApplicantGrpcClient(channel);
-
             try
             {
                 var request = new RemoveExamRequest { UserId = userId, ExamId = examId };
@@ -65,31 +64,4 @@ namespace Report.API.Grpc
             }
         }
     }
-
-
-    //public class ApplicantGrpcService
-    //{
-    //    private readonly ILogger<ApplicantGrpcService> _logger;
-    //    private readonly ApplicantGrpc.ApplicantGrpcClient _applicantGrpcService;
-
-    //    public ApplicantGrpcService(ILogger<ApplicantGrpcService> logger, ApplicantGrpc.ApplicantGrpcClient applicantGrpcService)
-    //    {
-    //        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    //        _applicantGrpcService = applicantGrpcService ?? throw new ArgumentNullException(nameof(applicantGrpcService));
-    //    }
-
-    //    public async Task<RemoveExamResponce> RemoveExamFromApplicantData(string userId, int examId)
-    //    {
-    //        var request = new RemoveExamRequest { UserId = userId, ExamId = examId };
-
-    //        return await _applicantGrpcService.RemoveExamFromApplicantDataAsync(request);
-    //    }
-
-    //    public async Task<GetUserDataResponse> GetUserDataAsync(string userId)
-    //    {
-    //        var request = new GetUserDataRequest() {UserId = userId };
-
-    //        return await _applicantGrpcService.GetUseDataAsync(request);
-    //    }
-    //}
 }

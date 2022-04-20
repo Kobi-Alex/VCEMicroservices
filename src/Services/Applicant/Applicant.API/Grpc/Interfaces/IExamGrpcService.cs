@@ -9,6 +9,6 @@ namespace Applicant.API.Grpc.Interfaces
     public interface IExamGrpcService
     {
         public ExamItemModel GetExamItem(int idExam);
-        public bool CheckTest(int id);
+        public ExamQuestionsResponse GetExamQuestions(int id);
     }
 }

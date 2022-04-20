@@ -15,19 +15,20 @@ namespace Question.API.Grpc
     {
         private readonly ILogger<ReportGrpcService> _logger;
         private readonly IConfiguration _configuration;
+        private GrpcChannel channel;
+        private ReportGrpc.ReportGrpcClient client;
 
         public ReportGrpcService(ILogger<ReportGrpcService> logger, IConfiguration configuration)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration;
+             channel = GrpcChannel.ForAddress(_configuration["GrpcReportSettings:ReportUrl"]);
+             client = new ReportGrpc.ReportGrpcClient(channel);
         }
 
         public ReportResponse CheckIfExistsExamInReports(int examId)
         {
             Console.WriteLine($"---> Calling Exam GRPC Service: {_configuration["GrpcReportSettings:ReportUrl"]}");
-
-            var channel = GrpcChannel.ForAddress(_configuration["GrpcReportSettings:ReportUrl"]);
-            var client = new ReportGrpc.ReportGrpcClient(channel);
 
             try
             {
@@ -40,32 +41,6 @@ namespace Question.API.Grpc
                 Console.WriteLine($"---> Could not call Grpc Server: {ex.Message}");
                 return null;
             }
-
-
-            throw new NotImplementedException();
         }
     }
-
-    //public class ReportGrpcService
-    //{
-    //    private readonly ILogger<ReportGrpcService> _logger;
-    //    private readonly ReportGrpc.ReportGrpcClient _reportGrpcService;
-
-    //    public ReportGrpcService(ReportGrpc.ReportGrpcClient reportGrpcService, ILogger<ReportGrpcService> logger)
-    //    {
-    //        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    //        _reportGrpcService = reportGrpcService ?? throw new ArgumentNullException(nameof(reportGrpcService));
-    //    }
-
-    //    public async Task<ReportResponse> CheckIfExistsExamInReports(int examId)
-    //    {
-    //        //var request = new GetExamItem { ExamId = examId };
-
-    //        //return await _examGrpcService.GetExamItemFromExamDataAsync(request);
-
-    //        var request = new ReportRequest() { ExamId = examId };
-
-    //        return await _reportGrpcService.CheckIfExistsExamInReportsAsync(request);
-    //    }
-    //}
 }
