@@ -25,6 +25,7 @@ namespace Exam.API.Grpc
 
         public override async Task<ExamItemModel> GetExamItemFromExamData(GetExamItem request, ServerCallContext context)
         {
+            Console.WriteLine($"Request: {request.ExamId}");
             // Get data from exam service DB by exam ID
             //var examItem = await _serviceManager.ExamItemService.GetByIdIncludeExamQuestionsAsync(request.ExamId);
             var examItem = await _repositoryManager.ExamItemRepository.GetByIdIncludeExamQustionsAsync(request.ExamId);

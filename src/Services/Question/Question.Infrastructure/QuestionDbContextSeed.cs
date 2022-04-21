@@ -174,20 +174,28 @@ namespace Question.Infrastructure
                 {
                     Context = "Donec enim diam vulputate ut pharetra. In nisl nisi scelerisque eu ultrices vitae auctor eu. Amet justo donec enim diam vulputate ut pharetra sit amet.",
                     ReleaseDate = new DateTimeOffset(DateTime.Now),
-                    AnswerType = AnswerType.Text,
+                    AnswerType = AnswerType.Single,
                     QuestionAnswers = new List<QuestionAnswer>
                     {
-                       new QuestionAnswer() { CharKey = "T", Context = "Donec enim diam vulputate ut pharetra. In nisl nisi scelerisque eu ultrices vitae auctor eu. Amet justo donec enim diam vulputate ut pharetra sit amet.",   IsCorrectAnswer = true },
+                       new QuestionAnswer() { CharKey = "A", Context = "T->Purus sit amet volutpat consequat mauris.",   IsCorrectAnswer = true },
+                       new QuestionAnswer() { CharKey = "B", Context = "In aliquam sem fringilla ut morbi tincidunt.",   IsCorrectAnswer = false },
+                       new QuestionAnswer() { CharKey = "C", Context = "Ipsum nunc aliquet bibendum enim facilisis gravida neque. ",   IsCorrectAnswer = false },
+                       new QuestionAnswer() { CharKey = "D", Context = "Ante in nibh mauris cursus mattis molestie a iaculis.",   IsCorrectAnswer = false },
+                       new QuestionAnswer() { CharKey = "E", Context = "Vulputate mi sit amet mauris. ",   IsCorrectAnswer = false },
                     }
                 },
                 new QuestionItem()
                 {
-                    Context = "Donec enim diam vulputate ut pharetra. In nisl nisi scelerisque eu ultrices vitae auctor eu. Amet justo donec enim diam vulputate ut pharetra sit amet.",
+                    Context = "Velit ut tortor pretium viverra. ",
                     ReleaseDate = new DateTimeOffset(DateTime.Now),
-                    AnswerType = AnswerType.Text,
+                    AnswerType = AnswerType.Single,
                     QuestionAnswers = new List<QuestionAnswer>
                     {
-                       new QuestionAnswer() { CharKey = "T", Context = "Donec enim diam vulputate ut pharetra. In nisl nisi scelerisque eu ultrices vitae auctor eu. Amet justo donec enim diam vulputate ut pharetra sit amet.",   IsCorrectAnswer = true },
+                       new QuestionAnswer() { CharKey = "A", Context = "At erat pellentesque adipiscing commodo elit. ",   IsCorrectAnswer =false },
+                       new QuestionAnswer() { CharKey = "B", Context = "Facilisis leo vel fringilla est ullamcorper eget",   IsCorrectAnswer =false },
+                       new QuestionAnswer() { CharKey = "C", Context = "T->Pellentesque elit ullamcorper dignissim cras tincidunt lobortis feugiat vivamus at.",   IsCorrectAnswer =true },
+                       new QuestionAnswer() { CharKey = "D", Context = "Pharetra massa massa ultricies mi quis.",   IsCorrectAnswer =false },
+                       new QuestionAnswer() { CharKey = "E", Context = "Volutpat sed cras ornare arcu dui vivamus arcu. ",   IsCorrectAnswer =false },
                     }
                 },
                 new QuestionItem()

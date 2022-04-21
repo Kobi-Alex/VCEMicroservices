@@ -95,6 +95,8 @@ namespace Exam.API.Application.Services
             // When creating exam, exam status equal not available
             //exam.Status = ExamStatus.NotAvailable;
 
+            Console.WriteLine("---> "+ exam.Description);
+
             _repositoryManager.ExamItemRepository.Insert(exam);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
 

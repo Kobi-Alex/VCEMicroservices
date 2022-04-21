@@ -14,7 +14,7 @@ spec:
   spec: 
    containers:
     - name: examservice
-      image: docker_hub_id/examservice:latest
+      image: ghostdockerhunter/examservice:latest
 ---
 apiVersion: v1
 kind: Service

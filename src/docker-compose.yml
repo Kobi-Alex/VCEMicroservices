@@ -13,7 +13,7 @@ services:
       - SA_PASSWORD=1Secure*Password1
 
   user.api:
-    image: ${DOCKER_REGISTRY-}{docker_hub_id}}/userservice
+    image: ${DOCKER_REGISTRY-}ghostdockerhunter/userservice
     container_name: userservice
     build:
       context: .
@@ -22,7 +22,7 @@ services:
      - db
   
   question.api:
-    image: ${DOCKER_REGISTRY-}{docker_hub_id}/questionservice
+    image: ${DOCKER_REGISTRY-}ghostdockerhunter/questionservice
     container_name: questionservice
     build:
       context: .
@@ -30,7 +30,7 @@ services:
     depends_on:
      - db
   exam.api:
-    image: ${DOCKER_REGISTRY-}{docker_hub_id}/examservice
+    image: ${DOCKER_REGISTRY-}ghostdockerhunter/examservice
     container_name: examservice
     build:
       context: .
@@ -38,7 +38,7 @@ services:
     depends_on:
      - db
   report.api:
-    image: ${DOCKER_REGISTRY-}{docker_hub_id}/reportservice
+    image: ${DOCKER_REGISTRY-}ghostdockerhunter/reportservice
     container_name: reportservice
     build:
      context: .
@@ -47,7 +47,7 @@ services:
      - db
 
   ocelotapigw:
-    image: ${DOCKER_REGISTRY-}{docker_hub_id}/ocelotapigw
+    image: ${DOCKER_REGISTRY-}ghostdockerhunter/ocelotapigw
     build:
       context: .
       dockerfile: APIGateway/OcelotApi/Dockerfile

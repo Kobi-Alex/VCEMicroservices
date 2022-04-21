@@ -14,7 +14,7 @@ spec:
   spec: 
    containers:
     - name: userservice
-      image: docker_hub_id/userservice:latest
+      image: ghostdockerhunter/userservice:latest
 ---
 apiVersion: v1
 kind: Service

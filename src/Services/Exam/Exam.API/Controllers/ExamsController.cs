@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authorization;
 using Question.API.Application.Paggination;
 using Exam.API.Grpc;
 using Exam.API.Grpc.Interfaces;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Exam.API.Controllers
 {
@@ -32,19 +34,19 @@ namespace Exam.API.Controllers
         // GET api/exam/items
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Manager, Student")]
-        public async Task<IActionResult> Exams(int page, string title, int limit, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken=default)
+        public async Task<IActionResult> Exams(int page, string title, int limit, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken = default)
         {
             Console.WriteLine("--> Getting exams...");
             var exams = await _serviceManager.ExamItemService.GetAllAsync(cancellationToken);
 
-            if(title != null)
+            if (title != null)
             {
                 exams = exams.Where(x => x.Title.ToLower().Contains(title.ToLower()));
             }
 
 
             if (middleVal <= cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
-            return Ok(Pagination<ExamItemReadDto>.GetData(currentPage: page,limit: limit,itemsData: exams, middleVal:middleVal, cntBetween:cntBetween));
+            return Ok(Pagination<ExamItemReadDto>.GetData(currentPage: page, limit: limit, itemsData: exams, middleVal: middleVal, cntBetween: cntBetween));
             //return Ok(exams);
         }
 
@@ -67,10 +69,15 @@ namespace Exam.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> CreateExam([FromBody] ExamItemCreateDto examCreateDto, CancellationToken cancellationToken)
         {
-            Console.WriteLine("--> Creating exam...");
-            var examDto = await _serviceManager.ExamItemService.CreateAsync(examCreateDto, cancellationToken);
+            if (ModelState.IsValid)
+            {
+                Console.WriteLine("--> Creating exam...");
+                var examDto = await _serviceManager.ExamItemService.CreateAsync(examCreateDto, cancellationToken);
 
-            return CreatedAtAction(nameof(ExamById), new { examId = examDto.Id }, examDto);
+                return CreatedAtAction(nameof(ExamById), new { examId = examDto.Id }, examDto);
+            }
+
+            return BadRequest(GetModelStateErrors(ModelState.Values));
         }
         // POST api/exam/items
         [Route("{examId:int}")]
@@ -78,10 +85,15 @@ namespace Exam.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> UpdateExam(int examId, [FromBody] ExamItemUpdateDto examItemUpdateDto, CancellationToken cancellationToken)
         {
-            Console.WriteLine("--> Update exam...");
-            await _serviceManager.ExamItemService.UpdateAsync(examId, examItemUpdateDto, cancellationToken);
+            if (ModelState.IsValid)
+            {
+                Console.WriteLine("--> Update exam...");
+                await _serviceManager.ExamItemService.UpdateAsync(examId, examItemUpdateDto, cancellationToken);
 
-            return NoContent();
+                return NoContent();
+            }
+
+            return BadRequest(GetModelStateErrors(ModelState.Values));
         }
 
         // GET api/exam/items/1
@@ -111,7 +123,7 @@ namespace Exam.API.Controllers
             var questions = await _serviceManager.ExamQuestionService.GetAllByExamItemIdAsync(examId, cancellationToken);
 
             if (middleVal <= cntBetween) return BadRequest(new { Error = "MiddleVal must be more than cntBetween" });
-            return Ok(Pagination<ExamQuestionReadDto>.GetData(currentPage: page,limit: limit,itemsData: questions, middleVal:middleVal, cntBetween:cntBetween));
+            return Ok(Pagination<ExamQuestionReadDto>.GetData(currentPage: page, limit: limit, itemsData: questions, middleVal: middleVal, cntBetween: cntBetween));
             //return Ok(questions);
         }
 
@@ -154,6 +166,23 @@ namespace Exam.API.Controllers
             await _serviceManager.ExamQuestionService.DeleteAsync(examId, questionId, cancellationToken);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Gets all modelstate errors
+        /// </summary>
+        private List<string> GetModelStateErrors(IEnumerable<ModelStateEntry> modelState)
+        {
+            var modelErrors = new List<string>();
+            foreach (var ms in modelState)
+            {
+                foreach (var modelError in ms.Errors)
+                {
+                    modelErrors.Add(modelError.ErrorMessage);
+                }
+            }
+
+            return modelErrors;
         }
     }
 }

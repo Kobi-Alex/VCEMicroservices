@@ -42,6 +42,10 @@ namespace Exam.Infrastructure.Persistance.Repositories
 
         public void Insert(ExamItem item)
         {
+            if(item.Description == null)
+            {
+                item.Description = "";
+            }
             _dbContext.Exams.Add(item);
         }
 

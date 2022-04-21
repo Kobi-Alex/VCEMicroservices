@@ -59,6 +59,8 @@ namespace Report.API.Application.Features.Commands.CloseReview
             }
 
 
+            Console.WriteLine($"reviewToUpdate: exam: {reviewToUpdate._examId}");
+
             // gRPC request to Exam service
             // Getting examItem object from exam service.
             var examItem =  _examGrpcService.GetExamItemFromExamData(reviewToUpdate._examId);
