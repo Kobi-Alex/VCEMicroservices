@@ -14,6 +14,8 @@ Execute commands:
 At the root directory which include kubernetes files, run below command:
 
 Execute commands:
+ NETWORK LOAD BALANCER (NLB) (https://kubernetes.github.io/ingress-nginx/deploy/#docker-desktop)
+ * kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.3/deploy/static/provider/aws/deploy.yaml
  * kubectl apply -f mssql-depl.yaml
  * kubectl apply -f users-depl.yaml
  * kubectl apply -f questions-depl.yaml
