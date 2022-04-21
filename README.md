@@ -9,7 +9,7 @@ Wait for docker compose all microservices. That’s it! (some microservices need
 # Kubernetes
 Execute commands:
  * Build images: docker-compose -f docker-compose.yml -f docker-compose.override.yml build -d
- * Push to Docker Hub: docker dockerhubid/servicename
+ * Push to Docker Hub: docker push servicename
 
 NETWORK LOAD BALANCER (NLB) (https://kubernetes.github.io/ingress-nginx/deploy/#docker-desktop):
  * kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.3/deploy/static/provider/aws/deploy.yaml
