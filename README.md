@@ -9,8 +9,10 @@ Wait for docker compose all microservices. That’s it! (some microservices need
 # Kubernets
 Execute commands:
  * Build images: docker-compose -f docker-compose.yml -f docker-compose.override.yml build -d
- * Push to Docker Hub: docker push <your docker hub id>/servicename
+ * Push to Docker Hub: docker dockerhubid/servicename
+
 At the root directory which include kubernetes files, run below command:
+
 Execute commands:
  * kubectl apply -f mssql-depl.yaml
  * kubectl apply -f users-depl.yaml
