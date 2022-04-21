@@ -8,6 +8,7 @@ At the root directory which include docker-compose.yml files, run below command:
 Wait for docker compose all microservices. That’s it! (some microservices need extra time to work so please wait if not worked in first shut).
 
 Url: http://localhost:9000
+ * /api/auth
  * /api/users
  * /api/categories
  * /api/questions
@@ -32,6 +33,7 @@ At the root directory which include kubernetes files, run below command:
  * kubectl apply -f reports-depl.yaml
 
 Url: http://acme.com:
+ * /api/auth
  * /api/users
  * /api/categories
  * /api/questions
