@@ -22,5 +22,7 @@ At the root directory which include kubernetes files, run below command:
  * kubectl apply -f exams-depl.yaml
  * kubectl apply -f reports-depl.yaml
 
+# Tutorial
+https://www.youtube.com/watch?v=DgVjEo3OGBI&t=19801s&ab_channel=LesJackson
 
  
