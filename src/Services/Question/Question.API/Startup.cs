@@ -79,69 +79,48 @@ namespace Question.API
 
             if (_env.IsProduction())
             {
-                try
-                {
-                    //Console.WriteLine("--> Using InMem DB Production");
-                    //services.AddDbContext<QuestionDbContext>(opt =>
-                    //   opt.UseInMemoryDatabase("InMem"));
+                //Console.WriteLine("--> Using InMem DB Production");
+                //services.AddDbContext<QuestionDbContext>(opt =>
+                //   opt.UseInMemoryDatabase("InMem"));
 
-                    Console.WriteLine("\n---> Using SqlServer Db Production\n");
-                    services.AddDbContext<QuestionDbContext>(opt =>
-                       opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
-                }
+                Console.WriteLine("\n---> Using SqlServer Db Production\n");
+                services.AddDbContext<QuestionDbContext>(opt =>
+                   opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
 
             }
             if (_env.IsDevelopment())
             {
-                try
-                {
-                    //Console.WriteLine("--> Using InMem DB Production");
-                    //services.AddDbContext<QuestionDbContext>(opt =>
-                    //   opt.UseInMemoryDatabase("InMem"));
+                //Console.WriteLine("--> Using InMem DB Production");
+                //services.AddDbContext<QuestionDbContext>(opt =>
+                //   opt.UseInMemoryDatabase("InMem"));
 
-                    Console.WriteLine("\n---> Using SqlServer Db Development\n");
-                    services.AddDbContext<QuestionDbContext>(opt =>
-                       opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
-                }
+                Console.WriteLine("\n---> Using SqlServer Db Development\n");
+                services.AddDbContext<QuestionDbContext>(opt =>
+                   opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
             }
 
-            if(_env.IsStaging())
+            if (_env.IsStaging())
             {
-                try
-                {
-                    //Console.WriteLine("--> Using InMem DB Production");
-                    //services.AddDbContext<QuestionDbContext>(opt =>
-                    //   opt.UseInMemoryDatabase("InMem"));
+                //Console.WriteLine("--> Using InMem DB Production");
+                //services.AddDbContext<QuestionDbContext>(opt =>
+                //   opt.UseInMemoryDatabase("InMem"));
 
-                    Console.WriteLine("\n---> Using SqlServer Db Staging\n");
-                    services.AddDbContext<QuestionDbContext>(opt =>
-                       opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
-                }
+                Console.WriteLine("\n---> Using SqlServer Db Staging\n");
+                services.AddDbContext<QuestionDbContext>(opt =>
+                   opt.UseSqlServer(Configuration.GetConnectionString("QuestionConnection")));
             }
 
 
             //add service ServiceManager
             services.AddScoped<IServiceManager, ServiceManager>();
-            
+
             //GRPC
             services.AddScoped<IExamGrpcService, ExamGrpcService>();
             services.AddScoped<IReportGrpcService, ReportGrpcService>();
 
             // RepositoryManager configuration
             services.AddScoped<IRepositoryManager, RepositoryManager>();
-            
+
             // gRPC configuration
             services.AddGrpc();
 

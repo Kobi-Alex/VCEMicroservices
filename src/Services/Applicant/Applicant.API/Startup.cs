@@ -57,65 +57,42 @@ namespace Applicant.API
 
             if (_env.IsStaging())
             {
-                try
-                {
-                    Console.WriteLine("\n---> Staging");
-                    Console.WriteLine("\n---> Using SQL Server Staging\n");
+                Console.WriteLine("\n---> Staging");
+                Console.WriteLine("\n---> Using SQL Server Staging\n");
 
-                    services.AddDbContext<AppDbContext>(opt =>
-                         opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+                services.AddDbContext<AppDbContext>(opt =>
+                     opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
 
-                    //Console.WriteLine("\n---> Using InMem Db Staging\n");
+                //Console.WriteLine("\n---> Using InMem Db Staging\n");
 
-                    //services.AddDbContext<AppDbContext>(opt =>
-                    //   opt.UseInMemoryDatabase("InMem"));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
-                }
-                
+                //services.AddDbContext<AppDbContext>(opt =>
+                //   opt.UseInMemoryDatabase("InMem"));
             }
 
             if (_env.IsProduction())
             {
-                try
-                {
-                    Console.WriteLine("\n---> Production");
-                    Console.WriteLine("\n---> Using InMem Db Production\n");
-                    services.AddDbContext<AppDbContext>(opt =>
-                       opt.UseInMemoryDatabase("InMem"));
+                Console.WriteLine("\n---> Production");
+                //Console.WriteLine("\n---> Using InMem Db Production\n");
+                //services.AddDbContext<AppDbContext>(opt =>
+                //   opt.UseInMemoryDatabase("InMem"));
 
-                    //Console.WriteLine("\n---> Using SQL Db Production\n");
-                    //services.AddDbContext<AppDbContext>(opt =>
-                    //    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
-                }
+                Console.WriteLine("\n---> Using SQL Db Production\n");
+                services.AddDbContext<AppDbContext>(opt =>
+                    opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
             }
 
             if (_env.IsDevelopment())
             {
-                try
-                {
-                    Console.WriteLine("\n---> Development");
-                    Console.WriteLine("\n---> Using SQL Db Development\n");
-                    Console.WriteLine();
+                Console.WriteLine("\n---> Development");
+                Console.WriteLine("\n---> Using SQL Db Development\n");
+                Console.WriteLine();
 
-                     services.AddDbContext<AppDbContext>(opt =>
-                        opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
+                services.AddDbContext<AppDbContext>(opt =>
+                   opt.UseSqlServer(Configuration.GetConnectionString("UsersConnection")));
 
-                    //services.AddDbContext<AppDbContext>(opt =>
-                    //   opt.UseInMemoryDatabase("InMem"));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
-                }
+                //services.AddDbContext<AppDbContext>(opt =>
+                //   opt.UseInMemoryDatabase("InMem"));
 
-               
             }
 
             //Grpc
@@ -176,7 +153,7 @@ namespace Applicant.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Applicant.API v1"));
             }
 
-           
+
 
             //add ExceptionHandlingMiddleware
             app.UseMiddleware<ExceptionHandlingMiddleware>();

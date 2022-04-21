@@ -91,54 +91,33 @@ namespace Report.API
 
             if (_env.IsDevelopment())
             {
-                try
-                {
-                    //Console.WriteLine("\n---> Using InMem Db Development\n");
-                    //services.AddDbContext<ReportDbContext>(opt =>
-                    //  opt.UseInMemoryDatabase("InMem"));
-                    Console.WriteLine("\n---> Using SqlServer Db Development\n");
-                    services.AddDbContext<ReportDbContext>(opt =>
-                        opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
-                }
+                //Console.WriteLine("\n---> Using InMem Db Development\n");
+                //services.AddDbContext<ReportDbContext>(opt =>
+                //  opt.UseInMemoryDatabase("InMem"));
+                Console.WriteLine("\n---> Using SqlServer Db Development\n");
+                services.AddDbContext<ReportDbContext>(opt =>
+                    opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
             }
 
-            if(_env.IsStaging())
+            if (_env.IsStaging())
             {
-                try
-                {
-                    //Console.WriteLine("\n---> Using InMem Db Development\n");
-                    //services.AddDbContext<ReportDbContext>(opt =>
-                    //  opt.UseInMemoryDatabase("InMem"));
-                    Console.WriteLine("\n---> Using SqlServer Db Staging\n");
-                    services.AddDbContext<ReportDbContext>(opt =>
-                        opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
-                }
+                //Console.WriteLine("\n---> Using InMem Db Development\n");
+                //services.AddDbContext<ReportDbContext>(opt =>
+                //  opt.UseInMemoryDatabase("InMem"));
+                Console.WriteLine("\n---> Using SqlServer Db Staging\n");
+                services.AddDbContext<ReportDbContext>(opt =>
+                    opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
             }
 
             if (_env.IsProduction())
             {
-                try
-                {
-                    //Console.WriteLine("\n---> Using InMem Db Development\n");
-                    //services.AddDbContext<ReportDbContext>(opt =>
-                    //  opt.UseInMemoryDatabase("InMem"));
-                    Console.WriteLine("\n---> Using SqlServer Db Production\n");
-                    services.AddDbContext<ReportDbContext>(opt =>
-                        opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"\n---> Could not connect to Sql: {ex.Message}");
-                }
+                //services.AddDbContext<ReportDbContext>(opt =>
+                //  opt.UseInMemoryDatabase("InMem"));
+                Console.WriteLine("\n---> Using SqlServer Db Production\n");
+                services.AddDbContext<ReportDbContext>(opt =>
+                    opt.UseSqlServer(Configuration.GetConnectionString("ReportsConnection")));
             }
+
 
             services.AddScoped<IServiceManager, ServiceManager>();
 
@@ -149,9 +128,6 @@ namespace Report.API
             services.AddScoped<IApplicantGrpcService, ApplicantGrpcService>();
             services.AddScoped<IExamGrpcService, ExamGrpcService>();
             services.AddScoped<IQuestionGrpcService, QuestionGrpcService>();
-
-
-
 
             // Review repository configuration
             services.AddScoped<IReviewRepository, ReviewRepository>();
@@ -225,14 +201,12 @@ namespace Report.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Report.API v1"));
             }
 
-
-
             //add ExceptionHandlingMiddleware
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             //webBuilder.ConfigureKestrel(options =>
 
-                app.UseRouting();
+            app.UseRouting();
             app.UseCors("AllowOrigin");
             app.UseAuthorization();
 
