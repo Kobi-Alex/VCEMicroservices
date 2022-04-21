@@ -1,6 +1,9 @@
 # VCEMicroservices
 VCE (Virtual computer environment) Microservices
 
+# Email
+ Required to register api key in https://sendgrid.com/ and set in appsettings.json in Applicant and Report Services.
+
 # Docker (Staging)
 At the root directory which include docker-compose.yml files, run below command:
  * docker-compose up -d
