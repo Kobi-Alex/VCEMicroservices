@@ -8,7 +8,7 @@ At the root directory which include docker-compose.yml files, run below command:
 Wait for docker compose all microservices. That’s it! (some microservices need extra time to work so please wait if not worked in first shut).
 
 # Kubernetes (Production)
-Execute commands:
+At the root directory which include docker-compose.yml files, run below command:
  * Build images: docker-compose build 
  * Push to Docker Hub: docker push {docker_hub_id}/servicename
 
