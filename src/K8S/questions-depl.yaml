@@ -14,7 +14,7 @@ spec:
   spec:
    containers:
     - name: questionservice
-      image: ghostdockerhunter/questionservice:latest
+      image: docker_hub_id/questionservice:latest
 ---
 apiVersion: v1
 kind: Service

@@ -14,7 +14,7 @@ spec:
   spec: 
    containers:
     - name: reportservice
-      image: ghostdockerhunter/reportservice:latest
+      image: docker_hub_id/reportservice:latest
 ---
 apiVersion: v1
 kind: Service
