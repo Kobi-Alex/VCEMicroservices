@@ -14,7 +14,7 @@ At the root directory which include docker-compose.yml files, run below command:
 
 NETWORK LOAD BALANCER (NLB) (https://kubernetes.github.io/ingress-nginx/deploy/#docker-desktop):
  * kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.3/deploy/static/provider/aws/deploy.yaml
- * Add acme.com (for example (127.0.0.1 acme.com)) in hosts: C:\Windows\System32\drivers\etc
+ * Add acme.com (for example: 127.0.0.1 acme.com) in hosts: C:\Windows\System32\drivers\etc
   
 At the root directory which include kubernetes files, run below command:
  * kubectl apply -f mssql-depl.yaml
