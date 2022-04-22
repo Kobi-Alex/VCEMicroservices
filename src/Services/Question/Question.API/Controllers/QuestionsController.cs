@@ -31,7 +31,7 @@ namespace Question.API.Controllers
 
         // GET api/Questions
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student, Manager")]
         public async Task<IActionResult> GetAllQuestions(int page, int limit, int category, string context, int middleVal = 10, int cntBetween = 5, CancellationToken cancellationToken = default)
         {
             var questions = await _serviceManager.QuestionItemService
@@ -57,7 +57,7 @@ namespace Question.API.Controllers
 
         // GET api/Questions/1
         [HttpGet("{questionId:int}", Name = "GetQuestionById")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student, Manager")]
         public async Task<IActionResult> GetQuestionById(int questionId, CancellationToken cancellationToken)
         {
             var question = await _serviceManager.QuestionItemService

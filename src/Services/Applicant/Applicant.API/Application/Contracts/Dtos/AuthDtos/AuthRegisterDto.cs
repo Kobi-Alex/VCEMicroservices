@@ -22,6 +22,6 @@ namespace Applicant.API.Application.Contracts.Dtos.AuthDtos
 
         public int Code { get; set; }
 
-        public string AdditionaInfo { get; set; }
+        public string AdditionalInfo { get; set; }
     }
 }

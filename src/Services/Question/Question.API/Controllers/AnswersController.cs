@@ -29,7 +29,7 @@ namespace Question.API.Controllers
 
         // GET api/Answers
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student, Manager")]
         public async Task<IActionResult> GetAllAnswers(int? questionId, CancellationToken cancellationToken)
         {
             var answers = await _serviceManager.QuestionAnswerService.GetAllAsync(cancellationToken);
@@ -49,7 +49,7 @@ namespace Question.API.Controllers
         //// GET api/Answers/1
         [HttpGet]
         [Route("q/{questionId:int}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student, Manager")]
 
         public async Task<IActionResult> GetAllAnswersByQuestionId(int questionId, CancellationToken cancellationToken)
         {
@@ -63,7 +63,7 @@ namespace Question.API.Controllers
 
         // GET api/Answers/1
         [HttpGet("{answerId:int}", Name = "GetAnswerById")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student, Manager")]
         public async Task<IActionResult> GetAnswerById(int answerId, CancellationToken cancellationToken)
         {
             var answer = await _serviceManager.QuestionAnswerService.GetByIdAsync(answerId, cancellationToken);
