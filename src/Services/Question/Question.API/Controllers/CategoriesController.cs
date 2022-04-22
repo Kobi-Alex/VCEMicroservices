@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Question.API.Application.Services.Interfaces;
 using Question.API.Application.Contracts.Dtos.QuestionCategoryDtos;
 using Question.API.Application.Paggination;
-
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Question.API.Controllers
 {
@@ -61,10 +62,14 @@ namespace Question.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> CreateCategory([FromBody] QuestionCategoryCreateDto questionCategoryCreateDto)
         {
-            var categoryDto = await _serviceManager.QuestionCategoryService.CreateAsync(questionCategoryCreateDto);
+            if (ModelState.IsValid)
+            {
+                var categoryDto = await _serviceManager.QuestionCategoryService.CreateAsync(questionCategoryCreateDto);
 
-            Console.WriteLine("--> Creating new category");
-            return CreatedAtAction(nameof(GetCategoryById), new { id = categoryDto.Id}, categoryDto);
+                Console.WriteLine("--> Creating new category");
+                return CreatedAtAction(nameof(GetCategoryById), new { id = categoryDto.Id}, categoryDto);
+            }
+            return BadRequest(GetModelStateErrors(ModelState.Values));
         }
 
 
@@ -73,10 +78,14 @@ namespace Question.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] QuestionCategoryUpdateDto questionCategoryUpdateDto, CancellationToken cancellationToken)
         {
-            await _serviceManager.QuestionCategoryService.UpdateAsync(id, questionCategoryUpdateDto, cancellationToken);
+            if (ModelState.IsValid)
+            {
+                await _serviceManager.QuestionCategoryService.UpdateAsync(id, questionCategoryUpdateDto, cancellationToken);
 
-            Console.WriteLine($"--> Updating category by ID = {id}");
-            return NoContent();
+                Console.WriteLine($"--> Updating category by ID = {id}");
+                return NoContent();
+            }
+            return BadRequest(GetModelStateErrors(ModelState.Values));
         }
 
         // Delete api/Categories/5
@@ -88,6 +97,23 @@ namespace Question.API.Controllers
 
             Console.WriteLine($"--> Deleting category by ID = {id}");
             return NoContent();
+        }
+
+        /// <summary>
+        /// Gets all modelstate errors
+        /// </summary>
+        private List<string> GetModelStateErrors(IEnumerable<ModelStateEntry> modelState)
+        {
+            var modelErrors = new List<string>();
+            foreach (var ms in modelState)
+            {
+                foreach (var modelError in ms.Errors)
+                {
+                    modelErrors.Add(modelError.ErrorMessage);
+                }
+            }
+
+            return modelErrors;
         }
     }
 }

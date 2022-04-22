@@ -10,7 +10,7 @@ namespace Applicant.API.Application.Exceptions
         {
         }
         public RoleException(string message)
-            : base($"Cannot add role: < {message} > to user with roles<Admin, Manager or Teacher>")
+            : base($"Cannot add role: < {message} > to user with roles: Admin, Manager or Teacher")
         {
         } 
 

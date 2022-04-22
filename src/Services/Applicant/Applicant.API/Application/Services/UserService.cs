@@ -154,7 +154,7 @@ namespace Applicant.API.Application.Services
             }
 
             _mapper.Map(userUpdateDto, user);
-            user.CreatedAt = new DateTimeOffset(DateTime.Now);
+            user.UpdatedAt = new DateTimeOffset(DateTime.Now);
             
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
@@ -354,7 +354,7 @@ namespace Applicant.API.Application.Services
             {
                 if (user.Roles.Any(x => x.Name == "Student"))
                 {
-                    throw new RoleException();
+                    throw new BadRequestMessage($"Could not add role {role.Name} to user with role Student!");
                 }
             }
 

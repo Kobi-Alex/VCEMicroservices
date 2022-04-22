@@ -76,7 +76,7 @@ namespace Applicant.API.Application.Services
                 LastName = authRegisterDto.LastName,
                 Email = authRegisterDto.Email,
                 Password = _hasher.HashPassword(null, authRegisterDto.Password),
-                AdditionalInfo = authRegisterDto.AdditionaInfo,
+                AdditionalInfo = authRegisterDto.AdditionalInfo,
                 CreatedAt = new DateTimeOffset(DateTime.Now),
                 UpdatedAt = new DateTimeOffset(DateTime.Now)
             };

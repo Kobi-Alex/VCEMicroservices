@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Question.API.Application.Services.Interfaces;
 using Question.API.Application.Contracts.Dtos.QuestionAnswerDtos;
-
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Question.API.Controllers
 {
@@ -28,12 +29,12 @@ namespace Question.API.Controllers
 
         // GET api/Answers
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles="Teacher, Student")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student, Manager")]
         public async Task<IActionResult> GetAllAnswers(int? questionId, CancellationToken cancellationToken)
         {
             var answers = await _serviceManager.QuestionAnswerService.GetAllAsync(cancellationToken);
 
-            if(questionId != null)
+            if (questionId != null)
             {
                 answers = answers.Where(x => x.QuestionItemId == questionId);
             }
@@ -48,7 +49,7 @@ namespace Question.API.Controllers
         //// GET api/Answers/1
         [HttpGet]
         [Route("q/{questionId:int}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student, Manager")]
 
         public async Task<IActionResult> GetAllAnswersByQuestionId(int questionId, CancellationToken cancellationToken)
         {
@@ -62,7 +63,7 @@ namespace Question.API.Controllers
 
         // GET api/Answers/1
         [HttpGet("{answerId:int}", Name = "GetAnswerById")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher, Student, Manager")]
         public async Task<IActionResult> GetAnswerById(int answerId, CancellationToken cancellationToken)
         {
             var answer = await _serviceManager.QuestionAnswerService.GetByIdAsync(answerId, cancellationToken);
@@ -78,10 +79,15 @@ namespace Question.API.Controllers
 
         public async Task<IActionResult> CreateAnswer([FromBody] QuestionAnswerCreateDto questionAnswerCreateDto, CancellationToken cancellationToken)
         {
-            var answerDto = await _serviceManager.QuestionAnswerService.CreateAsync(questionAnswerCreateDto, cancellationToken);
+            if (ModelState.IsValid)
+            {
+                var answerDto = await _serviceManager.QuestionAnswerService.CreateAsync(questionAnswerCreateDto, cancellationToken);
 
-            Console.WriteLine("--> Add new answer...");
-            return CreatedAtAction(nameof(GetAnswerById), new { answerId = answerDto.Id }, answerDto);
+                Console.WriteLine("--> Add new answer...");
+                return CreatedAtAction(nameof(GetAnswerById), new { answerId = answerDto.Id }, answerDto);
+
+            }
+            return BadRequest(GetModelStateErrors(ModelState.Values));
         }
 
 
@@ -91,10 +97,15 @@ namespace Question.API.Controllers
 
         public async Task<IActionResult> UpdateAnswer(int answerId, [FromBody] QuestionAnswerUpdateDto questionItemUpdateDto, CancellationToken cancellationToken)
         {
-            await _serviceManager.QuestionAnswerService.UpdateAsync(answerId, questionItemUpdateDto, cancellationToken);
+            if (ModelState.IsValid)
+            {
+                await _serviceManager.QuestionAnswerService.UpdateAsync(answerId, questionItemUpdateDto, cancellationToken);
 
-            Console.WriteLine($"--> Updating answer by ID = {answerId}");
-            return NoContent();
+                Console.WriteLine($"--> Updating answer by ID = {answerId}");
+                return NoContent();
+
+            }
+            return BadRequest(GetModelStateErrors(ModelState.Values));
         }
 
         // DELETE api/Answers/1
@@ -108,6 +119,21 @@ namespace Question.API.Controllers
             Console.WriteLine($"--> Delete answer by ID = {answerId}");
             return NoContent();
         }
+        /// <summary>
+        /// Gets all modelstate errors
+        /// </summary>
+        private List<string> GetModelStateErrors(IEnumerable<ModelStateEntry> modelState)
+        {
+            var modelErrors = new List<string>();
+            foreach (var ms in modelState)
+            {
+                foreach (var modelError in ms.Errors)
+                {
+                    modelErrors.Add(modelError.ErrorMessage);
+                }
+            }
 
+            return modelErrors;
+        }
     }
 }
