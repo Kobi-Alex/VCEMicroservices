@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Question.API.Application.Services.Interfaces;
 using Question.API.Application.Contracts.Dtos.QuestionItemDtos;
 using Question.API.Application.Paggination;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Question.API.Controllers
 {
@@ -35,12 +37,12 @@ namespace Question.API.Controllers
             var questions = await _serviceManager.QuestionItemService
                 .GetAllAsync(cancellationToken);
 
-            if(category > 0)
+            if (category > 0)
             {
                 questions = questions.Where(x => x.QuestionCategoryId == category).ToList();
             }
 
-            if(!String.IsNullOrEmpty(context))
+            if (!String.IsNullOrEmpty(context))
             {
                 questions = questions.Where(x => x.Context.ToLower().Contains(context.ToLower()));
             }
@@ -49,7 +51,7 @@ namespace Question.API.Controllers
 
 
             Console.WriteLine("--> Getting all questions...");
-            return Ok(Pagination<QuestionItemReadDto>.GetData(currentPage: page, limit: limit, itemsData: questions, middleVal:middleVal, cntBetween:cntBetween));
+            return Ok(Pagination<QuestionItemReadDto>.GetData(currentPage: page, limit: limit, itemsData: questions, middleVal: middleVal, cntBetween: cntBetween));
             //return Ok(questions);
         }
 
@@ -70,11 +72,16 @@ namespace Question.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> CreateQuestion([FromBody] QuestionItemCreateDto questionItemCreateDto, CancellationToken cancellationToken)
         {
-            var questionDto = await _serviceManager.QuestionItemService
-                .CreateAsync(questionItemCreateDto, cancellationToken);
+            if (ModelState.IsValid)
+            {
+                var questionDto = await _serviceManager.QuestionItemService
+               .CreateAsync(questionItemCreateDto, cancellationToken);
 
-            Console.WriteLine("--> Creating new question...");
-            return CreatedAtAction(nameof(GetQuestionById), new { questionId = questionDto.Id }, questionDto);
+                Console.WriteLine("--> Creating new question...");
+                return CreatedAtAction(nameof(GetQuestionById), new { questionId = questionDto.Id }, questionDto);
+            }
+
+            return BadRequest(GetModelStateErrors(ModelState.Values));
         }
 
         // PUT api/Questions/1
@@ -82,11 +89,16 @@ namespace Question.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
         public async Task<IActionResult> UpdateQuestion(int questionId, [FromBody] QuestionItemUpdateDto questionItemUpdateDto, CancellationToken cancellationToken)
         {
-            await _serviceManager.QuestionItemService
+            if (ModelState.IsValid)
+            {
+                await _serviceManager.QuestionItemService
                 .UpdateAsync(questionId, questionItemUpdateDto, cancellationToken);
 
-            Console.WriteLine($"--> Updating question by ID = {questionId}");
-            return NoContent();
+                Console.WriteLine($"--> Updating question by ID = {questionId}");
+                return NoContent();
+
+            }
+            return BadRequest(GetModelStateErrors(ModelState.Values));
         }
 
         // DELETE api/Questions/5
@@ -98,6 +110,23 @@ namespace Question.API.Controllers
 
             Console.WriteLine($"--> Question with ID = {questionId} has been removed!!");
             return NoContent();
+        }
+
+        /// <summary>
+        /// Gets all modelstate errors
+        /// </summary>
+        private List<string> GetModelStateErrors(IEnumerable<ModelStateEntry> modelState)
+        {
+            var modelErrors = new List<string>();
+            foreach (var ms in modelState)
+            {
+                foreach (var modelError in ms.Errors)
+                {
+                    modelErrors.Add(modelError.ErrorMessage);
+                }
+            }
+
+            return modelErrors;
         }
     }
 }
