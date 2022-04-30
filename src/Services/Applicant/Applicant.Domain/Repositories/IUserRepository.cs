@@ -17,6 +17,8 @@ namespace Applicant.Domain.Repositories
         Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
         Task<User> FindAsync(Expression<Func<User, bool>> predicate, CancellationToken cancellationToken = default);
 
+        void SetNewPassword(string email, string password);
+
         void Insert(User user);
         //void Update(User user);
         void Delete(User user);

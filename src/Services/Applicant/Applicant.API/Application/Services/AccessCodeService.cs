@@ -60,7 +60,7 @@ namespace Applicant.API.Application.Services
 
             if (userCodes.ToList().Count == 0)
             {
-                await AccessCodeAsync(authRegisterDto);
+                await AccessCodeAsync(authRegisterDto.Email);
                 return null;
                 //throw new AccessCodeNotFoundException();
             }
@@ -140,10 +140,9 @@ namespace Applicant.API.Application.Services
         }
 
 
-        public async Task AccessCodeAsync(AuthRegisterDto authRegisterDto, CancellationToken cancellationToken = default)
+        public async Task AccessCodeAsync(string userEmail, CancellationToken cancellationToken = default)
         {
-
-            var user = await _repositoryManager.UserRepository.GetByEmailAsync(authRegisterDto.Email);
+            var user = await _repositoryManager.UserRepository.GetByEmailAsync(userEmail);
 
             if (user != null)
             {
@@ -155,40 +154,21 @@ namespace Applicant.API.Application.Services
             var accessCode = _randomNumbers.Next(100000, 999999);
 
             Email email = new Email();
-            email.To= authRegisterDto.Email;
+            email.To = userEmail;
             email.Subject = "Access code";
             email.Body = $"<h1>Your access code: {accessCode}</h1>";
 
             await _emailService.SendEmail(email);
 
-            //using (MailMessage mail = new MailMessage())
-            //{
-            //    mail.From = new MailAddress(_emailConfig.From, "It step Administration"); ;
-            //    mail.To.Add(authRegisterDto.Email);
-            //    mail.Subject = "Access code";
-            //    mail.Body = $"<h1>Your access code: {accessCode}</h1>";
-            //    mail.IsBodyHtml = true;
-
-            //    using (SmtpClient smtp = new SmtpClient(_emailConfig.SmtpServer, _emailConfig.Port))
-            //    {
-            //        smtp.Credentials = new NetworkCredential(_emailConfig.From, _emailConfig.Password);//Real email and password
-
-            //        smtp.EnableSsl = true;
-            //        smtp.Send(mail);
-            //    }
-            //}
-
             var newAC = new AccessCode()
             {
                 Code = accessCode,
-                Email = authRegisterDto.Email,
+                Email = userEmail,
                 ExpiryDate = new DateTimeOffset(DateTime.Now).AddMinutes(30)
             };
 
             _repositoryManager.AccessCodeRepository.Create(newAC);
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
-            //_context.AccessCodes.Add(new AccessCode() { Code = accessCode, Email = emailRequest.Email, ExpiryDate = new DateTimeOffset(DateTime.Now).AddMinutes(30) });
-            //_context.SaveChanges();
         }
 
         private bool CheckPassword(User user, string password)
@@ -410,6 +390,64 @@ namespace Applicant.API.Application.Services
             return new string(Enumerable.Repeat(chars, length).Select(x => x[random.Next(x.Length)]).ToArray());
         }
 
+        public async Task SetNewPassword(AuthSetNewPasswordDto authSetNew, CancellationToken cancellationToken = default)
+        {
+            var user = await _repositoryManager.UserRepository.GetByEmailAsync(authSetNew.Email);
+
+            if (user == null)
+            {
+                throw new BadRequestMessage($"Email: {authSetNew.Email} not found!");
+            }
+
+            var userCodes = await _repositoryManager.AccessCodeRepository.GetAllByEmail(authSetNew.Email);
+
+            if (userCodes.ToList().Count == 0)
+            {
+                await AccessCodeAsync(authSetNew.Email);
+                //throw new AccessCodeNotFoundException();
+            } else
+            {
+                if (userCodes.ToList()[0].Code != authSetNew.AccessCode)
+                {
+                    throw new AccessCodeIncorrectException();
+                }
+
+                user.Password  = _hasher.HashPassword(null, authSetNew.Password);
+
+                await _repositoryManager.UnitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public async Task ForgotPassword(string userEmail, CancellationToken cancellationToken = default)
+        {
+            var user = await _repositoryManager.UserRepository.GetByEmailAsync(userEmail);
+
+            if (user == null)
+            {
+                throw new BadRequestMessage($"Email: {userEmail} not found!");
+            }
+
+            Console.WriteLine("\n---> Send Access code"); ;
+
+            var accessCode = _randomNumbers.Next(100000, 999999);
+
+            Email email = new Email();
+            email.To = userEmail;
+            email.Subject = "Forgot password";
+            email.Body = $"<h1>Your access code: {accessCode}</h1>";
+
+            await _emailService.SendEmail(email);
+
+            var newAC = new AccessCode()
+            {
+                Code = accessCode,
+                Email = userEmail,
+                ExpiryDate = new DateTimeOffset(DateTime.Now).AddMinutes(30)
+            };
+
+            _repositoryManager.AccessCodeRepository.Create(newAC);
+            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
     }
 
 }

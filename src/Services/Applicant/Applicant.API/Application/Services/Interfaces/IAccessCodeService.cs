@@ -13,7 +13,9 @@ namespace Applicant.API.Application.Services.Interfaces
         Task<AuthResult> RegisterUserAsync(AuthRegisterDto authRegisterDto, CancellationToken cancellationToken = default);
         Task<AuthResult> LoginUserAsync(AuthLoginDto authLoginDto, CancellationToken cancellationToken = default);
         Task<AuthResult> RefreshTokenAsync(AuthTokenRequestDto tokenRequest, CancellationToken cancellationToken = default);
-        Task AccessCodeAsync(AuthRegisterDto authRegisterDto, CancellationToken cancellationToken = default);
+        Task AccessCodeAsync(string userEmail, CancellationToken cancellationToken = default);
+        Task ForgotPassword(string userEmail, CancellationToken cancellationToken = default);
+        Task SetNewPassword(AuthSetNewPasswordDto authSetNew, CancellationToken cancellationToken = default);
 
     }
 

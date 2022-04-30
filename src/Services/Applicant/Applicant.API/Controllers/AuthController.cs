@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using Applicant.API.Application.Services.Interfaces;
 using Applicant.API.Application.Contracts.Dtos.AuthDtos;
-
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Applicant.API.Controllers
 {
@@ -70,20 +71,47 @@ namespace Applicant.API.Controllers
                     //return BadRequest(result);
                 }
             }
-            
+
             return BadRequest(new { Error = "Invalid payload" });
         }
 
         [HttpPost]
         [Route("SendMessage")]
-        public async Task<IActionResult> SendMessage([FromBody] AuthRegisterDto emailRequest)
+        public async Task<IActionResult> SendMessage([FromBody] AuthSendMessageDto sendMessageDto)
         {
             //Send message on the email
-
             if (ModelState.IsValid)
             {
                 Console.WriteLine($"\n---> Send Access code ...");
-                await _serviceManager.AccessCodeService.AccessCodeAsync(emailRequest);
+                await _serviceManager.AccessCodeService.AccessCodeAsync(sendMessageDto.Email);
+
+                return Ok();
+            }
+
+            return BadRequest(GetModelStateErrors(ModelState.Values));
+        }
+
+        [HttpPost]
+        [Route("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] AuthSendMessageDto sendMessageDto)
+        {
+            if (ModelState.IsValid)
+            {
+                await _serviceManager.AccessCodeService.ForgotPassword(sendMessageDto.Email);
+
+                return Ok();
+            }
+
+            return BadRequest(GetModelStateErrors(ModelState.Values));
+        }
+
+        [HttpPost]
+        [Route("SetNewPassword")]
+        public async Task<IActionResult> SetNewPassword([FromBody] AuthSetNewPasswordDto authSetNew)
+        {
+            if (ModelState.IsValid)
+            {
+                await _serviceManager.AccessCodeService.SetNewPassword(authSetNew);
 
                 return Ok();
             }
@@ -92,7 +120,23 @@ namespace Applicant.API.Controllers
             {
                 Error = "Invalid data"
             });
+        }
 
+        /// <summary>
+        /// Gets all modelstate errors
+        /// </summary>
+        private List<string> GetModelStateErrors(IEnumerable<ModelStateEntry> modelState)
+        {
+            var modelErrors = new List<string>();
+            foreach (var ms in modelState)
+            {
+                foreach (var modelError in ms.Errors)
+                {
+                    modelErrors.Add(modelError.ErrorMessage);
+                }
+            }
+
+            return modelErrors;
         }
     }
 }

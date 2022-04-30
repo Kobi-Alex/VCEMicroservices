@@ -69,5 +69,12 @@ namespace Applicant.Infrasructure.Persistance.Repositories
             _dbContext.Users.Remove(user);
         }
 
+        public void SetNewPassword(string email, string password)
+        {
+            var user = _dbContext.Users.FirstOrDefault(x => x.Email == email);
+            user.Password = password;
+
+            _dbContext.Update(user);
+        }
     }
 }

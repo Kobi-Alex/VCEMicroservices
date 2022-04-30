@@ -49,6 +49,30 @@
       "UpstreamPathTemplate": "/api/auth/sendMessage",
       "UpstreamHttpMethod": [ "POST" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/Auth/ForgotPassword",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "user.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/forgotPassword",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/SetNewPassword",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "user.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/setNewPassword",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
     //Users
     {
       "DownstreamPathTemplate": "/api/Users",
