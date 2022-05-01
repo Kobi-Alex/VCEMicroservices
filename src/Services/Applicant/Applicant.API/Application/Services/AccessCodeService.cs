@@ -60,9 +60,9 @@ namespace Applicant.API.Application.Services
 
             if (userCodes.ToList().Count == 0)
             {
-                await AccessCodeAsync(authRegisterDto.Email);
-                return null;
-                //throw new AccessCodeNotFoundException();
+               // await AccessCodeAsync(authRegisterDto.Email);
+               // return null;
+                throw new AccessCodeNotFoundException();
             }
 
             if (userCodes.ToList()[0].Code != authRegisterDto.Code)
@@ -403,8 +403,8 @@ namespace Applicant.API.Application.Services
 
             if (userCodes.ToList().Count == 0)
             {
-                await AccessCodeAsync(authSetNew.Email);
-                //throw new AccessCodeNotFoundException();
+                // await ForgotPassword(authSetNew.Email);
+                throw new AccessCodeNotFoundException();
             } else
             {
                 if (userCodes.ToList()[0].Code != authSetNew.AccessCode)
@@ -413,6 +413,11 @@ namespace Applicant.API.Application.Services
                 }
 
                 user.Password  = _hasher.HashPassword(null, authSetNew.Password);
+
+                foreach (var item in userCodes)
+                {
+                    _repositoryManager.AccessCodeRepository.Remove(item);
+                }
 
                 await _repositoryManager.UnitOfWork.SaveChangesAsync();
             }
