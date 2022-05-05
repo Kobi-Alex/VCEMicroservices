@@ -45,6 +45,21 @@ Url: http://acme.com:
  * /api/exams
  * /api/reports 
 
+In addition, we can deploy files for external access to our services:
+ * kubectl apply -f users-np-srv.yaml
+ * kubectl apply -f questions-np-srv.yaml
+ * kubectl apply -f exams-np-srv.yaml
+ * kubectl apply -f reports-np-srv.yaml
+
+Then run below command to view which port was assigned to the service:
+ * kubectl get services
+
+Urls:
+ * localhost:port/api/users
+ * localhost:port/api/questions
+ * localhost:port/api/exams
+ * localhost:port/api/reports
+
 # Tutorial
 https://www.youtube.com/watch?v=DgVjEo3OGBI&t=19801s&ab_channel=LesJackson
 
