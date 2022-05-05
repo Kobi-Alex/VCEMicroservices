@@ -55,10 +55,10 @@ Then run below command to view which port was assigned to the service:
  * kubectl get services
 
 Urls:
- * localhost:port/api/users
- * localhost:port/api/questions
- * localhost:port/api/exams
- * localhost:port/api/reports
+ * http://localhost:port/api/users
+ * http://localhost:port/api/questions
+ * http://localhost:port/api/exams
+ * http://localhost:port/api/reports
 
 # Tutorial
 https://www.youtube.com/watch?v=DgVjEo3OGBI&t=19801s&ab_channel=LesJackson
